@@ -11,5 +11,14 @@
   "description": "",
   "dependencies": {
     "dotenv": "^16.4.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Durgeshwar-AI/MediCheck.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Durgeshwar-AI/MediCheck/issues"
+  },
+  "homepage": "https://github.com/Durgeshwar-AI/MediCheck#readme"
 }
