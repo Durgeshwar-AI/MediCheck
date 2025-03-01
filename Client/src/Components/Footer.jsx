@@ -14,6 +14,7 @@ const Footer = () => {
   
   return (
     <footer className="bg-blue-900 text-white relative overflow-hidden">
+        
       {/* CSS with Media Queries */}
       <style jsx>{`
         /* Base styles (mobile first) */
