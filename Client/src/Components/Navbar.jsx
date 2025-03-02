@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -17,7 +18,7 @@ const Navbar = () => {
       <div>
         <Link to="/home" className="flex items-center cursor-pointer">
           <img
-            src={logo} // Add your logo here
+            src= {logo} // Add your logo here
             alt="Logo"
             className="rounded-b-full h-10 w-10 m-2" // Adjust the width and height of the logo
           />
