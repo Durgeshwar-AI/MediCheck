@@ -10,7 +10,7 @@ const FooterInfo = () => {
       <div className="flex iflex-col gap-8 md:gap-4 items-center justify-center md:justify-start cursor-pointer">
       <Link to="/home" className="flex items-center cursor-pointer">
         
-        <img src={logo} alt="Medicheck Logo" className="h-10 md:h-12 mr-2 w-auto" />
+        <img src={logo} alt="Medicheck Logo" className="h-10 md:h-12 mr-2 w-auto invert" />
         <span className="text-xl md:text-3xl font-bold italic [text-shadow:_0_4px_5px_rgb(205_194_194/_0.5)]">Medicheck</span>
       </Link>
       </div>
