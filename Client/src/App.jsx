@@ -5,12 +5,14 @@ import Contact from "./Pages/Contact";
 import Team from "./Pages/Team";
 import Support from "./Pages/Support";
 import PageNotAvailable from "./Components/PageError";
+import Landing from "./Pages/Landing";
 
 const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Landing/>} />
+        <Route path="/home" element={<Home/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/team" element={<Team />} />
         <Route path="/support" element={<Support />} />
