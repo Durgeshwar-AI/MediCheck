@@ -1,12 +1,14 @@
 import React from 'react';
 import { motion } from "framer-motion";
+import logo from '../assets/logo.png'
+
 
 const ServicesData = [
     {
         id: 1,
         title: "Service 1",
         description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, corrupti.",
-        icon: "icon-1",
+        icon: logo,
         bgColor: "bg-blue-100",
         delay: 0.5
     },
@@ -39,7 +41,7 @@ const ServicesData = [
 const Services = () => {
     return (
         <>
-            <div className="container mx-auto px-6 py-4">
+            <div className="container mx-auto px-6 py-4 mb-3">
                 {/* Header Section */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -54,7 +56,7 @@ const Services = () => {
                 </motion.div>
 
                 {/* Services Cards Section */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:mx-0.5 mx-[15%]">
                     {ServicesData.map((service) => (
                         <motion.div
                             key={service.id}
@@ -70,13 +72,13 @@ const Services = () => {
                             }}
                         >
                             {/* Icon */}
-                            <div className="icon text-xl font-bold">
-                                {service.icon}
+                            <div className="icon-container flex justify-center ">
+                                <img className='w-[70%] h-10 object-fit' src={service.icon} alt="" />
                             </div>
                             {/* Title */}
-                            <p className="text-lg font-bold">{service.title}</p>
+                            <p className="text-lg font-bold text-center">{service.title}</p>
                             {/* Description */}
-                            <p className="text-sm">{service.description}</p>
+                            <p className="text-sm text-center">{service.description}</p>
                         </motion.div>
                     ))}
                 </div>
