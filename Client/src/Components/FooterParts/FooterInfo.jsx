@@ -21,7 +21,7 @@ const FooterInfo = () => {
        <h1 className="font-bold md:text-start md:ml-5 text-center">FOLLOW US</h1>
       <div className="flex gap-6 md:gap-4 md:justify-start justify-center mt-4 md:mt-4 md:ml-2">
       <a
-            href="https://twitter.com/YourCompany"
+            href="https://twitter.com/#"
             target="_blank"
             rel="noopener noreferrer"
             className="border-2 border-gray-400 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:border-blue-500 hover:text-blue-500"
@@ -29,7 +29,7 @@ const FooterInfo = () => {
             <FaTwitter />
           </a>
           <a
-            href="https://www.instagram.com/YourCompany"
+            href="https://www.instagram.com/#"
             target="_blank"
             rel="noopener noreferrer"
             className="border-2 border-gray-400 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:border-pink-500 hover:text-pink-500"
@@ -37,7 +37,7 @@ const FooterInfo = () => {
             <FaInstagram />
           </a>
           <a
-            href="https://www.linkedin.com/company/YourCompany"
+            href="https://www.linkedin.com/company/#"
             target="_blank"
             rel="noopener noreferrer"
             className="border-2 border-gray-400 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:border-blue-700 hover:text-blue-700 hover:shadow"
@@ -45,7 +45,7 @@ const FooterInfo = () => {
             <FaLinkedinIn />
           </a>
           <a
-            href="https://www.facebook.com/YourCompany"
+            href="https://www.facebook.com/#"
             target="_blank"
             rel="noopener noreferrer"
             className="border-2 border-gray-400 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:border-blue-600 hover:text-blue-600"
