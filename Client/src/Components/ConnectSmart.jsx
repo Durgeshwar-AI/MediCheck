@@ -354,7 +354,7 @@ const ConnectSmart = () => {
                                 className="text-sm text-center mt-3 text-gray-500"
                                 variants={itemVariants}
                             >
-                                Don't see your device? <a href="#" className="text-blue-500 hover:underline">Check full list</a>
+                                Don&apos;t see your device? <a href="#" className="text-blue-500 hover:underline">Check full list</a>
                             </motion.p>
                         </motion.div>
 
