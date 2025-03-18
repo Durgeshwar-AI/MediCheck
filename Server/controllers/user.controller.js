@@ -1,23 +1,27 @@
-import userService from "../services/user.service";
+import * as userService from "../services/user.service.js";
 import { validationResult } from "express-validator";
 
 export const registerUser = async (req, res, next) => {
-  const error = validationResult(req);
-  if (!error.isEmpty()) {
-    return res.status(400).json({ errors: error.array() });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
   const { fullname, email, phone, password } = req.body;
 
-  const user = await userService.createUser({
-    firstname: fullname.firstname,
-    lastname: fullname.lastname,
-    email,
-    phone,
-    password: password,
-  });
+  try {
+    const user = await userService.createUser({
+      firstname: fullname.firstname,
+      lastname: fullname.lastname,
+      email,
+      phone,
+      password,
+    });
 
-  const token = user.generateAuthToken();
+    const token = user.generateAuthToken();
 
-  res.status(201).json({ token, user });
+    res.status(201).json({ token});
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
