@@ -4,20 +4,30 @@ import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import logo from "../assets/logo.png";
 
+
+const URL = import.meta.env.VITE_URL;
+
 const MENU_ITEMS = [
-  { name: "Health Support", path: "/healthsupport" },
-  { name: "Our Team", path: "/ourteam" },
-  { name: "Contact Us", path: "/contactus" },
+  { name: "home", path: `${URL}/home` },
+  { name: "Health Support", path: `${URL}/support` },
+  { name: "Our Team", path: `${URL}/team` },
+  { name: "Contact Us", path: `${URL}/contact` },
 ];
 
 const MenuItem = ({ item, isActive, isMobile, onClick }) => (
-  <motion.li initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+  <motion.li
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4 }}
+  >
     <Link
       to={item.path}
       onClick={onClick}
       aria-current={isActive ? "page" : undefined}
       className={`group p-1.5 font-bold rounded-xl transform transition-transform duration-300 ${
-        isMobile ? "block mx-1.5 py-1 hover:bg-gray-100 w-full text-center" : "hover:text-blue-600 hover:bg-gray-100"
+        isMobile
+          ? "block mx-1.5 py-1 hover:bg-gray-100 w-full text-center"
+          : "hover:text-blue-600 hover:bg-gray-100"
       } ${isActive ? "text-blue-600" : "text-black"} relative overflow-hidden`}
     >
       {item.name}
@@ -31,7 +41,10 @@ const MenuItem = ({ item, isActive, isMobile, onClick }) => (
 );
 
 MenuItem.propTypes = {
-  item: PropTypes.shape({ name: PropTypes.string.isRequired, path: PropTypes.string.isRequired }).isRequired,
+  item: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+  }).isRequired,
   isActive: PropTypes.bool.isRequired,
   isMobile: PropTypes.bool,
   onClick: PropTypes.func,
@@ -41,13 +54,18 @@ MenuItem.defaultProps = { isMobile: false, onClick: null };
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
-  const toggleMenu = useCallback(() => setMenuOpen(prev => !prev), []);
-  const closeMenu = useCallback(() => menuOpen && setMenuOpen(false), [menuOpen]);
-  const isActive = useCallback(path => pathname === path, [pathname]);
+  const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
+  const closeMenu = useCallback(
+    () => menuOpen && setMenuOpen(false),
+    [menuOpen]
+  );
+  const isActive = useCallback((path) => pathname === path, [pathname]);
 
   const JoinButton = ({ mobile }) => (
     <motion.button
-      className={`px-4 py-2 ${mobile ? "bg-white" : "bg-gray-50"} font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+      className={`px-4 py-2 ${
+        mobile ? "bg-white" : "bg-gray-50"
+      } font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double focus:outline-none focus:ring-2 focus:ring-blue-500 ${
         !mobile && "focus:ring-opacity-50"
       }`}
       whileHover={{ scale: 1.05 }}
@@ -69,7 +87,11 @@ const Navbar = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div>
-        <Link to="/home" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
+        <Link
+          to="/home"
+          className="flex items-center cursor-pointer"
+          aria-label="MediCheck Home"
+        >
           <motion.img
             src={logo}
             alt=""
@@ -83,10 +105,17 @@ const Navbar = () => {
           </h1>
         </Link>
       </div>
-      <nav className="hidden md:flex flex-grow justify-end" aria-label="Main navigation">
+      <nav
+        className="hidden md:flex flex-grow justify-end"
+        aria-label="Main navigation"
+      >
         <ul className="flex space-x-6">
-          {MENU_ITEMS.map(item => (
-            <MenuItem key={item.path} item={item} isActive={isActive(item.path)} />
+          {MENU_ITEMS.map((item) => (
+            <MenuItem
+              key={item.path}
+              item={item}
+              isActive={isActive(item.path)}
+            />
           ))}
         </ul>
       </nav>
@@ -106,7 +135,11 @@ const Navbar = () => {
             animate={menuOpen ? { rotate: 45, y: 9 } : { rotate: 0, y: 0 }}
             transition={{ duration: 0.2 }}
           />
-          <motion.span className="block h-0.5 bg-black" animate={{ opacity: menuOpen ? 0 : 1 }} transition={{ duration: 0.2 }} />
+          <motion.span
+            className="block h-0.5 bg-black"
+            animate={{ opacity: menuOpen ? 0 : 1 }}
+            transition={{ duration: 0.2 }}
+          />
           <motion.span
             className="block h-0.5 bg-black origin-center"
             animate={menuOpen ? { rotate: -45, y: -9 } : { rotate: 0, y: 0 }}
@@ -125,8 +158,14 @@ const Navbar = () => {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <motion.ul className="flex flex-col items-center py-2 space-y-1">
-              {MENU_ITEMS.map(item => (
-                <MenuItem key={item.path} item={item} isActive={isActive(item.path)} isMobile onClick={closeMenu} />
+              {MENU_ITEMS.map((item) => (
+                <MenuItem
+                  key={item.path}
+                  item={item}
+                  isActive={isActive(item.path)}
+                  isMobile
+                  onClick={closeMenu}
+                />
               ))}
               <motion.li
                 initial={{ opacity: 0, y: 20 }}
