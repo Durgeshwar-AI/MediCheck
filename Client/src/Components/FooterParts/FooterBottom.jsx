@@ -15,7 +15,7 @@ const FooterBottom = () => {
     <div className="text-center">  
         <div className='bg-white w-full h-0.25 rounded-2xl m-auto'></div>
 
-      <div className="flex flex-wrap justify-center gap-3 md:gap-4 text-sm md:text-base">
+      <div className="flex flex-wrap justify-center gap-3 mt-2 md:gap-4 text-sm md:text-base">
         {links.map((link, index) => (
           <a 
             key={index} 
