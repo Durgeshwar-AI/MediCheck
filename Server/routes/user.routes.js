@@ -1,6 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
-import { registerUser } from "../controllers/user.controller.js";
+import { registerUser, loginUser } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -19,6 +19,14 @@ router.post(
       .withMessage("Phone number should be exactly 10 characters long"),
   ],
   registerUser
+);
+router.post(
+  "/login",
+  [
+    body("email").isEmail().withMessage("Invalid Email"),
+    body("password").notEmpty().withMessage("Password is required"),
+  ],
+  loginUser
 );
 
 export default router;
