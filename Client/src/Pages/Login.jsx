@@ -1,9 +1,12 @@
 import React from "react";
+import Navbar from "../Components/Navbar";
 
 const URL = import.meta.env.VITE_URL;
 
 const Login = () => {
   return (
+    <>
+      <Navbar join={false}/>
     <div className="bg-blue-50 flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
@@ -38,6 +41,7 @@ const Login = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 

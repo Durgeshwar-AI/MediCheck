@@ -8,7 +8,7 @@ import Main from "../Components/Main";
 const Home = () => {
   return (
     <>
-      <Navbar />
+      <Navbar join={true}/>
       <Header />
       <Welcome />
       <Main />
