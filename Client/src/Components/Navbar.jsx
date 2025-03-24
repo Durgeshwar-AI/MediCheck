@@ -57,30 +57,33 @@ const Navbar = ({ join }) => {
       </nav>
       <div className="hidden md:block ml-4">
         {join && (
-          <a href={`${URL}/register`} className="px-4 py-2 bg-white font-bold rounded-xl border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white">
+          <a href={`${URL}/register`} className="font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double py-2 bg-white border-double">
             Join Us
           </a>
         )}
       </div>
       <button className="md:hidden ml-auto z-20 p-2" onClick={toggleMenu} aria-expanded={menuOpen}>
-        <div className="flex flex-col justify-between w-6 h-5">
+        <div className="flex flex-col justify-between w-6 h-5 cursor-pointer">
           <motion.span className="block h-0.5 bg-black" animate={menuOpen ? { rotate: 45, y: 9 } : { rotate: 0, y: 0 }} />
           <motion.span className="block h-0.5 bg-black" animate={{ opacity: menuOpen ? 0 : 1 }} />
           <motion.span className="block h-0.5 bg-black" animate={menuOpen ? { rotate: -45, y: -9 } : { rotate: 0, y: 0 }} />
         </div>
+        <motion.span
+         className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600" animate={{ opacity: menuOpen ? 1 : 0 }}
+       ></motion.span>
       </button>
       <AnimatePresence>
         {menuOpen && (
-          <motion.nav className="absolute top-full left-0 w-full bg-gray-100 shadow-lg md:hidden z-20" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+          <motion.nav className="absolute top-full left-0 w-full bg-white shadow-lg md:hidden z-20" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
             <motion.ul className="flex flex-col items-center py-2 space-y-1">
               {MENU_ITEMS.map((item) => (
                 <li key={item.path}>
                   <Link
                     to={item.path}
                     onClick={closeMenu}
-                    className={`block p-2 w-full text-center font-bold ${
+                    className={`block px-5 py-2 w-fit text-center font-bold ${
                       isActive(item.path) ? "text-blue-600" : "text-black"
-                    } hover:text-blue-600 hover:bg-gray-100`}
+                    } hover:text-blue-600 hover:bg-gradient-to-b from-gray-50 to-gray-100 hover:rounded-xl hover:scale-105`}
                   >
                     {item.name}
                   </Link>
@@ -88,7 +91,7 @@ const Navbar = ({ join }) => {
               ))}
               {join && (
                 <li className="mt-2 w-full flex justify-center">
-                  <a href={`${URL}/register`} className="px-4 py-2 bg-white font-bold rounded-xl border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white">
+                  <a href={`${URL}/register`} className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white">
                     Join Us
                   </a>
                 </li>
