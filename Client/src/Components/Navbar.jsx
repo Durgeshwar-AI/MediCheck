@@ -57,7 +57,7 @@ const Navbar = ({ join }) => {
       </nav>
       <div className="hidden md:block ml-4">
         {join && (
-          <a href={`${URL}/register`} className="font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double py-2 bg-white border-double">
+          <a href={`${URL}/register`} className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double">
             Join Us
           </a>
         )}
