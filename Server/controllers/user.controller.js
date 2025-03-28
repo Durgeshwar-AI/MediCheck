@@ -1,6 +1,5 @@
 import * as userService from "../services/user.service.js";
 import { validationResult } from "express-validator";
-import bcrypt from "bcrypt";
 import User from "../models/user.register.js";
 
 export const registerUser = async (req, res, next) => {
@@ -28,8 +27,7 @@ export const registerUser = async (req, res, next) => {
   }
 };
 
-// New loginUser function
-export const loginUser = async (req, res, next) => {
+export const loginUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -38,15 +36,22 @@ export const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    // Include password in the query as it is not selected by default
     const user = await User.findOne({ email }).select("+password");
+    console.log("User Found:", user);
+
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ message: "Invalid credentials - User not found" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+    console.log("Stored Password:", user.password);
+    console.log("Entered Password:", password);
+
+    if (password !== user.password) {
+      return res
+        .status(400)
+        .json({ message: "Invalid credentials - Password mismatch" });
     }
 
     const token = user.generateAuthToken();

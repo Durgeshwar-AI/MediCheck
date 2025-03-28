@@ -1,17 +1,20 @@
 import User from "../models/user.register.js";
 
-export const createUser = async ({ firstname, lastname, email, phone, password }) => {
+export const createUser = async ({
+  firstname,
+  lastname,
+  email,
+  phone,
+  password,
+}) => {
   if (!firstname || !email || !password) {
     throw new Error("All fields are required");
   }
-
-  const user = new User({
+  const user = await User.create({
     fullname: { firstname, lastname },
     email,
     phone,
     password,
   });
-
-  await user.save();
   return user;
 };
