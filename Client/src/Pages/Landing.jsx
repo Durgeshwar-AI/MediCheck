@@ -10,12 +10,14 @@ import DownloadApp from '../Components/DownloadApp'
 const Landing = () => {
   return (
     <>
-      <Hero/>
-      <About/>
-      <Services/>
-      <ConnectSmart/>
-      <Features/>
-      <DownloadApp/>
+      <div className='max-w-screen-lg mx-auto'>
+        <Hero/>
+        <About/>
+        <Services/>
+        <ConnectSmart/>
+        <Features/>
+        <DownloadApp/>
+      </div>
       <Footer/>
       
     </>

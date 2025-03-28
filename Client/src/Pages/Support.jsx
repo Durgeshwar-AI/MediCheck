@@ -6,7 +6,7 @@ import Footer from "../Components/Footer";
 const Support = () => {
   return (
     <>
-        <Navbar/>
+        <Navbar join={true}/>
         <Footer/>
     </>
   )
