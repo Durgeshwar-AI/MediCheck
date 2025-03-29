@@ -2,7 +2,7 @@ import * as userService from "../services/user.service.js";
 import { validationResult } from "express-validator";
 import User from "../models/user.register.js";
 
-export const registerUser = async (req, res, next) => {
+export const registerUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -37,7 +37,6 @@ export const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email }).select("+password");
-    console.log("User Found:", user);
 
     if (!user) {
       return res
@@ -60,3 +59,4 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
