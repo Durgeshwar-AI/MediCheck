@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./db/db.js";
 import userRoutes from "./routes/user.routes.js";
+import hospitalRoutes from "./routes/hospital.routes.js"
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", userRoutes);
+app.use("/hospital/api",hospitalRoutes)
 
 app.get("/", (req, res) => {
   res.send("Hello world");

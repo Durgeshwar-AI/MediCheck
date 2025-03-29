@@ -37,7 +37,6 @@ export const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email }).select("+password");
-    console.log("User Found:", user);
 
     if (!user) {
       return res
