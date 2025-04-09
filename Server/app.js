@@ -18,8 +18,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/users", userRoutes);          
-app.use("/hospital/api", hospitalRoutes);   
+app.use("/api/user", userRoutes);          
+app.use("/api/hospital", hospitalRoutes);   
 app.use("/api/ble", bleRoutes);             
 
 app.get("/", (req, res) => {

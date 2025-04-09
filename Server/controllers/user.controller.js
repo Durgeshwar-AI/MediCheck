@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import { validationResult } from 'express-validator';
 
 export const registerUser = async (req, res) => {
@@ -8,7 +8,8 @@ export const registerUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { firstname, lastname, email, phone, password } = req.body;
+  const { fullname, email, phone, password } = req.body; 
+    const { firstname, lastname } = fullname || {};
 
   try {
     const existingUser = await User.findOne({ email });
