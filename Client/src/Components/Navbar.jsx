@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useCallback, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.png";
+import { isLoggedIn, removeToken } from "../utils/auth";
 
 const URL = import.meta.env.VITE_URL;
 
@@ -14,10 +15,25 @@ const MENU_ITEMS = [
 
 const Navbar = ({ join }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  
   const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
   const closeMenu = useCallback(() => menuOpen && setMenuOpen(false), [menuOpen]);
   const isActive = useCallback((path) => pathname === path, [pathname]);
+
+  // Check authentication status when component mounts or join prop changes
+  useEffect(() => {
+    setUserLoggedIn(isLoggedIn());
+  }, [join, pathname]);
+
+  // Handle logout
+  const handleLogout = () => {
+    removeToken();
+    setUserLoggedIn(false);
+    navigate("/");
+  };
 
   return (
     <motion.header
@@ -27,7 +43,7 @@ const Navbar = ({ join }) => {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div>
-        <Link to="/home" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
+        <Link to="/" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
           <motion.img
             src={logo}
             alt=""
@@ -56,11 +72,18 @@ const Navbar = ({ join }) => {
         </ul>
       </nav>
       <div className="hidden md:block ml-4">
-        {join && (
+        {join && !userLoggedIn ? (
           <a href={`${URL}/register`} className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double">
             Join Us
           </a>
-        )}
+        ) : join && userLoggedIn ? (
+          <button 
+            onClick={handleLogout}
+            className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-red-300 text-red-500 hover:scale-105 hover:bg-red-500 hover:text-white hover:border-white transition duration-300"
+          >
+            Logout
+          </button>
+        ) : null}
       </div>
       <button className="md:hidden ml-auto z-20 p-2" onClick={toggleMenu} aria-expanded={menuOpen}>
         <div className="flex flex-col justify-between w-6 h-5 cursor-pointer">
@@ -89,13 +112,22 @@ const Navbar = ({ join }) => {
                   </Link>
                 </li>
               ))}
-              {join && (
+              {join && !userLoggedIn ? (
                 <li className="mt-2 w-full flex justify-center">
                   <a href={`${URL}/register`} className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white">
                     Join Us
                   </a>
                 </li>
-              )}
+              ) : join && userLoggedIn ? (
+                <li className="mt-2 w-full flex justify-center">
+                  <button 
+                    onClick={handleLogout}
+                    className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-red-300 text-red-500 hover:scale-105 hover:bg-red-500 hover:text-white hover:border-white transition duration-300"
+                  >
+                    Logout
+                  </button>
+                </li>
+              ) : null}
             </motion.ul>
           </motion.nav>
         )}

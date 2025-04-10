@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import { LuEyeClosed } from "react-icons/lu";
 import { RxEyeOpen } from "react-icons/rx";
@@ -19,7 +19,7 @@ const Login = () => {
 
   // Redirect if already logged in
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLoggedIn()) {
       navigate("/home");
     }
@@ -34,9 +34,8 @@ const Login = () => {
 
     // Validate password before proceeding
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
     if (!passwordRegex.test(password)) {
-      setMessage("Password must be at least 8 characters long, including one uppercase letter, one lowercase letter, one digit, and one special symbol.");
+      setMessage("⚠️ Password must include at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special symbol like: @$!%*?&");
       return;
     }
 
@@ -51,17 +50,17 @@ const Login = () => {
 
       if (res.ok) {
         storeToken(data.token);
-        localStorage.setItem("token", data.token);
-        setMessage("Login successful!");
+        // localStorage.setItem("token", data.token);
+        setMessage("✅ Login successful!");
         // redirect logic here if needed
         setTimeout(() => {
           navigate("/home");
         }, 500);
       } else {
-        setMessage(data.message || "Login failed!!");
+        setMessage(data.message || "❌ Login failed!");
       }
     } catch (err) {
-      setMessage("Something went wrong!! Please try again.");
+      setMessage("❌ Something went wrong. Please try again.");
       console.error(err);
     }
   };
@@ -106,25 +105,21 @@ const Login = () => {
               </button>
             </div>
             <motion.button
-              whileTap={{
-                scale: [null, 1.1],
-                transition: {
-                  duration: 0.5,
-                  times: [0, 0.5],
-                  ease: ["easeInOut", "easeOut"],
-                },
+              whileHover={{
+                backgroundColor: ["#00ff00", "#32cd32"], // Shining green effect
+                transition: { duration: 0.5, ease: "easeInOut", repeat: Infinity },
               }}
-              transition={{
-                duration: 0.3,
-                ease: "easeOut",
+              onHoverEnd={() => {
+                // Reset color back to blue when hover stops
+                document.querySelector(".register-btn").style.backgroundColor = "#155dfc"; // A shade of blue
               }}
-
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 hover:font-bold hover:text-[17px] transition">
+              className="register-btn w-full text-white py-2 rounded-lg bg-blue-600 hover:font-bold hover:text-[17px] transition"
+            >
               Login
             </motion.button>
           </form>
           {message && (
-            <p className={`text-center mt-4 font-medium ${message.includes("successful") ? "text-green-600" : "text-red-600"}`}>
+            <p className={`text-center mt-4 text-xs ${message.includes("successful") ? "text-green-600" : "text-red-600"}`}>
               {message}
             </p>
           )}
