@@ -1,5 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
+import { LuEyeClosed } from "react-icons/lu";
+import { RxEyeOpen } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { storeToken, isLoggedIn } from "../utils/auth";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -10,16 +15,41 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isLoggedIn()) {
+      navigate("/home");
+    }
+  }, [navigate]);
+
+  const handleTogglePassword = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 10); // Restricts to 10 digits
+    setPhone(value);
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    // Password validation
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setMessage("⚠️ Password must include at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special symbol like: @$!%*?&");
+      return;
+    }
 
     try {
       const res = await fetch(`${URL}/user/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          fullname: { firstname:firstname, lastname:lastname },
+          fullname: { firstname, lastname },
           email,
           phone,
           password,
@@ -29,27 +59,29 @@ const Register = () => {
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("token", data.token);
-        setMessage("Registration successful!");
-        // redirect logic here if needed
+        // Store token with 7-day expiration
+        storeToken(data.token);
+        // localStorage.setItem("token", data.token);
+        setMessage("✅ Registration successful!");
+        // Redirect to home page after successful registration        
+        setTimeout(() => {
+          navigate("/home");
+        }, 500);
       } else {
-        const err = data.errors?.[0]?.msg || data.message;
-        setMessage(err || "Registration failed.");
+        setMessage(data.errors?.[0]?.msg || data.message || "❌ Registration failed!");
       }
     } catch (err) {
-      console.log(err)
-      setMessage(`Something went wrong:`);
+      console.error(err);
+      setMessage("❌ Something went wrong. Please try again.");
     }
   };
 
   return (
     <>
       <Navbar join={false} />
-      <div className="bg-blue-50 flex items-center justify-center min-h-screen">
+      <div className="bg-blue-50 flex items-center justify-center min-h-screen py-10">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-          <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
-            Create an Account
-          </h2>
+          <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">Create an Account</h2>
           <form onSubmit={handleRegister}>
             <div className="mb-4">
               <label className="font-bold block text-gray-700">First Name</label>
@@ -86,33 +118,48 @@ const Register = () => {
               <input
                 type="text"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={handlePhoneChange}
+                maxLength={10}
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
                 placeholder="Enter your phone number"
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <label className="font-bold block text-gray-700">Password</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 pr-10"
                 placeholder="Enter your password"
+                required
               />
+              <button
+                type="button"
+                onClick={handleTogglePassword}
+                className="absolute my-2 right-3 text-gray-500 text-2xl font-bold rounded"
+              >
+                {showPassword ? <RxEyeOpen /> : <LuEyeClosed />}
+              </button>
             </div>
-            <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+            <motion.button
+              whileHover={{
+                backgroundColor: ["#00ff00", "#32cd32"], // Shining green effect
+                transition: { duration: 0.5, ease: "easeInOut", repeat: Infinity },
+              }}
+              onHoverEnd={() => {
+                // Reset color back to blue when hover stops
+                document.querySelector(".register-btn").style.backgroundColor = "#155dfc"; // A shade of blue
+              }}
+              className="register-btn w-full text-white py-2 rounded-lg bg-blue-600 hover:font-bold hover:text-[17px] transition"
+            >
               Register
-            </button>
+            </motion.button>
           </form>
-          {message && (
-            <p className="text-red-600 text-center mt-4 font-medium">{message}</p>
-          )}
+          {message && <p className="text-center mt-4 font-medium text-red-600 text-xs">{message}</p>}
           <p className="mt-4 text-center text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="text-blue-600 font-bold">
-              Login
-            </a>
+            <a href="/login" className="text-blue-600 font-bold">Login</a>
           </p>
         </div>
       </div>
