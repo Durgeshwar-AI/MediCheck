@@ -6,8 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { storeToken, isLoggedIn } from "../utils/auth";
 import { motion } from "framer-motion";
 
-
-
 const URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
