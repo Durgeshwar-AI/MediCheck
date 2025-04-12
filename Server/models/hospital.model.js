@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 const hospitalSchema = new mongoose.Schema({
   company: { type: String, required: true },
@@ -10,8 +10,40 @@ const hospitalSchema = new mongoose.Schema({
 
 hospitalSchema.methods.generateAuthToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: "10d",
+    expiresIn: "7d",
   });
-}
-const hospital=mongoose.model("Hospital",hospitalSchema)
-export default hospital
+};
+
+const doctorSchema = new mongoose.Schema({
+  hospital: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Hospital",
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  license: {
+    type: String,
+    required: true,
+  },
+  department: {
+    type: String,
+    required: true,
+  },
+  speciality: {
+    type: String,
+    required: true,
+  },
+  contact: {
+    type: String,
+    required: true,
+  },
+});
+
+const hospital = mongoose.model("Hospital", hospitalSchema);
+const doctor = mongoose.model("Doctor", doctorSchema);
+
+export default hospital;
+export { doctor };
