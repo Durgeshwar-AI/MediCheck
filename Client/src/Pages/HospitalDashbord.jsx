@@ -9,6 +9,7 @@ import HospitalAppointments from '../Components/HospitalParts/HospitalAppointmen
 import HospitalFacilities from '../Components/HospitalParts/HospitalFacilities';
 import PatientForm from '../Components/HospitalParts/PatientForm';
 import PatientList from '../Components/HospitalParts/PatientList';
+import BackToTopButton from '../Components/FooterParts/BackToTopButton'
 
 const mockAppointments = [
     { id: 1, patient: 'Emily Wilson', time: '09:30 AM' },
@@ -175,6 +176,7 @@ export default function HospitalDashboard() {
                     )}
                 </main>
             </div>
+            <BackToTopButton />
         </div>
     );
 }

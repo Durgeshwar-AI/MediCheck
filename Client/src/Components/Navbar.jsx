@@ -46,7 +46,7 @@ const Navbar = ({ join }) => {
         <Link to="/" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
           <motion.img
             src={logo}
-            alt=""
+            alt="logo"
             className="rounded-b-full h-10 w-10 m-2"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}

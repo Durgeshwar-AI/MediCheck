@@ -5,7 +5,7 @@ const PatientList = ({ patients }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('all');
-  const patientsPerPage = 5;
+  const patientsPerPage = 7;
 
   useEffect(() => {
     if (patients && patients.length > 0) {
@@ -40,7 +40,7 @@ const PatientList = ({ patients }) => {
 
   // Get status badge color
   const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status.toLowerCase().replace(/\s+/g, '')) {
       case 'active':
         return 'bg-green-100 text-green-800';
       case 'critical':
@@ -50,7 +50,7 @@ const PatientList = ({ patients }) => {
       case 'recovering':
         return 'bg-blue-100 text-blue-800';
       case 'underobservation':
-        return 'bg-orange-200 text-orange-800';
+        return 'bg-orange-100 text-orange-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }

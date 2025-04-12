@@ -40,7 +40,7 @@ export default function PatientForm({ onSubmit, onCancel }) {
     >
       <div className="sticky top-0 bg-white z-10 pb-4">
         <h2 className="text-2xl text-center font-bold mb-1">Patient Registration Form</h2>
-        <div className="w-32 h-0.5 bg-blue-500 mx-auto mb-3 rounded-full"></div>
+        <div className="w-60 h-0.5 bg-blue-500 mx-auto mb-3 rounded-full"></div>
       </div>
       
       <div className="overflow-y-auto max-h-[580px] pr-2" style={{ scrollbarWidth: 'thin' }}>
