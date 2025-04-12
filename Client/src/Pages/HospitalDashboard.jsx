@@ -41,7 +41,7 @@ const initialPatients = [
 
 ];
 
-export default function HospitalDashboard() {
+const HospitalDashboard = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [stats, setStats] = useState({
         totalPatients: 0,
@@ -180,3 +180,4 @@ export default function HospitalDashboard() {
         </div>
     );
 }
+export default  HospitalDashboard;

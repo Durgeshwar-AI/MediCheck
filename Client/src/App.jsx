@@ -8,7 +8,7 @@ import PageNotAvailable from "./Components/PageError";
 import Landing from "./Pages/Landing";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
-import HospitalDashbord from "./Pages/HospitalDashbord";
+import HospitalDashboard from "./Pages/HospitalDashboard";
 
 const App = () => {
   
@@ -22,7 +22,7 @@ const App = () => {
         <Route path="/support" element={<Support />} />
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
-        <Route path='/hospitalDashbord' element={<HospitalDashbord/>}/>
+        <Route path='/hospitalDashboard' element={<HospitalDashboard/>}/>
         <Route path="*" element={<PageNotAvailable />} />
       </Routes>
     </div>

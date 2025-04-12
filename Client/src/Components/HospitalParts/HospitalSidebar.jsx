@@ -1,48 +1,139 @@
-// src/Components/HospitalParts/HospitalSidebar.jsx
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard, Calendar, Users, UserPlus, Building, AlertTriangle,
+  Settings, ChevronRight, ChevronLeft
+} from "lucide-react";
 
-export default function HospitalSidebar() {
+const HospitalSidebar = ({ children }) => {
+  const [expanded, setExpanded] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const { pathname } = useLocation();
+  const maxLength = 7; 
+  const userName = "Dr. Krishna Kumar Roy";
+
+  const getInitials = (name) => {
+    const words = name.split(" ");
+    const initials = words.map((word) => (word.toLowerCase() === "dr." ? "Dr." : word.charAt(0).toUpperCase())).join("");
+    return initials.length > maxLength ? initials.substring(0, maxLength) + "..." : initials;
+  };
+
+ 
+  const displayName = getInitials(userName);
+
+  // ✅ Fix: Prevent SSR errors & optimize resize handling with debounce
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setExpanded(!mobile); // Ensure it collapses on smaller screens
+    };
+
+    const debounceResize = () => setTimeout(handleResize, 200);
+    window.addEventListener("resize", debounceResize);
+
+    handleResize(); // Initialize correct sidebar state
+    return () => window.removeEventListener("resize", debounceResize);
+  }, []);
+
   const menuItems = [
-    { name: 'Dashboard', icon: '📊', active: true },
-    { name: 'Appointments', icon: '📅' },
-    { name: 'Patients', icon: '🧑‍🤝‍🧑' },
-    { name: 'Doctors', icon: '👨‍⚕️' },
-    { name: 'Facilities', icon: '🏥' },
-    { name: 'Emergency', icon: '🚨' }
+    { name: "Dashboard", path: "/hospitalDashboard", icon: <LayoutDashboard size={20} /> },
+    { name: "Appointments", path: "/appointments", icon: <Calendar size={20} /> },
+    { name: "Patients", path: "/patients", icon: <Users size={20} /> },
+    { name: "Doctors", path: "/doctors", icon: <UserPlus size={20} /> },
+    { name: "Facilities", path: "/facilities", icon: <Building size={20} /> },
+    { name: "Emergency", path: "/emergency", icon: <AlertTriangle size={20} /> },
+    { name: "Settings", path: "/settings", icon: <Settings size={20} /> }
   ];
 
   return (
-    <motion.div 
-      className="w-64 bg-white shadow-md"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <nav className="p-4">
-        <ul className="space-y-2">
-          {menuItems.map((item, index) => (
-            <motion.li 
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
+    <div className="flex h-screen sticky top-0 bg-gray-50">
+      {/* ✅ Fix: Mobile overlay for closing menu */}
+      {isMobile && expanded && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20"
+          aria-hidden="true"
+          onClick={() => setExpanded(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div 
+        className={`h-full bg-white shadow-lg transition-all duration-300 ease-in-out
+        ${expanded ? "w-48" : "w-16"} 
+        ${isMobile ? "relative z-30" : "relative z-20"}`}
+      >
+        {/* Navigation menu */}
+        <nav className="p-3 mt-2">
+          <ul className="space-y-2">
+            {menuItems.map((item, index) => {
+              const active = pathname === item.path;
+              
+              return (
+                <li key={item.name} className="relative group hover:font-bold hover:text-blue-500">
+                  <Link
+                    key={item.name} // ✅ Fix: Proper key placement
+                    to={item.path}
+                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all
+                    ${active ? "bg-blue-50 text-red-600 font-medium" : "text-gray-600 hover:font-bold hover:text-blue-500 hover:bg-gray-50"}`}
+                  >
+                    <span className={active ? "text-red-600" : "text-gray-500 hover:font-bold hover:text-blue-500"}>
+                      {item.icon}
+                    </span>
+                    
+                    {expanded && (
+                      <span className="ml-3 whitespace-nowrap">{item.name}</span>
+                    )}
+                    
+                    {/* ✅ Fix: Tooltip for collapsed menu */}
+                    {!expanded && (
+                      <div className="absolute left-14 z-50 bg-gray-800 text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
+                        {item.name}
+                      </div>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Footer section */}
+        <div className="absolute bottom-5 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
+          <div className="flex items-center justify-between">
+            {/* User Profile */}
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
+                U
+              </div>
+              {expanded && (
+                <div className="ml-3">
+                  <p className="text-sm font-medium">{displayName}</p>
+                  <p className="text-xs text-gray-500">Admin</p>
+                </div>
+              )}
+            </div>
+            
+            {/* Toggle button */}
+            <button 
+              onClick={() => setExpanded(!expanded)}
+              className="rounded-full hover:bg-blue-300 transition-colors hover:font-bold"
+              aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
             >
-              <a
-                href="#"
-                className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  item.active
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'hover:bg-gray-100'
-                }`}
-              >
-                <span className="text-xl">{item.icon}</span>
-                <span className="font-medium">{item.name}</span>
-              </a>
-            </motion.li>
-          ))}
-        </ul>
-      </nav>
-    </motion.div>
+              {expanded ? <ChevronLeft color="green" size={22} /> : <ChevronRight color="red" size={25} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main content area */}
+      <div className="flex-1 transition-all duration-300 overflow-x-hidden">
+        {children}
+      </div>
+    </div>
   );
-}
+};
+
+export default HospitalSidebar;
