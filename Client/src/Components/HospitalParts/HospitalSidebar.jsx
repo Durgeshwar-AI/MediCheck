@@ -61,9 +61,9 @@ const HospitalSidebar = ({ children }) => {
 
       {/* Sidebar */}
       <div 
-        className={`h-full bg-white shadow-lg transition-all duration-300 ease-in-out
+        className={`h-full bg-white shadow-lg transition-all duration-300 ease-in-out sticky
         ${expanded ? "w-48" : "w-16"} 
-        ${isMobile ? "relative z-30" : "relative z-20"}`}
+        ${isMobile ? " z-30" : " z-20"}`}
       >
         {/* Navigation menu */}
         <nav className="p-3 mt-2">
