@@ -1,82 +1,86 @@
 import React from 'react';
-import logo from '../assets/logo.png'; // Ensure the path is correct
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import logo from '../assets/logo.png';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
-  // Animation Variants
-  const headingVariants = {
-    hidden: { opacity: 0, y: -50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 1 } },
+  // Enhanced animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        when: "beforeChildren",
+        staggerChildren: 0.2,
+        duration: 0.5
+      }
+    }
   };
 
-  const paragraphVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 1, delay: 0.3 } },
-  };
-
-  const buttonVariants = {
-    hidden: { scale: 0 },
-    visible: { scale: 1, transition: { duration: 0.8, delay: 0.6 } },
-    
-  };
-
-  const imageVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 1, delay: 0.5 } },
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
   };
 
   return (
-    <div className="hero-container p-4 grid grid-cols-1 md:grid-cols-2 items-center mt-[-20px]">
-      <div className="hero-content">
-        {/* Animated Heading */}
-        <motion.h1
-          className="text-5xl font-bold p-1.5 mb-6"
-          variants={headingVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          Find the best solution together.
-        </motion.h1>
-
-        {/* Animated Paragraph */}
-        <motion.span
-          className="m-1 p-1.5 bg-clip-text text-xl text-transparent bg-gradient-to-r from-blue-600 to-purple-600"
-          variants={paragraphVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla provident commodi, non,
-          deserunt unde veritatis ullam autem magni esse maiores nam odit! Magnam, suscipit numquam?
-        </motion.span>
-
-        {/* Animated Button */}
-        <motion.div
-          className="mt-6 flex md:justify-start md:ml-2.5 justify-center"
-          variants={buttonVariants}
-          initial="hidden"
-          animate="visible"
-          whileHover="hover"
-        >
-          <Link to="/home">
-            <button className="text-xl text-blue-600 px-10 py-1 border-blue-600 border-double border-2 hover:border hover:bg-gradient-to-r from-cyan-500 to-blue-500 hover:text-white pb-2 rounded-full font-semibold hover:scale-105 transition-all duration-500 shadow-cyan-200 shadow-[_3px_3px_5px_rgb(205_194_194/_0.5)]">
-              Get Started
-            </button>
-          </Link>
-        </motion.div>
+    <motion.div 
+      className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white py-16 md:py-24"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row items-center">
+          {/* Left Content */}
+          <motion.div className="md:w-1/2 mb-12 md:mb-0" variants={containerVariants}>
+            <motion.h1 
+              className="text-4xl md:text-5xl font-bold mb-6 text-gray-800 leading-tight"
+              variants={itemVariants}
+            >
+              Your Complete <span className="text-blue-600">Healthcare</span> Solution
+            </motion.h1>
+            
+            <motion.p 
+              className="text-lg text-gray-600 mb-8 max-w-lg"
+              variants={itemVariants}
+            >
+              Seamlessly connect your health devices, track vital data, and receive personalized healthcare recommendations all in one place.
+            </motion.p>
+            
+            <motion.div className="flex space-x-4" variants={itemVariants}>
+              <Link to="/register">
+                <button className="px-8 py-3 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all duration-300">
+                  Get Started
+                </button>
+              </Link>
+              <Link to="/home">
+                <button className="px-8 py-3 border-2 border-blue-500 text-blue-600 font-medium rounded-full hover:bg-blue-50 transition-all duration-300">
+                  Learn More
+                </button>
+              </Link>
+            </motion.div>
+          </motion.div>
+          
+          {/* Right Image */}
+          <motion.div 
+            className="md:w-1/2 flex justify-center"
+            variants={itemVariants}
+            whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+          >
+            <img 
+              src={logo} 
+              alt="MediCheck App" 
+              className="w-[300px] md:w-[450px] object-contain filter drop-shadow-xl" 
+            />
+          </motion.div>
+        </div>
       </div>
-
-      {/* Animated Image with One-Time Fade-In */}
-      <motion.div
-        className="hero-image rounded-full flex justify-center items-center"
-        variants={imageVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <img src={logo} alt="MediCheck Logo" className="w-[400px] lg:w-[500px]" />
-      </motion.div>
-    </div>
+      
+      {/* Decorative elements */}
+      <div className="hidden md:block absolute -top-24 -right-24 w-96 h-96 bg-blue-100 rounded-full opacity-50"></div>
+      <div className="hidden md:block absolute top-48 -left-12 w-48 h-48 bg-blue-100 rounded-full opacity-30"></div>
+    </motion.div>
   );
 };
 
-export default Hero;
+export default Hero
