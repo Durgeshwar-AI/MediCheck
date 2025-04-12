@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import HeaderHome from "../Components/HeaderHome";
-import { isLoggedIn } from "../utils/auth";
+import HeaderHome from "../../Components/HeaderHome";
+import { isLoggedIn } from "../../utils/auth";
 import { Link } from "react-router-dom";
-import Footer from "../Components/Footer";
-import Navbar from "../Components/Navbar";
+import Footer from "../../Components/Footer";
+import Navbar from "../../Components/Navbar";
 
 // Testimonial data with added profile images and roles
 const testimonials = [
@@ -75,7 +75,7 @@ function HomePage() {
           
           <div className="grid md:grid-cols-2 gap-6 mt-8">
             <div className="bg-blue-50 p-6 rounded-xl">
-              <h3 className="font-semibold text-blue-800">Today's Summary</h3>
+              <h3 className="font-semibold text-blue-800">Today&apos;s Summary</h3>
               {/* Placeholder for user dashboard content */}
               <div className="h-48 flex items-center justify-center border border-dashed border-blue-300 rounded-lg mt-3">
                 <p className="text-blue-400">Your health metrics will appear here</p>
@@ -112,7 +112,7 @@ function HomePage() {
                 Get Started Free
               </button>
             </Link>
-            <Link to="/learn-more">
+            <Link to="/dashboard">
               <button className="w-full sm:w-auto bg-transparent border-2 border-white text-white px-8 py-3 rounded-xl font-medium hover:bg-white/10 transition">
                 Learn More
               </button>
@@ -227,7 +227,7 @@ function HomePage() {
               </div>
               
               <div className="flex-1">
-                <p className="text-gray-700 text-lg italic">"{testimonials[activeTestimonial].feedback}"</p>
+                <p className="text-gray-700 text-lg italic">&quot;{testimonials[activeTestimonial].feedback}&quot;</p>
                 <div className="mt-4">
                   <p className="font-bold text-blue-700">{testimonials[activeTestimonial].name}</p>
                   <p className="text-gray-500">{testimonials[activeTestimonial].role}</p>

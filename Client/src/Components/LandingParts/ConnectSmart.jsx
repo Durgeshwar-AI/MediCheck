@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import AppleWatch from "../assets/AppleWatch.svg";  
+import AppleWatch from "../../assets/AppleWatch.svg";  
 
 const ConnectSmart = () => {
     const [time, setTime] = useState(new Date());

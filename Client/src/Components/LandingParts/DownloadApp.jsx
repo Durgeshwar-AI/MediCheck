@@ -1,6 +1,6 @@
 import React from 'react';
-import AppStore from '../assets/AppStore.png';
-import Playstore from '../assets/Playstore.png';
+import AppStore from '../../assets/AppStore.png';
+import Playstore from '../../assets/Playstore.png';
 
 const DownloadApp = () => {
   return (

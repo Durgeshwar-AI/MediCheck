@@ -1,4 +1,4 @@
-import MenuTop from "./MenuTop";
+import MenuTop from "../MenuTop";
 
 function Metrics({ metrics, connected }) {
     // Icons mapping for different metrics

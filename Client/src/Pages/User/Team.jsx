@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import HeaderHome from "../Components/HeaderHome";
-import Navbar from "../Components/Navbar";
-import Footer from "../Components/Footer";
+import Navbar from "../../Components/Navbar";
+import Footer from "../../Components/Footer";
 
 // Team data
 const teamMembers = [
@@ -317,7 +316,7 @@ function TeamPage() {
               <div className="md:w-2/3">
                 <h2 className="text-2xl md:text-3xl font-bold">Join Our Team</h2>
                 <p className="mt-4">
-                  We're always looking for talented individuals passionate about healthcare innovation.
+                  We&apos;re always looking for talented individuals passionate about healthcare innovation.
                   Join us in building the future of personal health monitoring.
                 </p>
                 <div className="mt-6 space-y-3">

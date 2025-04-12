@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import HeaderHome from "../Components/HeaderHome";
-import Footer from "../Components/Footer";
-import Navbar from "../Components/Navbar";
+import React, { useState} from "react";
+import Footer from "../../Components/Footer";
+import Navbar from "../../Components/Navbar";
 
 // ==========================================
 // CONTACT US PAGE
@@ -47,7 +45,7 @@ function Contact() {
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold">Contact Us</h1>
           <p className="mt-4 text-blue-100 max-w-2xl mx-auto">
-            Have questions or need assistance? We're here to help you with anything related to your health monitoring journey.
+            Have questions or need assistance? We&apos;re here to help you with anything related to your health monitoring journey.
           </p>
         </div>
       </div>
@@ -120,7 +118,7 @@ function Contact() {
               {formSubmitted ? (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                   <p className="font-medium">Thank you for your message!</p>
-                  <p>We'll get back to you as soon as possible.</p>
+                  <p>We&apos;l get back to you as soon as possible.</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">

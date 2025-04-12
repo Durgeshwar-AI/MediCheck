@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Header from '../Components/Header';
-import Welcome from "../Components/Welcome";
-import QuickStats from "../Components/QuickStats";
-import Metrics from "../Components/Metrics";
-import Appointment from "../Components/Appointment";
-import MedicalHistory from "../Components/MedicalHistory";
-import HealthGoals from "../Components/HealthGoals";
-import Medications from "../Components/Medications";
+import Header from '../../Components/UserDashboardParts/Header';
+import Welcome from "../../Components/UserDashboardParts/Welcome";
+import QuickStats from "../../Components/UserDashboardParts/QuickStats";
+import Metrics from "../../Components/UserDashboardParts/Metrics";
+import Appointment from "../../Components/UserDashboardParts/Appointment";
+import MedicalHistory from "../../Components/UserDashboardParts/MedicalHistory";
+import HealthGoals from "../../Components/UserDashboardParts/HealthGoals";
+import Medications from "../../Components/UserDashboardParts/Medications";
 
 const UserDashboard = () => {
   const metrics = [

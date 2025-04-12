@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import MenuTop from './MenuTop';
+import MenuTop from '../MenuTop';
 
 function MedicalHistory() {
     return (

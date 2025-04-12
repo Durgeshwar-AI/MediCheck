@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../Components/Navbar";
+import Navbar from "../../Components/Navbar";
 import { LuEyeClosed } from "react-icons/lu";
 import { RxEyeOpen } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
-import { storeToken, isLoggedIn } from "../utils/auth";
+import { storeToken, isLoggedIn } from "../../utils/auth";
 import { motion } from "framer-motion";
 
 const URL = import.meta.env.VITE_API_URL;

@@ -1,11 +1,11 @@
 import React from 'react'
-import Hero from '../Components/Hero'
+import Hero from '../Components/LandingParts/Hero'
 import Footer from '../Components/Footer'
-import About from '../Components/About'
-import Services from '../Components/Services'
-import ConnectSmart from '../Components/ConnectSmart'
-import Features from '../Components/Features'
-import DownloadApp from '../Components/DownloadApp'
+import About from '../Components/LandingParts/About'
+import Services from '../Components/LandingParts/Services'
+import ConnectSmart from '../Components/LandingParts/ConnectSmart'
+import Features from '../Components/LandingParts/Features'
+import DownloadApp from '../Components/LandingParts/DownloadApp'
 
 const Landing = () => {
   return (
