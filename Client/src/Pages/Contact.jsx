@@ -1,15 +1,235 @@
-import React from 'react'
-import Navbar from '../Components/Navbar'
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import HeaderHome from "../Components/HeaderHome";
 import Footer from "../Components/Footer";
+import Navbar from "../Components/Navbar";
 
+// ==========================================
+// CONTACT US PAGE
+// ==========================================
+function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "General Inquiry",
+    message: ""
+  });
+  
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // In a real app, we would send the form data to a backend service
+    console.log("Form submitted:", formData);
+    setFormSubmitted(true);
+    // Reset form after submission
+    setTimeout(() => {
+      setFormSubmitted(false);
+      setFormData({
+        name: "",
+        email: "",
+        subject: "General Inquiry",
+        message: ""
+      });
+    }, 3000);
+  };
 
-const Contact = () => {
   return (
-    <>
-        <Navbar join={true}/>
-        <Footer/>
-    </>
-  )
+    <div className="bg-gray-50 min-h-screen">
+    <Navbar/>
+      {/* Hero Banner */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <h1 className="text-3xl md:text-4xl font-bold">Contact Us</h1>
+          <p className="mt-4 text-blue-100 max-w-2xl mx-auto">
+            Have questions or need assistance? We're here to help you with anything related to your health monitoring journey.
+          </p>
+        </div>
+      </div>
+      
+      <div className="max-w-6xl mx-auto py-12 px-6">
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Contact Information */}
+          <div className="md:col-span-1 space-y-8">
+            <div className="bg-white p-6 rounded-xl shadow-md">
+              <h2 className="text-xl font-bold text-blue-700 mb-4">Get in Touch</h2>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    {/* Email icon placeholder */}
+                    <div className="w-5 h-5 bg-blue-500 rounded-sm"></div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800">Email Us</h3>
+                    <p className="text-blue-600">support@medicheck.com</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    {/* Phone icon placeholder */}
+                    <div className="w-5 h-5 bg-blue-500 rounded-sm"></div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800">Call Us</h3>
+                    <p className="text-blue-600">+1 (800) MED-CHECK</p>
+                    <p className="text-sm text-gray-500">Mon-Fri, 9am-5pm EST</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    {/* Location icon placeholder */}
+                    <div className="w-5 h-5 bg-blue-500 rounded-sm"></div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-800">Visit Us</h3>
+                    <address className="not-italic text-gray-600">
+                      123 Health Avenue<br />
+                      Suite 200<br />
+                      Boston, MA 02110
+                    </address>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-md">
+              <h2 className="text-xl font-bold text-blue-700 mb-4">Connect With Us</h2>
+              <div className="flex gap-4">
+                {/* Social media icons */}
+                <a href="#" className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">F</a>
+                <a href="#" className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center text-white">T</a>
+                <a href="#" className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white">I</a>
+                <a href="#" className="w-10 h-10 bg-blue-700 rounded-full flex items-center justify-center text-white">L</a>
+              </div>
+            </div>
+          </div>
+          
+          {/* Contact Form */}
+          <div className="md:col-span-2">
+            <div className="bg-white p-6 md:p-8 rounded-xl shadow-md">
+              <h2 className="text-2xl font-bold text-blue-700 mb-6">Send Us a Message</h2>
+              
+              {formSubmitted ? (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                  <p className="font-medium">Thank you for your message!</p>
+                  <p>We'll get back to you as soon as possible.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Your Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Your Email</label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">Subject</label>
+                    <select
+                      id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="General Inquiry">General Inquiry</option>
+                      <option value="Technical Support">Technical Support</option>
+                      <option value="Account Issue">Account Issue</option>
+                      <option value="Feature Request">Feature Request</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Your Message</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      rows="6"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    ></textarea>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-md"
+                    >
+                      Send Message
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* FAQ Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-center text-blue-800 mb-8">Frequently Asked Questions</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              {
+                q: "How do I connect my smartwatch to MediCheck?",
+                a: "Go to Settings > Devices in your MediCheck app and follow the on-screen instructions to pair your device via Bluetooth."
+              },
+              {
+                q: "Is my health data secure with MediCheck?",
+                a: "Absolutely. We use end-to-end encryption and follow HIPAA guidelines to ensure your personal health information stays private and secure."
+              },
+              {
+                q: "Can I export my health data from MediCheck?",
+                a: "Yes, you can export your data in CSV or PDF format from the Account > Data Export section of your profile."
+              },
+              {
+                q: "How often does MediCheck sync with my device?",
+                a: "MediCheck syncs automatically every 15 minutes when connected to your device. You can also trigger a manual sync anytime."
+              }
+            ].map((item, i) => (
+              <div key={i} className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="font-bold text-blue-700 mb-2">{item.q}</h3>
+                <p className="text-gray-600">{item.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <Footer/>
+    </div>
+  );
 }
 
 export default Contact
