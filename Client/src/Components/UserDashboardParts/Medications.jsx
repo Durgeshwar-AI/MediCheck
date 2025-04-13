@@ -1,5 +1,5 @@
 import React from 'react'
-import MenuTop from './MenuTop';
+import MenuTop from '../MenuTop';
 
 function Medications() {
     const meds = [

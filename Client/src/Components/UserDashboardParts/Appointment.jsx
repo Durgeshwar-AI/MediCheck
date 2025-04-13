@@ -1,6 +1,6 @@
 import { Calendar } from 'lucide-react';
 import React from 'react'
-import MenuTop from './MenuTop';
+import MenuTop from '../MenuTop';
 
 function Appointment() {
     return (

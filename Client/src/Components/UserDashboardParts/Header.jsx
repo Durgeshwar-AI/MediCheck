@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Home, FileText, Calendar, MessageSquare, Bell, User, Settings } from "lucide-react";
+import { Home, FileText, Calendar, MessageSquare, Bell, User} from "lucide-react";
 
 function Header() {
   return (

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 // Import components
-import HospitalHeader from '../Components/HospitalParts/HospitalHeader';
-import HospitalSidebar from '../Components/HospitalParts/HospitalSidebar';
-import HospitalStatsCard from '../Components/HospitalParts/HospitalStatsCard';
-import HospitalAppointments from '../Components/HospitalParts/HospitalAppointments';
-import HospitalFacilities from '../Components/HospitalParts/HospitalFacilities';
-import PatientForm from '../Components/HospitalParts/PatientForm';
-import PatientList from '../Components/HospitalParts/PatientList';
-import BackToTopButton from '../Components/FooterParts/BackToTopButton'
+import HospitalHeader from '../../Components/HospitalParts/HospitalHeader';
+import HospitalSidebar from '../../Components/HospitalParts/HospitalSidebar';
+import HospitalStatsCard from '../../Components/HospitalParts/HospitalStatsCard';
+import HospitalAppointments from '../../Components/HospitalParts/HospitalAppointments';
+import HospitalFacilities from '../../Components/HospitalParts/HospitalFacilities';
+import PatientForm from '../../Components/HospitalParts/PatientForm';
+import PatientList from '../../Components/HospitalParts/PatientList';
+import BackToTopButton from '../../Components/FooterParts/BackToTopButton'
 
 const mockAppointments = [
     { id: 1, patient: 'Emily Wilson', time: '09:30 AM' },

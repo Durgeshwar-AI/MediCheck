@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { getAuthHeader } from "../utils/auth";
-import Navbar from "../Components/Navbar";
 
 const applst = [
   { date: 15, month: "Mar", name: "Dr. Smith - Cardiology", time: "9:00 AM", location: "Memorial Hospital" },
