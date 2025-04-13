@@ -44,7 +44,7 @@ const Login = () => {
         setMessage("✅ Login successful!");
         // redirect logic here if needed
         setTimeout(() => {
-          navigate("/home");
+          navigate("/dashboard");
         }, 500);
       } else {
         setMessage(data.message || "❌ Login failed!");

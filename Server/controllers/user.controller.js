@@ -9,7 +9,7 @@ export const registerUser = async (req, res) => {
   }
 
   const { fullname, email, phone, password } = req.body; 
-    const { firstname, lastname } = fullname || {};
+  const { firstname, lastname } = fullname || {};
 
   try {
     const existingUser = await User.findOne({ email });
@@ -27,7 +27,7 @@ export const registerUser = async (req, res) => {
     await user.save();
 
     const token = user.generateAuthToken();
-    res.status(201).json({ token });
+    res.status(201).json({ token, firstname });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -53,7 +53,8 @@ export const loginUser = async (req, res) => {
     }
 
     const token = user.generateAuthToken();
-    res.status(200).json({ token });
+    const firstname = user.fullname.firstname
+    res.status(200).json({ token, firstname });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
