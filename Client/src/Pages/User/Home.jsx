@@ -68,6 +68,7 @@ function HomePage() {
   if (userLoggedIn) {
     return (
       <div className="px-6 py-8">
+        <Navbar/>
         <HeaderHome />
         <div className="max-w-6xl mx-auto mt-12 bg-white rounded-2xl shadow-md p-8">
           <h2 className="text-2xl font-bold text-blue-700">Welcome back to MediCheck</h2>

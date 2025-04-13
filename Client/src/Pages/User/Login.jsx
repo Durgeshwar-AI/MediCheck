@@ -29,14 +29,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate password before proceeding
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordRegex.test(password)) {
-      setMessage("⚠️ Password must include at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special symbol like: @$!%*?&");
-      return;
-    }
-
     try {
       const res = await fetch(`${URL}/user/login`, {
         method: "POST",
@@ -116,11 +108,6 @@ const Login = () => {
               Login
             </motion.button>
           </form>
-          {message && (
-            <p className={`text-center mt-4 text-xs ${message.includes("successful") ? "text-green-600" : "text-red-600"}`}>
-              {message}
-            </p>
-          )}
           <p className="mt-4 text-center text-gray-600">
             Don&apos;t have an account?{" "}
             <a href="/register" className="text-blue-600 font-bold">

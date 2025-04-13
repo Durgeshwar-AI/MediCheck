@@ -8,7 +8,7 @@ const URL = import.meta.env.VITE_URL;
 
 const MENU_ITEMS = [
   { name: "Home", path: `${URL}/home` },
-  { name: "Health Support", path: `${URL}/support` },
+  { name: "Emergency", path: `${URL}/support` },
   { name: "Our Team", path: `${URL}/team` },
   { name: "Contact Us", path: `${URL}/contact` },
 ];
@@ -32,7 +32,7 @@ const Navbar = ({ join }) => {
   const handleLogout = () => {
     removeToken();
     setUserLoggedIn(false);
-    navigate("/");
+    navigate("/home");
   };
 
   return (
@@ -76,14 +76,14 @@ const Navbar = ({ join }) => {
           <a href={`${URL}/register`} className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double">
             Join Us
           </a>
-        ) : join && userLoggedIn ? (
+        ) : (
           <button 
             onClick={handleLogout}
             className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-red-300 text-red-500 hover:scale-105 hover:bg-red-500 hover:text-white hover:border-white transition duration-300"
           >
             Logout
           </button>
-        ) : null}
+        )}
       </div>
       <button className="md:hidden ml-auto z-20 p-2" onClick={toggleMenu} aria-expanded={menuOpen}>
         <div className="flex flex-col justify-between w-6 h-5 cursor-pointer">
