@@ -2,12 +2,12 @@ import React from 'react';
 
 const FooterBottom = () => {
   const currentYear = new Date().getFullYear();
+
+  const URL = import.meta.env.VITE_URL
   
   const links = [
-    { name: 'Privacy Policy', url: '#' },
-    { name: 'Terms of Service', url: '#' },
-    { name: 'Sitemap', url: '#' },
-    { name: 'Cookies', url: '#' },
+    { name: 'Privacy Policy', url: `${URL}/policy` },
+    { name: 'Terms of Service', url: `${URL}/terms` },
   ];
 
   return (
