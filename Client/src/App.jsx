@@ -10,6 +10,9 @@ import Login from "./Pages/User/Login";
 import Register from "./Pages/User/Register";
 import UserDashboard from "./Pages/User/UserDashboard";
 import HospitalDashboard from "./Pages/Hospital/HospitalDashboard";
+import About from "./Pages/User/About";
+import PrivacyPolicy from "./Pages/User/Privacy";
+import TermsOfService from "./Pages/User/Terms";
 
 const App = () => {
   
@@ -21,6 +24,9 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/team" element={<Team />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/about" element={<About/>}/>
+        <Route path="/policy" element={<PrivacyPolicy/>}/>
+        <Route path="/terms" element={<TermsOfService/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/hospitalDashboard' element={<HospitalDashboard/>}/>
