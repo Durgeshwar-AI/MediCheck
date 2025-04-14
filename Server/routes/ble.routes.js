@@ -1,9 +1,8 @@
 import express from 'express';
-import { getHealthData } from '../controllers/ble.controller.js';
-import authMiddleware from '../middleware/auth.middleware.js';
+import { getHealthData, handleDisconnect } from '../controllers/ble.controller.js'; 
 
 const router = express.Router();
-
-router.get('/data', authMiddleware, getHealthData);
+router.get('/data', getHealthData);
+router.post('/disconnect/:address', handleDisconnect);
 
 export default router;
