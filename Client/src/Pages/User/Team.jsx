@@ -114,7 +114,7 @@ const roleToDepartment = {
 function TeamPage() {
   const [selectedTeamMember, setSelectedTeamMember] = useState(null);
   const [activeDepartment, setActiveDepartment] = useState("All");
-  
+
   const handleTeamMemberClick = (member) => {
     setSelectedTeamMember(member);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -129,13 +129,13 @@ function TeamPage() {
   };
 
   // Filter team members based on selected department
-  const filteredTeamMembers = activeDepartment === "All" 
-    ? teamMembers 
+  const filteredTeamMembers = activeDepartment === "All"
+    ? teamMembers
     : teamMembers.filter(member => roleToDepartment[member.role] === activeDepartment);
 
   return (
     <div className="bg-gray-50 min-h-screen">
-    <Navbar/>
+      <Navbar />
       {/* Team Member Detail Modal */}
       {selectedTeamMember && (
         <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
@@ -143,7 +143,7 @@ function TeamPage() {
             <div className="p-6 md:p-8">
               <div className="flex justify-between items-start">
                 <h2 className="text-2xl font-bold text-blue-800">{selectedTeamMember.name}</h2>
-                <button 
+                <button
                   onClick={handleCloseModal}
                   className="text-gray-500 hover:text-gray-700"
                 >
@@ -152,12 +152,12 @@ function TeamPage() {
                   </svg>
                 </button>
               </div>
-              
+
               <div className="mt-6 md:flex">
                 <div className="md:w-1/3">
-                  <img 
-                    src={selectedTeamMember.image} 
-                    alt={selectedTeamMember.name} 
+                  <img
+                    src={selectedTeamMember.image}
+                    alt={selectedTeamMember.name}
                     className="rounded-lg shadow-md w-full max-w-xs mx-auto"
                   />
                   <div className="mt-4 bg-blue-50 p-4 rounded-lg">
@@ -165,11 +165,11 @@ function TeamPage() {
                     <p className="text-sm text-gray-600 mt-2">{selectedTeamMember.education}</p>
                   </div>
                 </div>
-                
+
                 <div className="md:w-2/3 md:pl-8 mt-6 md:mt-0">
                   <h3 className="font-semibold text-lg text-gray-900">About</h3>
                   <p className="mt-2 text-gray-700">{selectedTeamMember.bio}</p>
-                  
+
                   <h3 className="font-semibold text-lg text-gray-900 mt-6">Areas of Expertise</h3>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {selectedTeamMember.expertise.map((area, index) => (
@@ -178,7 +178,7 @@ function TeamPage() {
                       </span>
                     ))}
                   </div>
-                  
+
                   <h3 className="font-semibold text-lg text-gray-900 mt-6">Publications</h3>
                   <ul className="mt-2 list-disc list-inside text-gray-700">
                     {selectedTeamMember.publications.map((pub, index) => (
@@ -191,7 +191,7 @@ function TeamPage() {
           </div>
         </div>
       )}
-      
+
       <main className="max-w-7xl mx-auto py-12 px-6">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-blue-800">Our Team</h1>
@@ -199,7 +199,7 @@ function TeamPage() {
             Meet the passionate individuals behind MediCheck - healthcare professionals, engineers, data scientists, and designers united by a mission to revolutionize personal health monitoring.
           </p>
         </div>
-        
+
         {/* Department filters */}
         <div className="mb-12">
           <div className="flex flex-wrap gap-2 justify-center">
@@ -207,30 +207,29 @@ function TeamPage() {
               <button
                 key={department}
                 onClick={() => handleDepartmentFilter(department)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                  activeDepartment === department
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition ${activeDepartment === department
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
               >
                 {department}
               </button>
             ))}
           </div>
         </div>
-        
+
         {/* Team grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredTeamMembers.map((member) => (
-            <div 
+            <div
               key={member.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
               onClick={() => handleTeamMemberClick(member)}
             >
               <div className="h-64 overflow-hidden">
-                <img 
-                  src={member.image} 
-                  alt={member.name} 
+                <img
+                  src={member.image}
+                  alt={member.name}
                   className="w-full h-full object-cover object-center"
                 />
               </div>
@@ -248,7 +247,7 @@ function TeamPage() {
             </div>
           ))}
         </div>
-        
+
         {/* Advisory Board section */}
         <section className="mt-24">
           <div className="text-center mb-12">
@@ -257,11 +256,11 @@ function TeamPage() {
               Our products and features are reviewed by a distinguished panel of healthcare professionals who ensure MediCheck meets the highest standards of medical accuracy and patient care.
             </p>
           </div>
-          
+
           <div className="bg-blue-50 rounded-2xl p-8 md:p-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-xl font-bold text-blue-800">Board Responsibilities</h3>
+                <h3 className="text-xl md:mx-5 md:text-start text-center font-bold text-blue-800">Board Responsibilities</h3>
                 <ul className="mt-4 space-y-3">
                   <li className="flex gap-3">
                     <svg className="w-6 h-6 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -295,8 +294,8 @@ function TeamPage() {
                   </li>
                 </ul>
               </div>
-              
-              <h3 className="text-xl font-bold text-blue-800">Clinical Expertise</h3>
+              <div>
+                <h3 className="text-xl md:mx-5 md:text-start text-center font-bold text-blue-800">Clinical Expertise</h3>
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   {["Cardiology", "Emergency Medicine", "Internal Medicine", "Digital Health", "Data Science", "Public Health", "Geriatrics", "Pediatrics"].map((specialty, index) => (
                     <div key={index} className="bg-white rounded-lg p-3 flex items-center gap-2">
@@ -306,9 +305,10 @@ function TeamPage() {
                   ))}
                 </div>
               </div>
+            </div>
           </div>
         </section>
-        
+
         {/* Join Our Team section */}
         <section className="mt-24 max-w-5xl mx-auto">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white">
@@ -350,7 +350,7 @@ function TeamPage() {
             </div>
           </div>
         </section>
-        
+
         {/* Our Values section */}
         <section className="mt-24">
           <div className="text-center mb-12">
@@ -359,7 +359,7 @@ function TeamPage() {
               These core principles guide everything we do at MediCheck, from product development to customer support.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
@@ -397,7 +397,7 @@ function TeamPage() {
             ))}
           </div>
         </section>
-        
+
         {/* Team locations map */}
         <section className="mt-24">
           <div className="text-center mb-12">
@@ -406,12 +406,12 @@ function TeamPage() {
               Our distributed team works across the globe, bringing diverse perspectives to healthcare innovation.
             </p>
           </div>
-          
+
           <div className="bg-white p-6 rounded-xl shadow-md">
             <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg flex items-center justify-center">
               <p className="text-gray-500">World map with team locations would appear here</p>
             </div>
-            
+
             <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
               {["San Francisco", "New York", "London", "Singapore", "Toronto", "Berlin", "Sydney", "Tokyo"].map((city, index) => (
                 <div key={index} className="text-center">
@@ -422,9 +422,9 @@ function TeamPage() {
           </div>
         </section>
       </main>
-      
+
       {/* Footer */}
-      <Footer/>
+      <Footer />
     </div>
   );
 }

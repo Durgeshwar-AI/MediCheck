@@ -1,4 +1,5 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
+import { FaFacebookF, FaInstagram, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
 
@@ -12,14 +13,14 @@ function Contact() {
     subject: "General Inquiry",
     message: ""
   });
-  
+
   const [formSubmitted, setFormSubmitted] = useState(false);
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // In a real app, we would send the form data to a backend service
@@ -39,7 +40,7 @@ function Contact() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-    <Navbar/>
+      <Navbar />
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12 px-6">
         <div className="max-w-5xl mx-auto text-center">
@@ -49,14 +50,14 @@ function Contact() {
           </p>
         </div>
       </div>
-      
+
       <div className="max-w-6xl mx-auto py-12 px-6">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Contact Information */}
-          <div className="md:col-span-1 space-y-8">
+          <div className="md:col-span-1 space-y-10">
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h2 className="text-xl font-bold text-blue-700 mb-4">Get in Touch</h2>
-              
+              <h2 className="text-xl font-bold text-blue-700 mb-5">Get in Touch</h2>
+
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -68,7 +69,7 @@ function Contact() {
                     <p className="text-blue-600">support@medicheck.com</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                     {/* Phone icon placeholder */}
@@ -80,7 +81,7 @@ function Contact() {
                     <p className="text-sm text-gray-500">Mon-Fri, 9am-5pm EST</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                     {/* Location icon placeholder */}
@@ -97,24 +98,52 @@ function Contact() {
                 </div>
               </div>
             </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h2 className="text-xl font-bold text-blue-700 mb-4">Connect With Us</h2>
-              <div className="flex gap-4">
-                {/* Social media icons */}
-                <a href="#" className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">F</a>
-                <a href="#" className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center text-white">T</a>
-                <a href="#" className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white">I</a>
-                <a href="#" className="w-10 h-10 bg-blue-700 rounded-full flex items-center justify-center text-white">L</a>
+
+            <div className="bg-white p-6 rounded-xl shadow-md  ">
+              <h2 className="text-xl font-bold text-blue-700 mb-4 md:mx-1 md:text-start text-center">Connect With Us</h2>
+
+              <div className="flex gap-6 md:gap-4 md:justify-start justify-center mt-4 md:mt-2 ">
+                <a
+                  href="https://twitter.com/#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-2  flex h-10 w-10 items-center justify-center rounded-full transition-colors border-blue-500 text-blue-500"
+                >
+                  <FaTwitter />
+                </a>
+                <a
+                  href="https://www.instagram.com/#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-2  flex h-10 w-10 items-center justify-center rounded-full transition-colors border-pink-500 text-pink-500"
+                >
+                  <FaInstagram />
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-2  flex h-10 w-10 items-center justify-center rounded-full transition-colors border-blue-700 text-blue-700 shadow"
+                >
+                  <FaLinkedinIn />
+                </a>
+                <a
+                  href="https://www.facebook.com/#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-2  flex h-10 w-10 items-center justify-center rounded-full transition-colors border-blue-600 text-blue-600"
+                >
+                  <FaFacebookF />
+                </a>
               </div>
             </div>
           </div>
-          
+
           {/* Contact Form */}
           <div className="md:col-span-2">
             <div className="bg-white p-6 md:p-8 rounded-xl shadow-md">
               <h2 className="text-2xl font-bold text-blue-700 mb-6">Send Us a Message</h2>
-              
+
               {formSubmitted ? (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                   <p className="font-medium">Thank you for your message!</p>
@@ -135,7 +164,7 @@ function Contact() {
                         required
                       />
                     </div>
-                    
+
                     <div>
                       <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Your Email</label>
                       <input
@@ -149,7 +178,7 @@ function Contact() {
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">Subject</label>
                     <select
@@ -166,7 +195,7 @@ function Contact() {
                       <option value="Other">Other</option>
                     </select>
                   </div>
-                  
+
                   <div>
                     <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Your Message</label>
                     <textarea
@@ -174,12 +203,12 @@ function Contact() {
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      rows="6"
+                      rows="3"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       required
                     ></textarea>
                   </div>
-                  
+
                   <div className="flex justify-end">
                     <button
                       type="submit"
@@ -193,11 +222,11 @@ function Contact() {
             </div>
           </div>
         </div>
-        
+
         {/* FAQ Section */}
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-center text-blue-800 mb-8">Frequently Asked Questions</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-6">
             {[
               {
@@ -225,7 +254,7 @@ function Contact() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

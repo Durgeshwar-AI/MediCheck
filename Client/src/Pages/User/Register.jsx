@@ -42,6 +42,13 @@ const Register = () => {
     if (!passwordRegex.test(password)) {
       setMessage("⚠️ Password must include at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special symbol like: @$!%*?&");
       return;
+
+    }
+    const nameRegex = /^[A-Za-z]+$/;
+    // Name validation
+    if (!nameRegex.test(firstname) || !nameRegex.test(lastname)) {
+      setMessage("⚠️ Name must contain only letters without spaces or special characters.");
+      return;
     }
 
     try {
@@ -61,12 +68,13 @@ const Register = () => {
       if (res.ok) {
         // Store token with 7-day expiration
         storeToken(data.token);
+        storeToken(data.firstname);
         // localStorage.setItem("token", data.token);
         setMessage("✅ Registration successful!");
         // Redirect to home page after successful registration        
         setTimeout(() => {
           navigate("/home");
-        }, 500);
+        }, 2000);
       } else {
         setMessage(data.errors?.[0]?.msg || data.message || "❌ Registration failed!");
       }

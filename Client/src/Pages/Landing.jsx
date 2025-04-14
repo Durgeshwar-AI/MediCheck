@@ -10,7 +10,7 @@ import DownloadApp from '../Components/LandingParts/DownloadApp'
 const Landing = () => {
   return (
     <>
-      <div className='max-w-screen-lg mx-auto'>
+      <div className='w-screen-lg mx-auto'>
         <Hero/>
         <About/>
         <Services/>
