@@ -113,16 +113,16 @@ const ConnectSmart = () => {
     };
 
     return (
-        <div className="bg-gray-50 min-h-screen p-6">
+        // <div className="bg-red-50 min-h-screen p-6">
             <motion.div
                 className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                <div className="p-6 border-b border-gray-200">
+                <div className="p-2 border-b border-gray-200">
                     <motion.h1
-                        className="text-2xl font-bold text-center text-gray-800"
+                        className="text-3xl font-bold text-center text-sky-800"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
@@ -507,7 +507,7 @@ const ConnectSmart = () => {
                     </div>
                 </motion.div>
             </motion.div>
-        </div>
+        // </div>
     );
 };
 

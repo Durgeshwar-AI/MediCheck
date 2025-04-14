@@ -23,6 +23,9 @@ const Navbar = ({ join }) => {
   const closeMenu = useCallback(() => menuOpen && setMenuOpen(false), [menuOpen]);
   const isActive = useCallback((path) => pathname === path, [pathname]);
 
+  const excludePaths = ["/login","/register"];
+  const showBtn =!excludePaths.includes(pathname);
+
   // Check authentication status when component mounts or join prop changes
   useEffect(() => {
     setUserLoggedIn(isLoggedIn());
@@ -71,6 +74,7 @@ const Navbar = ({ join }) => {
           ))}
         </ul>
       </nav>
+      {showBtn &&(
       <div className="hidden md:block ml-4">
         {join && !userLoggedIn ? (
           <a href={`${URL}/register`} className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double">
@@ -85,6 +89,7 @@ const Navbar = ({ join }) => {
           </button>
         )}
       </div>
+      )}
       <button className="md:hidden ml-auto z-20 p-2" onClick={toggleMenu} aria-expanded={menuOpen}>
         <div className="flex flex-col justify-between w-6 h-5 cursor-pointer">
           <motion.span className="block h-0.5 bg-black" animate={menuOpen ? { rotate: 45, y: 9 } : { rotate: 0, y: 0 }} />
@@ -112,13 +117,14 @@ const Navbar = ({ join }) => {
                   </Link>
                 </li>
               ))}
-              {join && !userLoggedIn ? (
+              {showBtn &&(
+              join && !userLoggedIn ? (
                 <li className="mt-2 w-full flex justify-center">
                   <a href={`${URL}/register`} className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white">
                     Join Us
                   </a>
                 </li>
-              ) : join && userLoggedIn ? (
+              ) : (
                 <li className="mt-2 w-full flex justify-center">
                   <button 
                     onClick={handleLogout}
@@ -127,7 +133,7 @@ const Navbar = ({ join }) => {
                     Logout
                   </button>
                 </li>
-              ) : null}
+              ) )}
             </motion.ul>
           </motion.nav>
         )}

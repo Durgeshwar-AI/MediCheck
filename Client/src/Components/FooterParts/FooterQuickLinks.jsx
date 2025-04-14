@@ -1,13 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from "react-router-dom";
+
+
+const URL = import.meta.env.VITE_URL;
 
 const FooterQuickLinks = () => {
   const links = [
-    { name: 'Home', url: '/home' },
-    { name: 'Medical Care', url: '#' },
-    { name: 'Health Services', url: '#' },
-    { name: 'Diagnostic Tests', url: '#' },
-    { name: 'Laboratory', url: '#' },
+    { name: "Home", path: `${URL}/home` },
+    { name: "Emergency", path: `${URL}/support` },
+    { name: "Our Team", path: `${URL}/team` },
+    { name: "Contact Us", path: `${URL}/contact` },
   ];
 
   return (
@@ -22,14 +25,14 @@ const FooterQuickLinks = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <a
-              href={link.url}
-              className="group relative inline-block items-center hover:text-blue-300 transition-colors"
+            <Link
+              to={link.path}
+              className="group relative inline-block items-center hover:cursor-pointer hover:text-blue-300 transition-colors"
             >
               <span className="mr-2">›</span>
               {link.name}
               <span className="absolute bottom-0 left-0 w-[105%] h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
-            </a>
+            </Link>
           </motion.li>
         ))}
       </motion.ul>
