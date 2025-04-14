@@ -40,12 +40,11 @@ const HospitalSidebar = ({ children }) => {
 
   const menuItems = [
     { name: "Dashboard", path: "/hospitalDashboard", icon: <LayoutDashboard size={20} /> },
-    { name: "Appointments", path: "/appointments", icon: <Calendar size={20} /> },
-    { name: "Patients", path: "/patients", icon: <Users size={20} /> },
-    { name: "Doctors", path: "/doctors", icon: <UserPlus size={20} /> },
-    { name: "Facilities", path: "/facilities", icon: <Building size={20} /> },
-    { name: "Emergency", path: "/emergency", icon: <AlertTriangle size={20} /> },
-    { name: "Settings", path: "/settings", icon: <Settings size={20} /> }
+    { name: "Appointments", path: "/hospitalAppointments", icon: <Calendar size={20} /> },
+    { name: "Patients", path: "/hospitalPatients", icon: <Users size={20} /> },
+    { name: "Doctors", path: "/hospitalDoctors", icon: <UserPlus size={20} /> },
+    { name: "Facilities", path: "/hospitalFacilities", icon: <Building size={20} /> },
+    { name: "Emergency", path: "/hospitalEmergency", icon: <AlertTriangle size={20} /> },
   ];
 
   return (

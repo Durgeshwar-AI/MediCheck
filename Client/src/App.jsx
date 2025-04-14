@@ -13,6 +13,13 @@ import HospitalDashboard from "./Pages/Hospital/HospitalDashboard";
 import About from "./Pages/User/About";
 import PrivacyPolicy from "./Pages/User/Privacy";
 import TermsOfService from "./Pages/User/Terms";
+import HospitalEmergency from "./Pages/Hospital/HospitalEmergency";
+import HospitalAppointments from "./Pages/Hospital/HospitalAppointments";
+import HospitalPatients from "./Pages/Hospital/HospitalPatients";
+import HospitalDoctors from "./Pages/Hospital/HospitalDoctors";
+import HospitalFacilities from "./Pages/Hospital/HospitalFacilities";
+import HospitalLogin from "./Pages/Hospital/HospitalLogin";
+import Redirect from "./Pages/Redirect";
 
 const App = () => {
   
@@ -20,6 +27,7 @@ const App = () => {
     <div>
       <Routes>
         <Route path="/" element={<Landing/>} />
+        <Route path="/redirect" element={<Redirect/>} />
         <Route path="/home" element={<Home/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/team" element={<Team />} />
@@ -30,6 +38,12 @@ const App = () => {
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/hospitalDashboard' element={<HospitalDashboard/>}/>
+        <Route path='/hospitalEmergency' element={<HospitalEmergency/>}/>
+        <Route path='/hospitalAppointments' element={<HospitalAppointments/>}/>
+        <Route path='/hospitalPatients' element={<HospitalPatients/>}/>
+        <Route path='/hospitalDoctors' element={<HospitalDoctors/>}/>
+        <Route path='/hospitalFacilities' element={<HospitalFacilities/>}/>
+        <Route path='/hospitalLogin' element={<HospitalLogin/>}/>
         <Route path='/dashboard' element={<UserDashboard/>}/>
         <Route path="*" element={<PageNotAvailable />} />
       </Routes>
