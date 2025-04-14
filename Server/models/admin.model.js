@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 
 const teamSchema = mongoose.Schema({
   name:{
