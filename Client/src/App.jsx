@@ -20,6 +20,8 @@ import HospitalDoctors from "./Pages/Hospital/HospitalDoctors";
 import HospitalFacilities from "./Pages/Hospital/HospitalFacilities";
 import HospitalLogin from "./Pages/Hospital/HospitalLogin";
 import Redirect from "./Pages/Redirect";
+import UserAppointments from "./Pages/User/UserAppointments";
+import UserMedicalRecords from "./Pages/User/UserMedicalRecords";
 
 const App = () => {
   
@@ -45,6 +47,8 @@ const App = () => {
         <Route path='/hospitalFacilities' element={<HospitalFacilities/>}/>
         <Route path='/hospitalLogin' element={<HospitalLogin/>}/>
         <Route path='/dashboard' element={<UserDashboard/>}/>
+        <Route path='/appointments' element={<UserAppointments/>}/>
+        <Route path='/records' element={<UserMedicalRecords/>}/>
         <Route path="*" element={<PageNotAvailable />} />
       </Routes>
     </div>
