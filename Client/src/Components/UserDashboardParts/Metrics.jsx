@@ -82,3 +82,55 @@ function Metrics({ metrics, connected }) {
   }
 
   export default Metrics
+
+// Using the backend to get data example
+//   import React, { useState } from 'react';
+// import axios from 'axios';
+// import useSocketHealthData from '../hooks/useSocketHealthData';
+
+// const HealthMonitor = () => {
+//   const [connectedAddress, setConnectedAddress] = useState(null);
+//   const { healthData, deviceStatus } = useSocketHealthData();
+
+//   const connectDevice = async () => {
+//     try {
+//       const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/ble/data`);
+//       setConnectedAddress(res.data.address);
+//     } catch (err) {
+//       console.error('Connection failed:', err.message);
+//     }
+//   };
+
+//   const disconnectDevice = async () => {
+//     if (!connectedAddress) return;
+//     try {
+//       await axios.post(`${import.meta.env.VITE_API_URL}/api/ble/disconnect/${connectedAddress}`);
+//       setConnectedAddress(null);
+//     } catch (err) {
+//       console.error('Disconnection failed:', err.message);
+//     }
+//   };
+
+//   return (
+//     <div className="p-4">
+//       <button onClick={connectDevice} className="bg-green-500 text-white px-4 py-2 rounded mr-2">
+//         Connect
+//       </button>
+//       <button onClick={disconnectDevice} className="bg-red-500 text-white px-4 py-2 rounded">
+//         Disconnect
+//       </button>
+
+//       {deviceStatus && <p className="mt-4">Status: {deviceStatus}</p>}
+
+//       {healthData && (
+//         <div className="mt-4">
+//           <p>Heart Rate: {healthData.heartRate} bpm</p>
+//           <p>Blood Pressure: {healthData.bloodPressure.systolic}/{healthData.bloodPressure.diastolic} mmHg</p>
+//           <p>Steps Today: {healthData.steps}</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default HealthMonitor;
