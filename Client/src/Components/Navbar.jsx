@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.png";
 import { isLoggedIn, removeToken } from "../utils/auth";
+import LogoutButton from "./LogoutButton";
 
 const URL = import.meta.env.VITE_URL;
 
@@ -81,12 +82,7 @@ const Navbar = ({ join }) => {
             Join Us
           </a>
         ) : (
-          <button 
-            onClick={handleLogout}
-            className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-red-300 text-red-500 hover:scale-105 hover:bg-red-500 hover:text-white hover:border-white transition duration-300"
-          >
-            Logout
-          </button>
+          <LogoutButton/>
         )}
       </div>
       )}
@@ -126,12 +122,7 @@ const Navbar = ({ join }) => {
                 </li>
               ) : (
                 <li className="mt-2 w-full flex justify-center">
-                  <button 
-                    onClick={handleLogout}
-                    className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-red-300 text-red-500 hover:scale-105 hover:bg-red-500 hover:text-white hover:border-white transition duration-300"
-                  >
-                    Logout
-                  </button>
+                  <LogoutButton/>
                 </li>
               ) )}
             </motion.ul>

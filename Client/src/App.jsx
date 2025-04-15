@@ -22,12 +22,12 @@ import HospitalLogin from "./Pages/Hospital/HospitalLogin";
 import Redirect from "./Pages/Redirect";
 import UserAppointments from "./Pages/User/UserAppointments";
 import UserMedicalRecords from "./Pages/User/UserMedicalRecords";
-import { HealthDataProvider } from "./utils/HealthDataContext";
+import { HealthProvider } from "./context/HealthDataContext";
 
 const App = () => {
   
   return (
-    <HealthDataProvider>
+    <HealthProvider>
       <div>
       <Routes>
         <Route path="/" element={<Landing/>} />
@@ -54,7 +54,7 @@ const App = () => {
         <Route path="*" element={<PageNotAvailable />} />
       </Routes>
     </div>
-    </HealthDataProvider>
+    </HealthProvider>
   );
 };
 

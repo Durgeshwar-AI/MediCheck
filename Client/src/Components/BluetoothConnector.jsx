@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHealthData } from './HealthDataContext'; // Import the custom hook
 
 const BluetoothConnector = () => {

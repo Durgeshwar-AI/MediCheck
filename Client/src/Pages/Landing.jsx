@@ -26,7 +26,7 @@ const Landing = () => {
           whileHover={{ scale: 1.05 }}
           className="text-2xl font-bold text-indigo-600 cursor-pointer"
         >
-          Cabify
+          Medicheck
         </motion.div>
 
         {/* Nav Links */}

@@ -7,6 +7,7 @@ import Appointment from "../../Components/UserDashboardParts/Appointment";
 import MedicalHistory from "../../Components/UserDashboardParts/MedicalHistory";
 import HealthGoals from "../../Components/UserDashboardParts/HealthGoals";
 import Medications from "../../Components/UserDashboardParts/Medications";
+import { useHealth } from "../../hooks/useHealth";
 
 const UserDashboard = () => {
   const metrics = [
@@ -17,8 +18,8 @@ const UserDashboard = () => {
     { name: "Sleep Duration", data: "7h 20m" },
     { name: "Weight", data: "75 kg" },
   ];
-  
-  const [connected, setConnected] = useState(true); // For demo purposes
+
+  const {deviceConnected}=useHealth()
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -26,11 +27,9 @@ const UserDashboard = () => {
       <div className="max-w-7xl mx-auto px-4 py-6">
         <Welcome />
         
-        <QuickStats />
-        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <Metrics metrics={metrics} connected={connected} />
+            <Metrics metrics={metrics} connected={deviceConnected} />
             <div className="mt-6">
               <HealthGoals />
             </div>
@@ -38,8 +37,7 @@ const UserDashboard = () => {
           
           <div className="space-y-6">
             <Appointment/>
-            <Medications />
-            <MedicalHistory />
+            <Medications/>
           </div>
         </div>
       </div>

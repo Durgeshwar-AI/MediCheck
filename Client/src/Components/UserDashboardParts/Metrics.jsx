@@ -8,7 +8,6 @@ function Metrics({ metrics, connected }) {
       "Blood Pressure": <BPIcon />,
       "Steps Today": <StepsIcon />,
       "Sleep Duration": <SleepIcon />,
-      "Weight": <WeightIcon />
     };
   
     return (
@@ -75,10 +74,6 @@ function Metrics({ metrics, connected }) {
   
   function SleepIcon() {
     return <div className="p-3 bg-indigo-100 text-indigo-500 rounded-full">😴</div>;
-  }
-  
-  function WeightIcon() {
-    return <div className="p-3 bg-yellow-100 text-yellow-500 rounded-full">⚖️</div>;
   }
 
   export default Metrics
