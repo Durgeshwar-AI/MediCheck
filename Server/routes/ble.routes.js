@@ -1,8 +1,8 @@
 import express from 'express';
-import { getHealthData, handleDisconnect } from '../controllers/ble.controller.js'; 
+import healthData from '../controllers/ble.controller.js';
 
 const router = express.Router();
-router.get('/data', getHealthData);
-router.post('/disconnect/:address', handleDisconnect);
+router.post('/data', healthData);
+router.post('/report', )
 
 export default router;
