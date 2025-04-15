@@ -15,6 +15,8 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
+const PORT = process.env.PORT || 5000;
+
 const io = new Server(httpServer, {
   cors: {
     origin: "*",
@@ -22,12 +24,23 @@ const io = new Server(httpServer, {
   }
 });
 
+// You can handle socket connections here if needed
+io.on("connection", (socket) => {
+  console.log(`Socket connected: ${socket.id}`);
+
+  socket.on("disconnect", () => {
+    console.log(`Socket disconnected: ${socket.id}`);
+  });
+});
+
 connectDB();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
 app.use("/api/user", userRoutes);
 app.use("/api/hospital", hospitalRoutes);
 app.use("/api/ble", bleRoutes);
@@ -37,3 +50,6 @@ app.get("/", (req, res) => {
   res.send("Server is running with Socket.IO support.");
 });
 
+httpServer.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
+});

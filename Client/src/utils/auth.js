@@ -1,16 +1,20 @@
 // auth.js
 // Utility for handling authentication tokens
 
-export const storeToken = (token) => {
+export const storeToken = (token,userName) => {
   if (!token) return;
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + 7);
   
-  const tokenData = {
+  const data = {
+    userName: userName,
     value: token,
     expiry: expirationDate.getTime(),
   };
-  localStorage.setItem('authToken', JSON.stringify(tokenData));
+
+  console.log(data)
+
+  localStorage.setItem('authToken', JSON.stringify(data));
 };
 
 export const getToken = () => {

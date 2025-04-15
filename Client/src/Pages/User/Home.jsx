@@ -4,7 +4,6 @@ import { isLoggedIn } from "../../utils/auth";
 import { Link } from "react-router-dom";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
-
 import dashboard from "../../assets/dashboard.png";
 
 // Testimonial data with added profile images and roles
@@ -74,8 +73,9 @@ function HomePage() {
   // Render user dashboard if logged in
   if (userLoggedIn) {
     return (
-      <div className="px-6 py-8">
-        <Navbar />
+      <>
+      <Navbar/>
+      <div className="px-6">
         <HeaderHome />
         <div className="max-w-6xl mx-auto mt-12 bg-white rounded-2xl shadow-md p-8">
           <h2 className="text-2xl font-bold text-blue-700">
@@ -110,6 +110,7 @@ function HomePage() {
           </div>
         </div>
       </div>
+      </>
     );
   }
 

@@ -5,6 +5,7 @@ import { RxEyeOpen } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { storeToken, isLoggedIn } from "../../utils/auth";
 import { motion } from "framer-motion";
+import { useHealth } from "../../hooks/useHealth";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -15,13 +16,15 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  const { userLoggedIn, updateLogin } = useHealth();
+
   // Redirect if already logged in
 
   useEffect(() => {
-    if (isLoggedIn()) {
+    if (userLoggedIn) {
       navigate("/home");
     }
-  }, [navigate]);
+  }, [navigate,userLoggedIn]);
 
   const handleTogglePassword = () => {
     setShowPassword((prevState) => !prevState);
@@ -39,9 +42,10 @@ const Login = () => {
       const data = await res.json();
 
       if (res.ok) {
-        storeToken(data.token);
+        storeToken(data.token, data.firstname);
         // localStorage.setItem("token", data.token);
         setMessage("✅ Login successful!");
+        updateLogin(true)
         // redirect logic here if needed
         setTimeout(() => {
           navigate("/dashboard");
@@ -90,18 +94,22 @@ const Login = () => {
                 onClick={handleTogglePassword}
                 className="absolute my-2 right-3 text-gray-500  text-2xl font-bold rounded"
               >
-                {showPassword ? <RxEyeOpen /> : <LuEyeClosed />
-                }
+                {showPassword ? <RxEyeOpen /> : <LuEyeClosed />}
               </button>
             </div>
             <motion.button
               whileHover={{
                 backgroundColor: ["#00ff00", "#32cd32"], // Shining green effect
-                transition: { duration: 0.5, ease: "easeInOut", repeat: Infinity },
+                transition: {
+                  duration: 0.5,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                },
               }}
               onHoverEnd={() => {
                 // Reset color back to blue when hover stops
-                document.querySelector(".register-btn").style.backgroundColor = "#155dfc"; // A shade of blue
+                document.querySelector(".register-btn").style.backgroundColor =
+                  "#155dfc"; // A shade of blue
               }}
               className="register-btn w-full text-white py-2 rounded-lg bg-blue-600 hover:font-bold hover:text-[17px] transition"
             >
