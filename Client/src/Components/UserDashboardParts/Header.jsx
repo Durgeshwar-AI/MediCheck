@@ -28,7 +28,6 @@ function MainNav() {
     { name: "Dashboard", icon: <Home size={18} /> },
     { name: "Medical Records", icon: <FileText size={18} /> },
     { name: "Appointments", icon: <Calendar size={18} /> },
-    { name: "Messages", icon: <MessageSquare size={18} /> }
   ];
 
   return (

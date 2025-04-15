@@ -2,12 +2,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const FooterAboutLinks = () => {
+
+  const URL=import.meta.env.VITE_URL
+
   const links = [
-    { name: 'Our Story', url: '#' },
-    { name: 'Vision & Mission', url: '#' },
-    { name: 'Our Doctors', url: '#' },
-    { name: 'Careers', url: '#' },
-    { name: 'FAQ', url: '#' },
+    { name: 'Our Story', url: `${URL}/about` },
+    { name: 'Vision & Mission', url: `${URL}/about#vision`},
+    { name: 'Features', url:`${URL}/about#features` },
+    { name: 'FAQ', url: `${URL}/about#faq` },
   ];
 
   return (

@@ -48,7 +48,7 @@ const Hero = () => {
             </motion.p>
             
             <motion.div className="flex space-x-4" variants={itemVariants}>
-              <Link to="/register">
+              <Link to="/redirect">
                 <button className="px-8 py-3 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all duration-300">
                   Get Started
                 </button>
