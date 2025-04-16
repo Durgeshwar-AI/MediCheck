@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Hospital, Phone, MapPin, CalendarCheck, Settings } from "lucide-react";
+import { Hospital, Phone, MapPin, Settings } from "lucide-react";
 import LogoutButton from "../LogoutButton";
 
 const HospitalProfile = () => {
-  const tokenData = localStorage.getItem("authToken");
-  const { hospitalName } = JSON.parse(tokenData);
+  
+  // const { hospitalName } = JSON.parse(localStorage.getItem("authToken"));
 
   const [hospitalData, setHospitalData] = useState({
+    hospitalName: "MediCare Hospital", 
     email: "contact@hospital.com",
     phone: "+91 12345 67890",
     location: "Kolkata, India",
@@ -40,7 +41,9 @@ const HospitalProfile = () => {
 
         {/* Hospital Info */}
         <div className="flex flex-col">
-          <h2 className="text-xl font-bold text-gray-800">{hospitalName}</h2>
+          <h2 className="text-2xl font-bold text-gray-800">
+            {hospitalData.hospitalName}
+          </h2>
           <p className="text-gray-600 text-sm">{hospitalData.specialization}</p>
         </div>
       </div>
@@ -57,12 +60,6 @@ const HospitalProfile = () => {
           {hospitalData.location}
         </p>
       </div>
-
-      {/* Appointment Button */}
-      <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md flex items-center hover:bg-blue-700 transition">
-        <CalendarCheck size={18} className="mr-2" />
-        Book Appointment
-      </button>
 
       {/* Logout Button */}
       <div className="mt-4">

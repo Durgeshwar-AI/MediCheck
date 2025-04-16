@@ -6,6 +6,8 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
+  User,
+  LogOut,
 } from "lucide-react";
 
 const URL = import.meta.env.VITE_URL;
@@ -38,12 +40,18 @@ const UserSidebar = ({ children }) => {
     };
   }, []);
 
-  // New navigation items based on your provided structure
+  // New navigation items
   const navItems = [
     { name: "Dashboard", icon: <Home size={18} />, path: `${URL}/dashboard` },
     { name: "Medical Records", icon: <FileText size={18} />, path: `${URL}/records` },
     { name: "Appointments", icon: <Calendar size={18} />, path: `${URL}/appointments` },
   ];
+
+  // Logout function: clear token and reload to login
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    window.location.href = `${URL}/`;
+  };
 
   return (
     <div className="flex h-screen sticky top-0 bg-gray-50">
@@ -70,20 +78,16 @@ const UserSidebar = ({ children }) => {
                 <li key={item.name} className="relative group">
                   <Link
                     to={item.path}
-                    className={`flex items-center ${
-                      expanded ? "justify-start" : "justify-center"
-                    } px-3 py-3 rounded-lg transition-all ${
+                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all ${
                       active
                         ? "bg-blue-50 text-blue-600 font-medium"
                         : "text-gray-600 hover:bg-gray-50 hover:text-blue-500"
                     }`}
                   >
-                    <span className={`${active ? "text-blue-600" : "text-gray-500"}`}>
+                    <span className={active ? "text-blue-600" : "text-gray-500"}>
                       {item.icon}
                     </span>
                     {expanded && <span className="ml-3 whitespace-nowrap">{item.name}</span>}
-                    
-                    {/* Tooltip for collapsed menu */}
                     {!expanded && (
                       <div className="absolute left-14 z-50 bg-gray-800 text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
                         {item.name}
@@ -96,40 +100,54 @@ const UserSidebar = ({ children }) => {
           </ul>
         </nav>
 
-        {/* Footer section */}
+        {/* Footer section with user profile and logout */}
         <div className="absolute bottom-5 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
           <div className="flex items-center justify-between">
             {/* User Profile */}
             <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
-                U
+              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                <User size={20} />
               </div>
               {expanded && (
                 <div className="ml-3">
-                  <p className="text-sm font-medium">User</p>
-                  <p className="text-xs text-gray-500">Admin</p>
+                  <p className="text-sm font-medium text-gray-800">John Doe</p>
+                  <p className="text-xs text-gray-500">patient@example.com</p>
                 </div>
               )}
             </div>
 
-            {/* Toggle button */}
+            {/* Toggle sidebar button */}
             <button
               onClick={() => setExpanded(!expanded)}
-              className="rounded-full hover:bg-blue-300 transition-colors"
+              className="p-1 rounded-full hover:bg-gray-100 transition-colors"
               aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
             >
               {expanded ? (
-                <ChevronLeft color="green" size={22} />
+                <ChevronLeft size={20} className="text-red-600 bg-blue-300 border border-red-700-500 rounded-full" />
               ) : (
-                <ChevronRight color="red" size={25} />
+                <ChevronRight size={20} className="text-blue-600 bg-red-300 border border-blue-700 rounded-full" />
               )}
             </button>
           </div>
+
+          {/* Logout section:  */}
+          {expanded && (
+            <button
+              onClick={handleLogout}
+              className="mt-4 flex items-center justify-start w-full px-3 py-2 rounded-lg hover:bg-red-600 hover:text-white text-red-600 transition-all "
+              aria-label="Logout"
+            >
+              <LogOut size={20} />
+              <span className="ml-3">Log Out</span>
+            </button>
+          )}
         </div>
       </aside>
 
       {/* Main content area */}
-      <main className="flex-1 transition-all duration-300 overflow-x-hidden">{children}</main>
+      <main className="flex-1 transition-all duration-300 overflow-x-hidden">
+        {children}
+      </main>
     </div>
   );
 };
