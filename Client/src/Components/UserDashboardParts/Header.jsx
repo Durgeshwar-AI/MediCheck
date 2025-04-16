@@ -1,15 +1,9 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
-import { Home, FileText, Calendar, MessageSquare, User } from "lucide-react";
+import { Home, FileText, Calendar, User } from "lucide-react";
 import UserProfile from "../../Components/UserDashboardParts/UserProfile";
-
-=======
-import React, {useState} from "react";
-import { Home, FileText, Calendar, MessageSquare, Bell, User} from "lucide-react";
 import {Link} from 'react-router-dom'
 
 const URL = import.meta.env.VITE_URL;
->>>>>>> 17837966815c131c397ec857b22bb1c28b24c25b
 
 function Header() {
   return (

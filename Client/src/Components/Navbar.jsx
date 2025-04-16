@@ -33,11 +33,28 @@ const Navbar = ({ join }) => {
     setUserLoggedIn(isLoggedIn());
   }, [join, pathname]);
 
-  // Handle logout: remove token, update state and navigate home
-  const handleLogout = () => {
-    removeToken();
-    setUserLoggedIn(false);
-    navigate("/home");
+
+  // AuthButton component to render the appropriate button based on login state
+  const AuthButton = ({ isMobile }) => {
+    const baseClassName = `font-bold rounded-xl cursor-pointer border-2 ${
+      isMobile ? 'px-4 py-1' : 'px-4 py-2'
+    }`;
+    
+    if (!userLoggedIn && join) {
+      return (
+        <a
+          href={`${URL}/register`}
+          className={`${baseClassName} border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double`}
+        >
+          Join Us
+        </a>
+      );
+    } else if (userLoggedIn) {
+      return (
+        <LogoutButton />
+      );
+    }
+    return null;
   };
 
   return (
@@ -77,40 +94,12 @@ const Navbar = ({ join }) => {
           ))}
         </ul>
       </nav>
-<<<<<<< HEAD
 
+      {/* Desktop Auth Button */}
       {showBtn && (
         <div className="hidden md:block ml-4">
-          {/* If the user isn't logged in and join is enabled, show "Join Us". 
-              Else if the user is logged in, show "Logout". */}
-          {!userLoggedIn && join ? (
-            <a
-              href={`${URL}/register`}
-              className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double"
-            >
-              Join Us
-            </a>
-          ) : userLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-red-300 text-red-500 hover:scale-105 hover:bg-red-500 hover:text-white hover:border-white transition duration-300"
-            >
-              Logout
-            </button>
-          ) : null}
+          <AuthButton isMobile={false} />
         </div>
-=======
-      {showBtn &&(
-      <div className="hidden md:block ml-4">
-        {join && !userLoggedIn ? (
-          <a href={`${URL}/register`} className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double">
-            Join Us
-          </a>
-        ) : (
-          <LogoutButton/>
-        )}
-      </div>
->>>>>>> 17837966815c131c397ec857b22bb1c28b24c25b
       )}
 
       <button className="md:hidden ml-auto z-20 p-2" onClick={toggleMenu} aria-expanded={menuOpen}>
@@ -153,43 +142,13 @@ const Navbar = ({ join }) => {
                   </Link>
                 </li>
               ))}
-<<<<<<< HEAD
+              
+              {/* Mobile Auth Button */}
               {showBtn && (
-                // Mobile button conditions mirrored from above:
-                !userLoggedIn && join ? (
-                  <li className="mt-2 w-full flex justify-center">
-                    <a
-                      href={`${URL}/register`}
-                      className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white"
-                    >
-                      Join Us
-                    </a>
-                  </li>
-                ) : userLoggedIn ? (
-                  <li className="mt-2 w-full flex justify-center">
-                    <button
-                      onClick={handleLogout}
-                      className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-red-300 text-red-500 hover:scale-105 hover:bg-red-500 hover:text-white hover:border-white transition duration-300"
-                    >
-                      Logout
-                    </button>
-                  </li>
-                ) : null
+                <li className="mt-2 w-full flex justify-center">
+                  <AuthButton isMobile={true} />
+                </li>
               )}
-=======
-              {showBtn &&(
-              join && !userLoggedIn ? (
-                <li className="mt-2 w-full flex justify-center">
-                  <a href={`${URL}/register`} className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white">
-                    Join Us
-                  </a>
-                </li>
-              ) : (
-                <li className="mt-2 w-full flex justify-center">
-                  <LogoutButton/>
-                </li>
-              ) )}
->>>>>>> 17837966815c131c397ec857b22bb1c28b24c25b
             </motion.ul>
           </motion.nav>
         )}

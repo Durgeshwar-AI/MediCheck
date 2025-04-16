@@ -5,6 +5,7 @@ import { RxEyeOpen } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { storeToken, isLoggedIn } from "../../utils/auth";
+//akta problem ho66e seta holo is logged r userLoggedin er jonno 
 import { useHealth } from "../../hooks/useHealth";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -23,7 +24,7 @@ const Register = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (userLoggedIn) {
+    if (isLoggedIn) {
       navigate("/dashboard");
     }
   }, [navigate, userLoggedIn]);
@@ -80,7 +81,7 @@ const Register = () => {
         // Redirect to home page after successful registration
         updateLogin(true);
         setTimeout(() => {
-          navigate("/home");
+          navigate("/dashboard");
         }, 2000);
       } else {
         setMessage(

@@ -21,8 +21,8 @@ const Login = () => {
   // Redirect if already logged in
 
   useEffect(() => {
-    if (userLoggedIn) {
-      navigate("/home");
+    if (isLoggedIn) {
+      navigate("/dashboard");
     }
   }, [navigate,userLoggedIn]);
 

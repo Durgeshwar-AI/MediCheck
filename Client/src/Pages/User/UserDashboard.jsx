@@ -7,11 +7,9 @@ import Appointment from "../../Components/UserDashboardParts/Appointment";
 import MedicalHistory from "../../Components/UserDashboardParts/MedicalHistory";
 import HealthGoals from "../../Components/UserDashboardParts/HealthGoals";
 import Medications from "../../Components/UserDashboardParts/Medications";
-<<<<<<< HEAD
-=======
+
 import { useHealth } from "../../hooks/useHealth";
 
->>>>>>> 17837966815c131c397ec857b22bb1c28b24c25b
 const UserDashboard = () => {
   const metrics = [
     { name: "Heart Rate", data: "72 bpm" },
