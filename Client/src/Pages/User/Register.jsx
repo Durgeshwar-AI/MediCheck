@@ -5,6 +5,7 @@ import { RxEyeOpen } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { storeToken, isLoggedIn } from "../../utils/auth";
+import { useHealth } from "../../hooks/useHealth";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -18,12 +19,14 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  const { userLoggedIn, updateLogin } = useHealth();
+
   // Redirect if already logged in
   useEffect(() => {
-    if (isLoggedIn()) {
-      navigate("/home");
+    if (userLoggedIn) {
+      navigate("/dashboard");
     }
-  }, [navigate]);
+  }, [navigate, userLoggedIn]);
 
   const handleTogglePassword = () => {
     setShowPassword((prevState) => !prevState);
@@ -38,16 +41,20 @@ const Register = () => {
     e.preventDefault();
 
     // Password validation
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
-      setMessage("⚠️ Password must include at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special symbol like: @$!%*?&");
+      setMessage(
+        "⚠️ Password must include at least 8 characters, one uppercase letter, one lowercase letter, one digit and one special symbol like: @$!%*?&"
+      );
       return;
-
     }
     const nameRegex = /^[A-Za-z]+$/;
     // Name validation
     if (!nameRegex.test(firstname) || !nameRegex.test(lastname)) {
-      setMessage("⚠️ Name must contain only letters without spaces or special characters.");
+      setMessage(
+        "⚠️ Name must contain only letters without spaces or special characters."
+      );
       return;
     }
 
@@ -67,16 +74,18 @@ const Register = () => {
 
       if (res.ok) {
         // Store token with 7-day expiration
-        storeToken(data.token);
-        storeToken(data.firstname);
+        storeToken(data.token, data.firstname);
         // localStorage.setItem("token", data.token);
         setMessage("✅ Registration successful!");
-        // Redirect to home page after successful registration        
+        // Redirect to home page after successful registration
+        updateLogin(true);
         setTimeout(() => {
           navigate("/home");
         }, 2000);
       } else {
-        setMessage(data.errors?.[0]?.msg || data.message || "❌ Registration failed!");
+        setMessage(
+          data.errors?.[0]?.msg || data.message || "❌ Registration failed!"
+        );
       }
     } catch (err) {
       console.error(err);
@@ -89,10 +98,14 @@ const Register = () => {
       <Navbar join={false} />
       <div className="bg-blue-50 flex items-center justify-center min-h-screen py-10">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-          <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">Create an Account</h2>
+          <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
+            Create an Account
+          </h2>
           <form onSubmit={handleRegister}>
             <div className="mb-4">
-              <label className="font-bold block text-gray-700">First Name</label>
+              <label className="font-bold block text-gray-700">
+                First Name
+              </label>
               <input
                 type="text"
                 value={firstname}
@@ -153,21 +166,32 @@ const Register = () => {
             <motion.button
               whileHover={{
                 backgroundColor: ["#00ff00", "#32cd32"], // Shining green effect
-                transition: { duration: 0.5, ease: "easeInOut", repeat: Infinity },
+                transition: {
+                  duration: 0.5,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                },
               }}
               onHoverEnd={() => {
                 // Reset color back to blue when hover stops
-                document.querySelector(".register-btn").style.backgroundColor = "#155dfc"; // A shade of blue
+                document.querySelector(".register-btn").style.backgroundColor =
+                  "#155dfc"; // A shade of blue
               }}
               className="register-btn w-full text-white py-2 rounded-lg bg-blue-600 hover:font-bold hover:text-[17px] transition"
             >
               Register
             </motion.button>
           </form>
-          {message && <p className="text-center mt-4 font-medium text-red-600 text-xs">{message}</p>}
+          {message && (
+            <p className="text-center mt-4 font-medium text-red-600 text-xs">
+              {message}
+            </p>
+          )}
           <p className="mt-4 text-center text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="text-blue-600 font-bold">Login</a>
+            <a href="/login" className="text-blue-600 font-bold">
+              Login
+            </a>
           </p>
         </div>
       </div>

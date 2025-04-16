@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.png";
 import { isLoggedIn, removeToken } from "../utils/auth";
+import LogoutButton from "./LogoutButton";
 
 const URL = import.meta.env.VITE_URL;
 
@@ -76,6 +77,7 @@ const Navbar = ({ join }) => {
           ))}
         </ul>
       </nav>
+<<<<<<< HEAD
 
       {showBtn && (
         <div className="hidden md:block ml-4">
@@ -97,6 +99,18 @@ const Navbar = ({ join }) => {
             </button>
           ) : null}
         </div>
+=======
+      {showBtn &&(
+      <div className="hidden md:block ml-4">
+        {join && !userLoggedIn ? (
+          <a href={`${URL}/register`} className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double">
+            Join Us
+          </a>
+        ) : (
+          <LogoutButton/>
+        )}
+      </div>
+>>>>>>> 17837966815c131c397ec857b22bb1c28b24c25b
       )}
 
       <button className="md:hidden ml-auto z-20 p-2" onClick={toggleMenu} aria-expanded={menuOpen}>
@@ -139,6 +153,7 @@ const Navbar = ({ join }) => {
                   </Link>
                 </li>
               ))}
+<<<<<<< HEAD
               {showBtn && (
                 // Mobile button conditions mirrored from above:
                 !userLoggedIn && join ? (
@@ -161,6 +176,20 @@ const Navbar = ({ join }) => {
                   </li>
                 ) : null
               )}
+=======
+              {showBtn &&(
+              join && !userLoggedIn ? (
+                <li className="mt-2 w-full flex justify-center">
+                  <a href={`${URL}/register`} className="px-4 py-1 bg-white font-bold rounded-xl border-double border-2 border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white">
+                    Join Us
+                  </a>
+                </li>
+              ) : (
+                <li className="mt-2 w-full flex justify-center">
+                  <LogoutButton/>
+                </li>
+              ) )}
+>>>>>>> 17837966815c131c397ec857b22bb1c28b24c25b
             </motion.ul>
           </motion.nav>
         )}

@@ -1,16 +1,26 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { Home, FileText, Calendar, MessageSquare, User } from "lucide-react";
 import UserProfile from "../../Components/UserDashboardParts/UserProfile";
 
+=======
+import React, {useState} from "react";
+import { Home, FileText, Calendar, MessageSquare, Bell, User} from "lucide-react";
+import {Link} from 'react-router-dom'
+
+const URL = import.meta.env.VITE_URL;
+>>>>>>> 17837966815c131c397ec857b22bb1c28b24c25b
 
 function Header() {
   return (
     <header className="sticky top-0 z-10 bg-white border-b shadow-sm px-4 py-2">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <div className="text-blue-600 font-bold text-2xl mr-2">
-            <span className="font-black">Medi</span>Check
-          </div>
+          <Link to={`${URL}/home`}>
+            <div className="text-blue-600 font-bold text-2xl mr-2">
+              <span className="font-black">Medi</span>Check
+            </div>
+          </Link>
           <MainNav />
         </div>
         <div className="flex items-center space-x-3">
@@ -25,14 +35,15 @@ function Header() {
 function MainNav() {
   const [active, setActive] = useState("Dashboard");
   const navItems = [
-    { name: "Dashboard", icon: <Home size={18} /> },
-    { name: "Medical Records", icon: <FileText size={18} /> },
-    { name: "Appointments", icon: <Calendar size={18} /> },
+    { name: "Dashboard", icon: <Home size={18} />, path :`${URL}/dashboard` },
+    { name: "Medical Records", icon: <FileText size={18} />, path :`${URL}/appointments` },
+    { name: "Appointments", icon: <Calendar size={18} />, path :`${URL}/records` },
   ];
 
   return (
     <nav className="hidden md:flex ml-8">
       {navItems.map((item) => (
+        <a href={item.path} key={item.name}>
         <button
           key={item.name}
           className={`flex items-center px-4 py-2 mx-1 rounded-md transition-colors ${active === item.name
@@ -44,6 +55,7 @@ function MainNav() {
           <span className="mr-2">{item.icon}</span>
           {item.name}
         </button>
+        </a>
       ))}
     </nav>
   );

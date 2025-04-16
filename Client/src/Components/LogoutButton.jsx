@@ -1,20 +1,20 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { removeToken } from '../utils/auth';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { removeToken } from "../utils/auth";
+import { useHealth } from "../hooks/useHealth";
 
 const LogoutButton = () => {
   const navigate = useNavigate();
-  
+  const { userLoggedIn, updateLogin } = useHealth();
+
   const handleLogout = () => {
-    // Remove the token
+    updateLogin(false)
     removeToken();
-    
-    // Redirect to landing page
-    navigate('/');
+    navigate("/");
   };
-  
+
   return (
-    <button 
+    <button
       onClick={handleLogout}
       className="px-4 py-2 font-bold rounded-xl cursor-pointer border-2 border-red-400 text-red-500 hover:bg-red-500 hover:text-white transition duration-300"
     >
