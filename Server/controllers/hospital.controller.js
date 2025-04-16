@@ -10,14 +10,14 @@ export const loginHospital= async(req,res)=>{
 
   try {
     const hospital = await Hospital.findOne({ email }).select("+password");
-
+    const isMatch = await bcrypt.compare(password, hospital.password);
     if (!hospital) {
       return res
         .status(400)
         .json({ message: "Invalid credentials - User not found" });
     }
 
-    if (password !== hospital.password) {
+    if (!isMatch) {
       return res
         .status(400)
         .json({ message: "Invalid credentials - Password mismatch" });
