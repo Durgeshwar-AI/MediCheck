@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { User, Settings } from "lucide-react";
+import LogoutButton from "../LogoutButton";
+import { useHealth } from "../../hooks/useHealth";
+
 
 const UserProfile = () => {
+  const tokenData = localStorage.getItem("authToken");
+  const { userName } = JSON.parse(tokenData);
+
   const [userData, setUserData] = useState({
-    name: "John Doe",
     email: "john.doe@example.com",
     bio: "Passionate about health and well-being!",
     avatar: "",
@@ -31,7 +36,7 @@ const UserProfile = () => {
 
         {/* User Info */}
         <div className="flex flex-col">
-          <h2 className="text-xl font-bold text-gray-800">{userData.name}</h2>
+          <h2 className="text-xl font-bold text-gray-800">{userName}</h2>
           <p className="text-gray-600 text-sm">{userData.email}</p>
         </div>
       </div>
@@ -40,6 +45,9 @@ const UserProfile = () => {
       <div className=" w-full">
         <h3 className="text-sm font-semibold text-gray-500">About</h3>
         <p className="text-gray-700 italic">{userData.bio}</p>
+      </div>
+      <div className="">
+        <LogoutButton />
       </div>
     </div>
   );

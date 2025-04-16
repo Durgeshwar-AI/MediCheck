@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 import logo from "../../assets/logo.png";
 import { GrSearchAdvanced } from "react-icons/gr";
 import { FaUserMd } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const HospitalHeader = () => {
-  const maxLength = 7; 
+  const maxLength = 7;
   const userName = "Dr. Krishna Kumar Roy";
 
   const getInitials = (name) => {
@@ -26,14 +27,18 @@ const HospitalHeader = () => {
       <div className="mx-auto flex flex-col md:flex-row justify-between items-center">
         {/* Left Section: Logo and Title */}
         <div className="flex items-center space-x-4 mb-4 md:mb-0">
-          <motion.img
-            src={logo}
-            alt="MediCheck Logo"
-            className="invert rounded-b-full ml-2 h-12 w-12 md:h-16 md:w-16"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-          />
+          <Link
+            to="/">
+            <motion.img
+              src={logo}
+              alt="MediCheck Logo"
+              className="invert rounded-b-full ml-2 h-12 w-12 md:h-16 md:w-16"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+
+            />
+          </Link>
           <h1 className="text-lg md:text-2xl font-bold">MediCheck Hospital Dashboard</h1>
         </div>
 

@@ -14,7 +14,7 @@ const MENU_ITEMS = [
   { name: "Contact Us", path: `${URL}/contact` },
 ];
 
-const Navbar = ({ join }) => {
+const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const { pathname } = useLocation();
@@ -31,7 +31,7 @@ const Navbar = ({ join }) => {
   // Update the authentication status whenever join prop or current path changes
   useEffect(() => {
     setUserLoggedIn(isLoggedIn());
-  }, [join, pathname]);
+  }, [pathname]);
 
 
   // AuthButton component to render the appropriate button based on login state
@@ -40,7 +40,7 @@ const Navbar = ({ join }) => {
       isMobile ? 'px-4 py-1' : 'px-4 py-2'
     }`;
     
-    if (!userLoggedIn && join) {
+    if (!userLoggedIn) {
       return (
         <a
           href={`${URL}/register`}

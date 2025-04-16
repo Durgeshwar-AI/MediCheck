@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Calendar, Users, UserPlus, Building, AlertTriangle,
-  Settings, ChevronRight, ChevronLeft
+  ChevronRight, ChevronLeft
 } from "lucide-react";
 
 const HospitalSidebar = ({ children }) => {
@@ -60,9 +60,8 @@ const HospitalSidebar = ({ children }) => {
 
       {/* Sidebar */}
       <div 
-        className={`h-full bg-white shadow-lg transition-all duration-300 ease-in-out sticky
-        ${expanded ? "w-48" : "w-16"} 
-        ${isMobile ? " z-30" : " z-20"}`}
+        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky
+        ${expanded ? "w-48" : "w-16"} `}
       >
         {/* Navigation menu */}
         <nav className="p-3 mt-2">

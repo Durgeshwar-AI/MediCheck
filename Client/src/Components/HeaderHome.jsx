@@ -1,5 +1,6 @@
 import React from "react";
 import { useHealth } from "../hooks/useHealth";
+import { Link } from "react-router-dom";
 
 function HeaderHome() {
   const tokenData = localStorage.getItem("authToken");
@@ -25,9 +26,12 @@ function HeaderHome() {
             )}
           </div>
         </div>
+        <Link
+        to='/dashboard'>
         <button className="bg-white shadow-sm border py-2 px-6 rounded-full hover:bg-gray-50 transition-colors">
           View Full Dashboard
         </button>
+        </Link>
       </div>
     </div>
   );

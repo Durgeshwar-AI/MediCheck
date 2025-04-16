@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../../Components/Navbar";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import logo from "../../assets/logo.png";
 import { LuEyeClosed } from "react-icons/lu";
 import { RxEyeOpen } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeftFromLine } from 'lucide-react';
 import { storeToken, isLoggedIn } from "../../utils/auth";
-import { motion } from "framer-motion";
 import { useHealth } from "../../hooks/useHealth";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -16,22 +17,29 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const { userLoggedIn, updateLogin } = useHealth();
+  const { updateLogin } = useHealth();
 
   // Redirect if already logged in
-
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/dashboard");
+    // Check directly from auth.js to ensure initial state is correct
+    if (isLoggedIn()) {
+      updateLogin(true);
+      navigate("/home");
     }
-  }, [navigate,userLoggedIn]);
+  }, [navigate, updateLogin]);
 
   const handleTogglePassword = () => {
     setShowPassword((prevState) => !prevState);
   };
 
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+
     try {
       const res = await fetch(`${URL}/user/login`, {
         method: "POST",
@@ -43,13 +51,12 @@ const Login = () => {
 
       if (res.ok) {
         storeToken(data.token, data.firstname);
-        // localStorage.setItem("token", data.token);
         setMessage("✅ Login successful!");
-        updateLogin(true)
+        updateLogin(true);
         // redirect logic here if needed
         setTimeout(() => {
-          navigate("/dashboard");
-        }, 500);
+          navigate("/home");
+        }, 2000); // Redirect after 2 seconds
       } else {
         setMessage(data.message || "❌ Login failed!");
       }
@@ -61,12 +68,57 @@ const Login = () => {
 
   return (
     <>
-      <Navbar join={false} />
+      <motion.header
+        className="sticky top-0 z-50 bg-white shadow-md flex items-center justify-between px-4 py-2"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <div>
+          <Link to="/" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
+            <motion.img
+              src={logo}
+              alt="logo"
+              className="rounded-b-full h-10 w-10 m-2"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            />
+            <h1 className="text-blue-700 font-bold italic text-2xl my-1">MediCheck</h1>
+          </Link>
+        </div>
+        {/* <div className="hidden md:flex flex-grow justify-end"></div> */}
+
+      </motion.header>
       <div className="bg-blue-50 flex items-center justify-center min-h-screen">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">
+          {/* Add cancel/go back button to top right of the form container */}
+          <motion.button
+            type="button"
+            about="Go back to previous page"
+            onClick={handleGoBack}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95, 
+              x: -220, // Move left when clicked
+              transition: { duration: 1 } // Add a transition for the rotation
+
+             }}
+            className="absolute top-2 right-2 text-red-500 hover:text-red-700 flex items-center"
+            aria-label="Cancel"
+            aria-describedby="go-back-tooltip"
+          >
+           <ArrowLeftFromLine/>
+          </motion.button>
+
+
           <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
             Login to Medical Portal
           </h2>
+          {message && (
+            <div className={`text-center mb-4 p-2 rounded ${message.includes("✅") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+              {message}
+            </div>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="font-bold block text-gray-700">Email</label>
@@ -92,12 +144,13 @@ const Login = () => {
               <button
                 type="button"
                 onClick={handleTogglePassword}
-                className="absolute my-2 right-3 text-gray-500  text-2xl font-bold rounded"
+                className="absolute my-2 right-3 text-gray-500 text-2xl font-bold rounded"
               >
                 {showPassword ? <RxEyeOpen /> : <LuEyeClosed />}
               </button>
             </div>
             <motion.button
+              type="submit"
               whileHover={{
                 backgroundColor: ["#00ff00", "#32cd32"], // Shining green effect
                 transition: {

@@ -30,8 +30,8 @@ function MainNav() {
   const [active, setActive] = useState("Dashboard");
   const navItems = [
     { name: "Dashboard", icon: <Home size={18} />, path :`${URL}/dashboard` },
-    { name: "Medical Records", icon: <FileText size={18} />, path :`${URL}/appointments` },
-    { name: "Appointments", icon: <Calendar size={18} />, path :`${URL}/records` },
+    { name: "Medical Records", icon: <FileText size={18} />, path :`${URL}/records` },
+    { name: "Appointments", icon: <Calendar size={18} />, path :`${URL}/appointments` },
   ];
 
   return (

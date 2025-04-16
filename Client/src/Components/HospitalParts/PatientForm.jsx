@@ -38,8 +38,8 @@ const PatientForm = ({ onSubmit, onCancel }) => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="sticky top-0 bg-white z-10 pb-2 sm:pb-3 md:pb-4">
-        <h2 className="text-xl sm:text-2xl text-center font-bold mb-1">Patient Registration Form</h2>
+      <div className="sticky top-0 z-10 pb-2 sm:pb-3 md:pb-4">
+        <h2 className="text-xl sm:text-2xl text-center bg-transparent font-bold mb-1">Patient Registration Form</h2>
         <div className="w-36 sm:w-48 md:w-60 h-0.5 bg-blue-500 mx-auto mb-2 sm:mb-3 rounded-full"></div>
       </div>
 

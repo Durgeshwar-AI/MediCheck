@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../../Components/Navbar";
+import { Link, useNavigate } from "react-router-dom";
+import { easeInOut, motion } from "framer-motion";
+import logo from "../../assets/logo.png";
 import { LuEyeClosed } from "react-icons/lu";
 import { RxEyeOpen } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { ArrowLeftFromLine } from 'lucide-react';
 import { storeToken, isLoggedIn } from "../../utils/auth";
-//akta problem ho66e seta holo is logged r userLoggedin er jonno 
 import { useHealth } from "../../hooks/useHealth";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -20,17 +20,23 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const { userLoggedIn, updateLogin } = useHealth();
+  const { updateLogin } = useHealth();
 
   // Redirect if already logged in
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/dashboard");
+    // Check directly from auth.js to ensure initial state is correct
+    if (isLoggedIn()) {
+      updateLogin(true);
+      navigate("/home");
     }
-  }, [navigate, userLoggedIn]);
+  }, [navigate, updateLogin]);
 
   const handleTogglePassword = () => {
     setShowPassword((prevState) => !prevState);
+  };
+
+  const handleGoBack = () => {
+    window.history.back();
   };
 
   const handlePhoneChange = (e) => {
@@ -81,7 +87,7 @@ const Register = () => {
         // Redirect to home page after successful registration
         updateLogin(true);
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/home");
         }, 2000);
       } else {
         setMessage(
@@ -96,9 +102,50 @@ const Register = () => {
 
   return (
     <>
-      <Navbar join={false} />
+      <motion.header
+        className="sticky top-0 z-50 bg-white shadow-md flex items-center justify-between px-4 py-2"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <div>
+          <Link to="/" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
+            <motion.img
+              src={logo}
+              alt="logo"
+              className="rounded-b-full h-10 w-10 m-2"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            />
+            <h1 className="text-blue-700 font-bold italic text-2xl my-1">MediCheck</h1>
+          </Link>
+        </div>
+        <div className="hidden md:flex flex-grow justify-end"></div>
+
+
+      </motion.header>
       <div className="bg-blue-50 flex items-center justify-center min-h-screen py-10">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">
+          {/* Add cancel/go back button to top right of the form container */}
+          <motion.button
+            type="button"
+            about="Go back to previous page"
+            onClick={handleGoBack}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95, 
+              x: -220, // Move left when clicked
+              transition: { duration: 1,ease:easeInOut } // Add a transition for the rotation
+
+             }}
+            className="absolute top-2 right-2 text-red-500 hover:text-red-700 flex items-center"
+            aria-label="Cancel"
+            aria-describedby="go-back-tooltip"
+          >
+           <ArrowLeftFromLine/>
+          </motion.button>
+
+
           <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
             Create an Account
           </h2>
@@ -165,6 +212,7 @@ const Register = () => {
               </button>
             </div>
             <motion.button
+              type="submit"
               whileHover={{
                 backgroundColor: ["#00ff00", "#32cd32"], // Shining green effect
                 transition: {
@@ -184,7 +232,7 @@ const Register = () => {
             </motion.button>
           </form>
           {message && (
-            <p className="text-center mt-4 font-medium text-red-600 text-xs">
+            <p className={`text-center mt-4 font-medium ${message.includes("✅") ? "text-green-600" : "text-red-600"} text-xs`}>
               {message}
             </p>
           )}
