@@ -1,3 +1,4 @@
+import BluetoothConnector from "../BluetoothConnector";
 import MenuTop from "../MenuTop";
 
 function Metrics({ metrics, connected }) {
@@ -35,9 +36,7 @@ function Metrics({ metrics, connected }) {
               <p className="text-gray-700 mb-4">
                 Connect your smartwatch to view your health metrics
               </p>
-              <button className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700">
-                Connect Device
-              </button>
+              <BluetoothConnector/>
             </div>
           </div>
         )}

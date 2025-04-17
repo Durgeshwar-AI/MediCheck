@@ -72,10 +72,10 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                 />
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Date of Birth</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">Age</label>
                 <input
-                  type="date"
-                  name="dateOfBirth"
+                  type="number"
+                  name="age"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
@@ -125,7 +125,7 @@ const PatientForm = ({ onSubmit, onCancel }) => {
             <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">Medical Information</h3>
             <div className="space-y-2 sm:space-y-3">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Admission Reason</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">Condition</label>
                 <input
                   type="text"
                   name="admissionReason"
@@ -135,16 +135,6 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                   required
                 />
               </div>
-              <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Medical History</label>
-                <textarea
-                  name="medicalHistory"
-                  value={formData.medicalHistory}
-                  onChange={handleChange}
-                  rows="2"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-                />
-              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                 <div>
                   <label className="block text-xs sm:text-sm font-medium text-gray-700">Allergies</label>
@@ -152,16 +142,6 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                     type="text"
                     name="allergies"
                     value={formData.allergies}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700">Ongoing Medications</label>
-                  <input
-                    type="text"
-                    name="ongoingMedications"
-                    value={formData.ongoingMedications}
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
                   />
@@ -215,47 +195,6 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                     value={formData.email}
                     onChange={handleChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Emergency & Insurance Section */}
-          <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">Emergency & Insurance</h3>
-            <div className="space-y-2 sm:space-y-3">
-              <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Insurance Number</label>
-                <input
-                  type="text"
-                  name="insuranceNumber"
-                  value={formData.insuranceNumber}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700">Emergency Contact</label>
-                  <input
-                    type="text"
-                    name="emergencyContact"
-                    value={formData.emergencyContact}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700">Emergency Phone</label>
-                  <input
-                    type="tel"
-                    name="emergencyPhone"
-                    value={formData.emergencyPhone}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
-                    required
                   />
                 </div>
               </div>

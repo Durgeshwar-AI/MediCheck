@@ -6,9 +6,15 @@ import Services from "../Components/LandingParts/Services";
 import ConnectSmart from "../Components/LandingParts/ConnectSmart";
 import Features from "../Components/LandingParts/Features";
 import DownloadApp from "../Components/LandingParts/DownloadApp";
+import LogoutButton from "../Components/LogoutButton"
 import { motion } from "framer-motion";
+import {useHealth} from "../hooks/useHealth"
 
 const Landing = () => {
+
+  const {userLoggedIn} = useHealth()
+
+  console.log(userLoggedIn)
 
   const URL= import.meta.env.VITE_URL
   const navItems = [{name:'Home', path: `${URL}/home`}, {name: 'Emergency', path: `${URL}/emergency`}, {name:'About', path: `${URL}/about`}, {name:'Contact', path:`${URL}/contact`}];
@@ -45,14 +51,14 @@ const Landing = () => {
 
         {/* Buttons */}
         <div className="flex gap-3">
-        <a href={`${URL}/redirect`}>
+        {userLoggedIn?<LogoutButton/>:(<a href={`${URL}/redirect`}>
           <motion.button
             whileTap={{ scale: 0.95 }}
             className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(0,118,255,0.9)] px-8 py-2 bg-[#0070f3] rounded-md text-white font-light transition duration-200 ease-linear"
           >
             Login
           </motion.button>
-          </a>
+          </a>)}
         </div>
       </motion.nav>
       <div className="w-screen-lg mx-auto">

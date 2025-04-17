@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.png";
-import { isLoggedIn, removeToken } from "../utils/auth";
 import LogoutButton from "./LogoutButton";
+import { useHealth } from "../hooks/useHealth";
 
 const URL = import.meta.env.VITE_URL;
 
@@ -16,9 +16,8 @@ const MENU_ITEMS = [
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const {userLoggedIn}= useHealth()
   const { pathname } = useLocation();
-  const navigate = useNavigate();
 
   const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
   const closeMenu = useCallback(() => menuOpen && setMenuOpen(false), [menuOpen]);
@@ -27,11 +26,6 @@ const Navbar = () => {
   // Exclude some pages (like '/login' and '/register') from showing the join/logout button
   const excludePaths = ["/login", "/register"];
   const showBtn = !excludePaths.includes(pathname);
-
-  // Update the authentication status whenever join prop or current path changes
-  useEffect(() => {
-    setUserLoggedIn(isLoggedIn());
-  }, [pathname]);
 
 
   // AuthButton component to render the appropriate button based on login state

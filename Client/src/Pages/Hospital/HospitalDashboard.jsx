@@ -12,11 +12,11 @@ import PatientList from '../../Components/HospitalParts/PatientList';
 import BackToTopButton from '../../Components/FooterParts/BackToTopButton'
 
 const mockAppointments = [
-    { id: 1, patient: 'Emily Wilson', time: '09:30 AM' },
-    { id: 2, patient: 'Robert Davis', time: '10:15 AM' },
-    { id: 3, patient: 'Maria Rodriguez', time: '11:00 AM' },
-    { id: 4, patient: 'James Brown', time: '11:45 AM' },
-    { id: 5, patient: 'Lisa Thompson', time: '01:30 PM' }
+    { id: 1, patient: 'Emily Wilson', time: '09:30 AM', doctor: "Rem", date:"17th april" },
+    { id: 2, patient: 'Robert Davis', time: '10:15 AM', doctor: "Rem", date:"17th april"  },
+    { id: 3, patient: 'Maria Rodriguez', time: '11:00 AM', doctor: "Rem", date:"17th april"  },
+    { id: 4, patient: 'James Brown', time: '11:45 AM', doctor: "Rem", date:"17th april"  },
+    { id: 5, patient: 'Lisa Thompson', time: '01:30 PM', doctor: "Rem", date:"17th april"  }
 ];
 
 const mockFacilities = {

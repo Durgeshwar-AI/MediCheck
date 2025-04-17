@@ -53,7 +53,7 @@ const UserAppointments = () => {
   );
 
   return (
-    <div className="min-h-screen p-6 bg-gray-50">
+    <div className="min-h-screen px-6 bg-gray-50">
       <Header />
       <div className="flex flex-grow">
         <UserSidebar />

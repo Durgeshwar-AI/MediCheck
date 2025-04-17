@@ -23,7 +23,9 @@ const HospitalAppointments = ({ appointments }) => {
                     <thead>
                         <tr className="bg-blue-100 text-gray-700">
                             <th className="text-left py-2 sm:py-3 px-2 sm:px-4">Patient</th>
+                            <th className="text-left py-2 sm:py-3 px-2 sm:px-4">Doctor</th>
                             <th className="text-left py-2 sm:py-3 px-2 sm:px-4">Time</th>
+                            <th className="text-left py-2 sm:py-3 px-2 sm:px-4">Dateq</th>
                             <th className="text-center py-2 sm:py-3 px-2 sm:px-4">Actions</th>
                         </tr>
                     </thead>
@@ -38,7 +40,9 @@ const HospitalAppointments = ({ appointments }) => {
                                     className="border-b border-gray-300 hover:bg-gray-200 transition duration-200"
                                 >
                                     <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-xs sm:text-base">{appointment.patient}</td>
+                                    <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-xs sm:text-base">{appointment.doctor}</td>
                                     <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-base">{appointment.time}</td>
+                                    <td className="py-2 sm:py-3 px-2 sm:px-4 text-xs sm:text-base">{appointment.date}</td>
                                     <td className="py-2 sm:py-3 px-2 sm:px-4 flex items-center justify-center gap-2 sm:gap-4">
                                         {/* Accept Button */}
                                         <motion.button
@@ -57,6 +61,13 @@ const HospitalAppointments = ({ appointments }) => {
                                         >
                                             <RxCross2 size={16} className="sm:text-lg" />
                                         </motion.button> */}
+                                        <motion.button
+                                            className="bg-red-600 text-white px-2 sm:px-4 py-1 rounded-md text-xs md:text-sm shadow-md hover:bg-red-700 transition duration-200"
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            Reject
+                                        </motion.button>
                                     </td>
                                 </motion.tr>
                             ))
