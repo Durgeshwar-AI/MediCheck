@@ -130,7 +130,7 @@ const Register = () => {
           {/* Add cancel/go back button to top right of the form container */}
           <motion.button
             type="button"
-            about="Go back to previous page"
+            aria-level="Go back to previous page"
             onClick={handleGoBack}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95, 
@@ -139,7 +139,6 @@ const Register = () => {
 
              }}
             className="absolute top-2 right-2 text-red-500 hover:text-red-700 flex items-center"
-            aria-label="Cancel"
             aria-describedby="go-back-tooltip"
           >
            <ArrowLeftFromLine/>
