@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Home, FileText, Calendar, User } from "lucide-react";
+import { User } from "lucide-react";
 import UserProfile from "../../Components/UserDashboardParts/UserProfile";
+import logo from "../../assets/logo.png";
 import {Link} from 'react-router-dom'
+import { motion } from "framer-motion";
 
 const URL = import.meta.env.VITE_URL;
 
@@ -11,11 +13,20 @@ function Header() {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <Link to={`${URL}/home`}>
-            <div className="text-blue-600 font-bold text-2xl mr-2">
+        <div className="flex flex-row">
+          <motion.img
+            src={logo}
+            alt="logo"
+            className="rounded-b-full h-10 w-10 m-2"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+          />
+            <div className="text-blue-600 font-bold text-2xl mr-2 my-auto">
               <span className="font-black">Medi</span>Check
             </div>
+          </div>
           </Link>
-          <MainNav />
         </div>
         <div className="flex items-center space-x-3">
           {/* popup for UserProfile.jsx */}
@@ -26,34 +37,7 @@ function Header() {
   );
 }
 
-function MainNav() {
-  const [active, setActive] = useState("Dashboard");
-  const navItems = [
-    { name: "Dashboard", icon: <Home size={18} />, path :`${URL}/dashboard` },
-    { name: "Medical Records", icon: <FileText size={18} />, path :`${URL}/records` },
-    { name: "Appointments", icon: <Calendar size={18} />, path :`${URL}/appointments` },
-  ];
 
-  return (
-    <nav className="hidden md:flex ml-8">
-      {navItems.map((item) => (
-        <a href={item.path} key={item.name}>
-        <button
-          key={item.name}
-          className={`flex items-center px-4 py-2 mx-1 rounded-md transition-colors ${active === item.name
-            ? "bg-blue-100 text-blue-700"
-            : "hover:bg-gray-100"
-            }`}
-          onClick={() => setActive(item.name)}
-        >
-          <span className="mr-2">{item.icon}</span>
-          {item.name}
-        </button>
-        </a>
-      ))}
-    </nav>
-  );
-}
 
 // function NotificationBell() {
 //   const [count, setCount] = useState(2);

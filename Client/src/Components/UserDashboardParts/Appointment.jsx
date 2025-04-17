@@ -1,4 +1,4 @@
-import { Plus, X, Trash2 } from "lucide-react";
+import { Plus, X, Trash2, Edit } from "lucide-react";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
@@ -6,6 +6,7 @@ function Appointment() {
   // State for the appointments list
   const [appointments, setAppointments] = useState([
     {
+      id: 1,
       month: "Mar",
       date: 15,
       name: "Dr. Smith - Cardiology",
@@ -14,6 +15,7 @@ function Appointment() {
       type: "checkup",
     },
     {
+      id: 2,
       month: "Mar",
       date: 23,
       name: "Blood Work",
@@ -25,6 +27,12 @@ function Appointment() {
 
   // State to show/hide the create appointment popup
   const [showForm, setShowForm] = useState(false);
+  
+  // State to track if we're editing an existing appointment
+  const [isEditing, setIsEditing] = useState(false);
+  
+  // State to track current appointment ID for editing
+  const [currentAppointmentId, setCurrentAppointmentId] = useState(null);
 
   // Form data state for new appointment
   const [formData, setFormData] = useState({
@@ -40,7 +48,7 @@ function Appointment() {
   const getDaysInMonth = (month) => {
     switch (month) {
       case "Feb":
-        return 28; // set a auto leapear detector
+        return new Date().getFullYear() % 4 === 0 ? 29 : 28; // Leap year check
       case "Apr":
       case "Jun":
       case "Sep":
@@ -59,19 +67,47 @@ function Appointment() {
     }
   };
 
-  // Open the popup
+  // Open the popup for creating a new appointment
   const handleCreateClick = () => {
+    setIsEditing(false);
+    setCurrentAppointmentId(null);
+    // Reset form data to empty values
+    setFormData({
+      month: "",
+      date: "",
+      name: "",
+      time: "",
+      location: "",
+      type: "checkup",
+    });
+    setShowForm(true);
+  };
+  
+  // Open the popup for editing an existing appointment
+  const handleEditClick = (appointment) => {
+    setIsEditing(true);
+    setCurrentAppointmentId(appointment.id);
+    // Populate form with existing appointment data
+    setFormData({
+      month: appointment.month,
+      date: appointment.date.toString(),
+      name: appointment.name,
+      time: appointment.time,
+      location: appointment.location,
+      type: appointment.type,
+    });
     setShowForm(true);
   };
 
   // Close the popup
   const handleCloseForm = () => {
     setShowForm(false);
+    setIsEditing(false);
   };
 
-  // Delete an appointment based on index
-  const handleDeleteAppointment = (index) => {
-    setAppointments(appointments.filter((_, i) => i !== index));
+  // Delete an appointment based on ID
+  const handleDeleteAppointment = (id) => {
+    setAppointments(appointments.filter(appointment => appointment.id !== id));
   };
 
   // Update form data state as the user types.
@@ -85,21 +121,49 @@ function Appointment() {
     }
   };
 
-  // Add the new appointment to the list and close the modal
+  // Generate a unique ID for new appointments
+  const generateNewId = () => {
+    return appointments.length > 0 
+      ? Math.max(...appointments.map(app => app.id)) + 1 
+      : 1;
+  };
+
+  // Add the new appointment to the list or update existing and close the modal
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    setAppointments([
-      ...appointments,
-      {
-        month: formData.month,
-        date: parseInt(formData.date),
-        name: formData.name,
-        time: formData.time,
-        location: formData.location,
-        type: formData.type,
-      },
-    ]);
+    if (isEditing) {
+      // Update existing appointment
+      setAppointments(
+        appointments.map(app => 
+          app.id === currentAppointmentId 
+            ? {
+                ...app,
+                month: formData.month,
+                date: parseInt(formData.date),
+                name: formData.name,
+                time: formData.time,
+                location: formData.location,
+                type: formData.type,
+              }
+            : app
+        )
+      );
+    } else {
+      // Add new appointment with a unique ID
+      setAppointments([
+        ...appointments,
+        {
+          id: generateNewId(),
+          month: formData.month,
+          date: parseInt(formData.date),
+          name: formData.name,
+          time: formData.time,
+          location: formData.location,
+          type: formData.type,
+        },
+      ]);
+    }
 
     // Reset form data and close the popup
     setFormData({
@@ -111,6 +175,7 @@ function Appointment() {
       type: "checkup",
     });
     setShowForm(false);
+    setIsEditing(false);
   };
 
   return (
@@ -128,19 +193,20 @@ function Appointment() {
 
       {/* Appointment list */}
       <div className="p-2 h-auto md:h-[260px] overflow-y-auto">
-        {appointments.map((appointment, idx) => (
-          <Appointments
-            key={idx}
-            index={idx}
-            month={appointment.month}
-            date={appointment.date}
-            name={appointment.name}
-            time={appointment.time}
-            location={appointment.location}
-            type={appointment.type}
-            onDelete={() => handleDeleteAppointment(idx)}
-          />
-        ))}
+        {appointments.length === 0 ? (
+          <div className="flex justify-center items-center h-32 text-gray-500">
+            No appointments scheduled
+          </div>
+        ) : (
+          appointments.map((appointment) => (
+            <Appointments
+              key={appointment.id}
+              appointment={appointment}
+              onDelete={() => handleDeleteAppointment(appointment.id)}
+              onEdit={() => handleEditClick(appointment)}
+            />
+          ))
+        )}
       </div>
 
       {/* Popup modal form */}
@@ -154,7 +220,9 @@ function Appointment() {
             className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-gray-800">Create Appointment</h2>
+              <h2 className="text-2xl font-semibold text-gray-800">
+                {isEditing ? "Edit Appointment" : "Create Appointment"}
+              </h2>
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={handleCloseForm}
@@ -176,7 +244,7 @@ function Appointment() {
                     className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                     required
                   >
-                    <option value="">Select Month</option>
+                    <option value="" disabled>Select Month</option>
                     <option value="Jan">January</option>
                     <option value="Feb">February</option>
                     <option value="Mar">March</option>
@@ -192,10 +260,9 @@ function Appointment() {
                   </select>
                   <label
                     htmlFor="month"
-                    className="absolute left-3 top-2 text-sm text-gray-500 transition-all 
-                              peer-focus:-top-3 peer-focus:text-xs"
+                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
                   >
-                    Month
+                    Month *
                   </label>
                 </div>
                 {/* Date Select (dynamic based on month) */}
@@ -209,7 +276,7 @@ function Appointment() {
                     required
                     disabled={!formData.month}
                   >
-                    <option value="">Select Date</option>
+                    <option value="" disabled>Select Date</option>
                     {formData.month &&
                       Array.from({ length: getDaysInMonth(formData.month) }, (_, i) => (
                         <option key={i + 1} value={i + 1}>
@@ -219,10 +286,9 @@ function Appointment() {
                   </select>
                   <label
                     htmlFor="date"
-                    className="absolute left-3 top-2 text-sm text-gray-500 transition-all 
-                              peer-focus:-top-3 peer-focus:text-xs"
+                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
                   >
-                    Date
+                    Date *
                   </label>
                 </div>
               </div>
@@ -240,10 +306,9 @@ function Appointment() {
                 />
                 <label
                   htmlFor="time"
-                  className="absolute left-3 top-2 text-sm text-gray-500 transition-all 
-                            peer-focus:-top-3 peer-focus:text-xs"
+                  className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
                 >
-                  Time
+                  Time *
                 </label>
               </div>
 
@@ -255,16 +320,15 @@ function Appointment() {
                   id="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  placeholder=" "
-                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  placeholder=""
+                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   required
                 />
                 <label
                   htmlFor="name"
-                  className="absolute left-3 top-2 text-sm text-gray-500 transition-all 
-                            peer-focus:-top-3 peer-focus:text-xs"
+                  className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
                 >
-                  Appointment Name
+                  Appointment Name *
                 </label>
               </div>
 
@@ -276,24 +340,23 @@ function Appointment() {
                   id="location"
                   value={formData.location}
                   onChange={handleInputChange}
-                  placeholder=" "
-                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  placeholder=""
+                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   required
                 />
                 <label
                   htmlFor="location"
-                  className="absolute left-3 top-2 text-sm text-gray-500 transition-all 
-                            peer-focus:-top-3 peer-focus:text-xs"
+                  className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
                 >
-                  Location
+                  Location *
                 </label>
               </div>
 
               {/* Type Select */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+              <div className="relative">
                 <select
                   name="type"
+                  id="type"
                   value={formData.type}
                   onChange={handleInputChange}
                   className="block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
@@ -303,6 +366,12 @@ function Appointment() {
                   <option value="vaccination">Vaccination</option>
                   <option value="specialist">Specialist</option>
                 </select>
+                <label
+                  htmlFor="type"
+                  className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
+                >
+                  Appointment Type
+                </label>
               </div>
 
               {/* Action Buttons */}
@@ -320,7 +389,7 @@ function Appointment() {
                   whileTap={{ scale: 0.9 }}
                   className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
                 >
-                  Save
+                  {isEditing ? "Update" : "Save"}
                 </motion.button>
               </div>
             </form>
@@ -332,7 +401,9 @@ function Appointment() {
 }
 
 // Component to display each appointment
-function Appointments({ date, month, name, time, location, type, onDelete }) {
+function Appointments({ appointment, onDelete, onEdit }) {
+  const { date, month, name, time, location, type } = appointment;
+  
   const bgColors = {
     checkup: "bg-blue-100",
     lab: "bg-purple-100",
@@ -356,13 +427,22 @@ function Appointments({ date, month, name, time, location, type, onDelete }) {
               {time} - {location}
             </p>
           </div>
-          <motion.button
-            onClick={onDelete}
-            whileTap={{ scale: 0.9 }}
-            className="text-rose-600 hover:text-rose-800"
-          >
-            <Trash2 size={20} />
-          </motion.button>
+          <div className="flex gap-2">
+            <motion.button
+              onClick={onEdit}
+              whileTap={{ scale: 0.9 }}
+              className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50"
+            >
+              <Edit size={18} />
+            </motion.button>
+            <motion.button
+              onClick={onDelete}
+              whileTap={{ scale: 0.9 }}
+              className="text-rose-600 hover:text-rose-800 p-1 rounded-full hover:bg-rose-50"
+            >
+              <Trash2 size={18} />
+            </motion.button>
+          </div>
         </div>
       </div>
     </div>

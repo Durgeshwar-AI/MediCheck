@@ -4,12 +4,19 @@ import { Plus, Trash2 } from "lucide-react";
 
 function Medications() {
   const [meds, setMeds] = useState([
-    { id: 1, name: "Lisinopril", dosage: "10mg", schedule: "Daily - Morning", refill: "May 15" },
-    { id: 2, name: "Metformin", dosage: "500mg", schedule: "Twice daily", refill: "April 30" },
+    { id: 1, name: "Lisinopril", dosage: "10mg", schedule: "Daily - Morning", refill: "May 15", year: "2025" },
+    { id: 2, name: "Metformin", dosage: "500mg", schedule: "Twice daily", refill: "April 30", year: "2025" },
   ]);
 
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ name: "", dosage: "", schedule: "", refill: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    dosage: "",
+    schedule: "",
+    month: "",
+    date: "",
+    year: new Date().getFullYear().toString()
+  });
 
   useEffect(() => {
     if (showForm) {
@@ -24,13 +31,81 @@ function Medications() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (Object.values(formData).some((field) => field.trim() === "")) return;
+  const isLeapYear = (year) => {
+    const yearNum = parseInt(year);
+    return ((yearNum % 4 === 0) && (yearNum % 100 !== 0)) || (yearNum % 400 === 0);
+  };
 
-    setMeds([...meds, { ...formData, id: meds.length + 1 }]);
-    setFormData({ name: "", dosage: "", schedule: "", refill: "" });
+  const getDaysInMonth = (month, year) => {
+    const monthMap = {
+      "Jan": 31,
+      "Feb": isLeapYear(year) ? 29 : 28,
+      "Mar": 31,
+      "Apr": 30,
+      "May": 31,
+      "Jun": 30,
+      "Jul": 31,
+      "Aug": 31,
+      "Sep": 30,
+      "Oct": 31,
+      "Nov": 30,
+      "Dec": 31
+    };
+    return monthMap[month] || 31;
+  };
+
+  // Reset date if month changes or if year changes and affects February
+  useEffect(() => {
+    if (formData.month === "Feb" && formData.date && parseInt(formData.date) > getDaysInMonth("Feb", formData.year)) {
+      setFormData(prev => ({ ...prev, date: getDaysInMonth("Feb", formData.year).toString() }));
+    }
+  }, [formData.month, formData.year]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "month") {
+      setFormData({ ...formData, month: value, date: "" });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const generateNewId = () => {
+    return meds.length > 0 ? Math.max(...meds.map(med => med.id)) + 1 : 1;
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    // Format the refill date string
+    const refillDate = `${formData.month} ${formData.date}`;
+
+    // Add new medication with a unique ID
+    const newMed = {
+      id: generateNewId(),
+      name: formData.name,
+      dosage: formData.dosage,
+      schedule: formData.schedule,
+      refill: refillDate,
+      year: formData.year
+    };
+
+    setMeds([...meds, newMed]);
+
+    // Reset form data and close the popup
+    setFormData({
+      name: "",
+      dosage: "",
+      schedule: "",
+      month: "",
+      date: "",
+      year: new Date().getFullYear().toString()
+    });
     setShowForm(false);
+  };
+
+  const handleDelete = (id) => {
+    setMeds(meds.filter(med => med.id !== id));
   };
 
   return (
@@ -46,24 +121,29 @@ function Medications() {
                hover:scale-105 bg-white border-blue-500 text-blue-500"
             onClick={handleCreateClick}
           >
-            <Plus /> Add 
+            <Plus size={20} /> Add
           </motion.button>
         </div>
-
+        <hr className="mt-4" />
         <div className="mt-4 space-y-4 h-[270px] overflow-y-auto">
           {meds.map((med) => (
-            <div key={med.id} className="grid grid-cols-12 items-center w-full p-3 mb-3 border rounded-lg">
-              <div className="flex flex-col col-span-8">
-                <div className="font-medium">{med.name} {med.dosage}</div>
-                <div className="text-sm text-gray-500">{med.schedule}</div>
+            <div key={med.id} className="p-4 border rounded-xl flex justify-between items-center">
+              <div className="flex flex-col">
+                <div className="font-semibold text-lg">{med.name} {med.dosage}</div>
+                <div className="text-gray-500">{med.schedule}</div>
               </div>
-              <div className="flex flex-col col-span-3">
-                <div className="text-sm text-gray-500">Refill by</div>
-                <div className="font-medium">{med.refill}</div>
+              <div className="flex items-center">
+                <div className="flex flex-col items-end mr-3">
+                  <div className="text-sm text-gray-500">Refill by</div>
+                  <div className="font-semibold">{med.refill} {med.year}</div>
+                </div>
+                <button
+                  className="text-red-500 hover:text-red-700 transition-colors p-1"
+                  onClick={() => handleDelete(med.id)}
+                >
+                  <Trash2 size={20} />
+                </button>
               </div>
-              <button className="text-red-500 hover:text-red-700 transition-colors">
-                <Trash2 size={20} />
-              </button>
             </div>
           ))}
         </div>
@@ -80,67 +160,158 @@ function Medications() {
             className="w-full max-w-xl bg-white border-2 p-6 rounded-lg shadow-lg border-blue-500"
           >
             <h2 className="text-2xl font-bold mb-6 text-center">Add Medication</h2>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Medication Name</label>
-                <input
-                  id="medicationName"
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="mt-1 w-full border rounded-lg px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Dosage</label>
-                <input
-                  type="text"
-                  name="dosage"
-                  value={formData.dosage}
-                  onChange={handleChange}
-                  className="mt-1 w-full border rounded-lg px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Schedule</label>
-                <input
-                  type="text"
-                  name="schedule"
-                  value={formData.schedule}
-                  onChange={handleChange}
-                  className="mt-1 w-full border rounded-lg px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Refill Date</label>
-                <input
-                  type="date"
-                  name="refill"
-                  value={formData.refill}
-                  onChange={handleChange}
-                  className="mt-1 w-full border rounded-lg px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all"
-                  required
-                />
-              </div>
-              <div className="flex justify-between pt-4">
-                <motion.button
-                  type="button"
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleCloseForm}
-                  className="px-4 py-2 shadow-md text-rose-600 border rounded-lg font-bold hover:bg-red-300 hover:text-white transition duration-300"
-                >
-                  Cancel
-                </motion.button>
-                <motion.button
-                  type="submit"
-                  className="px-4 font-bold py-2 bg-gradient-to-br from-green-600 via-green-400 to-green-200 text-white rounded-lg hover:scale-105 hover:shadow-md transition duration-300 ease-in-out"
-                >
-                  Save
-                </motion.button>
+            <form onSubmit={handleFormSubmit} className="space-y-5">
+              <div className="grid grid-cols-2 gap-4">
+                {/* Medication Name */}
+                <div className="relative">
+                  <input
+                    id="medicationName"
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    required
+                  />
+                  <label
+                    htmlFor="medicationName"
+                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-red-400 font-bold"
+                  >
+                    Medication Name *
+                  </label>
+                </div>
+
+                {/* Dosage */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="dosage"
+                    value={formData.dosage}
+                    onChange={handleChange}
+                    className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    required
+                  />
+                  <label
+                    htmlFor="dosage"
+                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-red-400 font-bold"
+                  >
+                    Dosage *
+                  </label>
+                </div>
+
+                {/* Schedule */}
+                <div className="relative col-span-2">
+                  <input
+                    type="text"
+                    name="schedule"
+                    value={formData.schedule}
+                    onChange={handleChange}
+                    className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    required
+                  />
+                  <label
+                    htmlFor="schedule"
+                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-red-400 font-bold"
+                  >
+                    Schedule *
+                  </label>
+                </div>
+
+                {/* Month Select */}
+                <div className="relative">
+                  <select
+                    name="month"
+                    id="month"
+                    value={formData.month}
+                    onChange={handleInputChange}
+                    className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    required
+                  >
+                    <option value="" disabled>Select Month</option>
+                    {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map(
+                      (month, index) => (
+                        <option key={index} value={month}>
+                          {month}
+                        </option>
+                      )
+                    )}
+                  </select>
+                  <label
+                    htmlFor="month"
+                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-rose-500"
+                  >
+                    Refill Month *
+                  </label>
+                </div>
+
+                {/* Date Select */}
+                <div className="relative">
+                  <select
+                    name="date"
+                    id="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    required
+                    disabled={!formData.month}
+                  >
+                    <option value="" disabled>Select Date</option>
+                    {formData.month &&
+                      Array.from({ length: getDaysInMonth(formData.month, formData.year) }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {i + 1}
+                        </option>
+                      ))}
+                  </select>
+                  <label
+                    htmlFor="date"
+                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-rose-500"
+                  >
+                    Refill Date *
+                  </label>
+                </div>
+
+                {/* Year Select */}
+                <div className="relative col-span-2">
+                  <select
+                    name="year"
+                    id="year"
+                    value={formData.year}
+                    onChange={handleInputChange}
+                    className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    required
+                  >
+                    {Array.from({ length: 26 }, (_, i) => 2025 + i).map(year => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <label
+                    htmlFor="year"
+                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-rose-500"
+                  >
+                    Year *
+                  </label>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex justify-between pt-4 col-span-2">
+                  <motion.button
+                    type="button"
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleCloseForm}
+                    className="px-4 py-2 shadow-md text-rose-600 border rounded-lg font-bold hover:bg-red-300 hover:text-white transition duration-300"
+                  >
+                    Cancel
+                  </motion.button>
+                  <motion.button
+                    type="submit"
+                    className="px-4 font-bold py-2 bg-gradient-to-br from-green-600 via-green-400 to-green-200 text-white rounded-lg hover:scale-105 hover:shadow-md transition duration-300 ease-in-out"
+                  >
+                    Save
+                  </motion.button>
+                </div>
               </div>
             </form>
           </motion.div>

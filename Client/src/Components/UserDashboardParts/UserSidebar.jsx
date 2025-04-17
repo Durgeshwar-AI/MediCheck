@@ -8,6 +8,7 @@ import {
   ChevronRight,
   User,
   LogOut,
+  AlertTriangle,
 } from "lucide-react";
 
 const URL = import.meta.env.VITE_URL;
@@ -45,6 +46,8 @@ const UserSidebar = ({ children }) => {
     { name: "Dashboard", icon: <Home size={18} />, path: `${URL}/dashboard` },
     { name: "Medical Records", icon: <FileText size={18} />, path: `${URL}/records` },
     { name: "Appointments", icon: <Calendar size={18} />, path: `${URL}/appointments` },
+    { name: "Emergency", path: "/support", icon: <AlertTriangle size={20} /> },
+
   ];
 
   // Logout function: clear token and reload to login
@@ -66,9 +69,8 @@ const UserSidebar = ({ children }) => {
 
       {/* Sidebar */}
       <aside
-        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky ${
-          expanded ? "w-48" : "w-16"
-        }`}
+        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky ${expanded ? "w-48" : "w-16"
+          }`}
       >
         <nav className="p-3 mt-2">
           <ul className="space-y-2">
@@ -78,11 +80,10 @@ const UserSidebar = ({ children }) => {
                 <li key={item.name} className="relative group">
                   <Link
                     to={item.path}
-                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all ${
-                      active
+                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all ${active
                         ? "bg-blue-50 text-blue-600 font-medium"
                         : "text-gray-600 hover:bg-gray-50 hover:text-blue-500"
-                    }`}
+                      }`}
                   >
                     <span className={active ? "text-blue-600" : "text-gray-500"}>
                       {item.icon}
