@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  BrainCog,
   LogOut,
   AlertTriangle,
 } from "lucide-react";
@@ -47,6 +48,7 @@ const UserSidebar = ({ children }) => {
     { name: "Medical Records", icon: <FileText size={18} />, path: `${URL}/records` },
     { name: "Appointments", icon: <Calendar size={18} />, path: `${URL}/appointments` },
     { name: "Emergency", path: "/support", icon: <AlertTriangle size={20} /> },
+    { name: "Ask AI", path: "/ai", icon: <BrainCog size={20} /> },
 
   ];
 
@@ -81,8 +83,8 @@ const UserSidebar = ({ children }) => {
                   <Link
                     to={item.path}
                     className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all ${active
-                        ? "bg-blue-50 text-blue-600 font-medium"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-blue-500"
+                      ? "bg-blue-50 text-blue-600 font-medium"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-blue-500"
                       }`}
                   >
                     <span className={active ? "text-blue-600" : "text-gray-500"}>

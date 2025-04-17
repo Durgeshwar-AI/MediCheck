@@ -23,7 +23,7 @@ import Redirect from "./Pages/Redirect";
 import UserAppointments from "./Pages/User/UserAppointments";
 import UserMedicalRecords from "./Pages/User/UserMedicalRecords";
 import { HealthProvider } from "./context/HealthDataContext";
-
+import UserAI from "./Pages/User/UserAI";
 const App = () => {
   
   return (
@@ -51,6 +51,7 @@ const App = () => {
         <Route path='/dashboard' element={<UserDashboard/>}/>
         <Route path='/appointments' element={<UserAppointments/>}/>
         <Route path='/records' element={<UserMedicalRecords/>}/>
+        <Route path='/ai' element={<UserAI/>}/>
         <Route path="*" element={<PageNotAvailable />} />
       </Routes>
     </div>
