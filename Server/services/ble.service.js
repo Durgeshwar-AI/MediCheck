@@ -123,7 +123,7 @@ const checkHealth = async (healthData)=>{
         - Steps Taken: ${steps}
         - Sleep Duration: ${sleepString}
     
-        Analyze these metrics and Return only either OK, PROBLEM or EMERGENCY-CASE depending on the data.
+        Analyze these metrics and Return only either OK, PROBLEM or EMERGENCY-CASE depending on the data. And a single line statement on where the problem is:
         `;
     
       try {

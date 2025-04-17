@@ -12,6 +12,13 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true, minlength: 8, select: false },
 });
 
+const fileSchema = new mongoose.Schema({
+  name: String,
+  data: String,
+  contentType: String,
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+})
+
 // Hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
@@ -28,4 +35,6 @@ userSchema.methods.generateAuthToken = function () {
 };
 
 const User = mongoose.model('User', userSchema);
+const File = mongoose.model('File', fileSchema)
 export default User;
+export {File}

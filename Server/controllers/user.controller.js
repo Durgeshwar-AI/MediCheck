@@ -1,6 +1,7 @@
-import User from '../models/user.model.js';
+import User, { File } from '../models/user.model.js';
 import bcrypt from 'bcrypt';
 import { validationResult } from 'express-validator';
+import hospital from '../models/hospital.model.js';
 
 export const registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -59,3 +60,25 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const fileUpload = async (req, res) => {
+  const { name, data, contentType } = req.body;
+  const image = new File({
+    name,
+    data,
+    contentType,
+    userId: req.user.userId,
+  });
+  await image.save();
+  res.send({ message: "Image saved" });
+}
+
+export const fileRetrive = async (req, res) => {
+  const images = await File.find({ userId: req.user.userId });
+  res.json(images);
+}
+
+export const getHospitals = async (req,res)=>{
+  const hospitals = await hospital.find({},"id company")
+  res.json(hospitals)
+}
