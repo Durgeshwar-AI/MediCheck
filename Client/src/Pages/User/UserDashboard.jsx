@@ -8,6 +8,7 @@ import MedicalHistory from "../../Components/UserDashboardParts/MedicalHistory";
 import HealthGoals from "../../Components/UserDashboardParts/HealthGoals";
 import Medications from "../../Components/UserDashboardParts/Medications";
 import UserSidebar from "../../Components/UserDashboardParts/UserSidebar";
+import UserAiSection from "../../Components/UserDashboardParts/UserAiSection";
 import { useHealth } from "../../hooks/useHealth";
 
 const UserDashboard = () => {
@@ -54,7 +55,9 @@ const UserDashboard = () => {
                     such as QuickStats or MedicalHistory, they can be added here */}
               </div>
             </div>
+            <UserAiSection/>
           </main>
+
         </div>
       </div>
     </div>
