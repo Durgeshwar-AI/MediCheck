@@ -111,7 +111,7 @@ const HospitalAppointments = () => {
 
               {/* Today's Appointments */}
               <motion.div variants={itemVariants}>
-                <h2 className="text-xl font-semibold mt-6 mb-4">Today's Appointments</h2>
+                <h2 className="text-xl font-semibold mt-6 mb-4">Today&apos;s Appointments</h2>
                 {todaysAppointments.length > 0 ? (
                   <div className="space-y-4">
                     {todaysAppointments.map(app => (

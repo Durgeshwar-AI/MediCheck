@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 const Redirect = () => {
   const navigate = useNavigate();
 
-  const URL= import.meta.env.VITE_URL
+  // const URL= import.meta.env.VITE_URL
 
   const cardVariants = {
     hidden: { opacity: 0, y: 40 },

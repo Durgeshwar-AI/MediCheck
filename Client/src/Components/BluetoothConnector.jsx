@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHealthData } from './HealthDataContext'; // Import the custom hook
+import { useHealthData } from '../context/HealthDataContext'; // Import the custom hook
 
 const BluetoothConnector = () => {
   const { heartRate, oxygen, bp, steps, sleep, updateHealthData } = useHealthData(); // Use the context
