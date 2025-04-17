@@ -19,11 +19,14 @@ const PatientList = ({ patients }) => {
         );
       }
       
-      // Apply status filter
+      // Apply status filter - Fix for "Under Observation"
       if (statusFilter !== 'all') {
-        filtered = filtered.filter(patient => 
-          patient.status.toLowerCase() === statusFilter.toLowerCase()
-        );
+        filtered = filtered.filter(patient => {
+          // Remove spaces and convert to lowercase for comparison
+          const normalizedPatientStatus = patient.status.toLowerCase().replace(/\s+/g, '');
+          const normalizedFilterStatus = statusFilter.toLowerCase().replace(/\s+/g, '');
+          return normalizedPatientStatus === normalizedFilterStatus;
+        });
       }
       
       setDisplayPatients(filtered);
@@ -63,6 +66,11 @@ const PatientList = ({ patients }) => {
     }
   };
 
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
   return (
     <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg shadow-md h-full">
       <h2 className="text-xl sm:text-2xl text-center font-bold mb-1">Recent Patients</h2>
@@ -90,7 +98,7 @@ const PatientList = ({ patients }) => {
             <option value="critical">Critical</option>
             <option value="stable">Stable</option>
             <option value="recovering">Recovering</option>
-            <option value="underobservation">Under Observation</option>
+            <option value="under observation">Under Observation</option>
           </select>
         </div>
       </div>
@@ -109,7 +117,7 @@ const PatientList = ({ patients }) => {
                 Age
               </th>
               <th scope="col" className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Doctor
+                Specialty
               </th>
               <th scope="col" className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
@@ -130,7 +138,7 @@ const PatientList = ({ patients }) => {
                     {patient.age}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-gray-500">
-                    {patient.doctor}
+                    {patient.doctorType || patient.doctor}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
                     <span className={`px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-medium rounded-full ${getStatusColor(patient.status)}`}>
@@ -152,7 +160,7 @@ const PatientList = ({ patients }) => {
       
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row justify-center sm:justify-end items-center space-y-2 sm:space-y-0 sm:space-x-2">
+        <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
           <span className="text-xs sm:text-sm text-gray-500">
             Showing {indexOfFirstPatient + 1} to {Math.min(indexOfLastPatient, displayPatients.length)} of {displayPatients.length} patients
           </span>
@@ -161,6 +169,7 @@ const PatientList = ({ patients }) => {
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
               className="p-1 rounded-md disabled:opacity-50"
+              aria-label="Previous page"
             >
               <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -173,6 +182,7 @@ const PatientList = ({ patients }) => {
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
               className="p-1 rounded-md disabled:opacity-50"
+              aria-label="Next page"
             >
               <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />

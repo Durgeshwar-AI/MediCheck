@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ArrowLeftFromLine } from 'lucide-react';
 
 function EmergencyPage() {
   const [location, setLocation] = useState(null);
@@ -7,6 +8,11 @@ function EmergencyPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [emergencyRequested, setEmergencyRequested] = useState(false);
   const [emergencyType, setEmergencyType] = useState("medical");
+
+
+  const handleGoBack = () => {
+    window.history.back();
+  };
 
   // Get current location when component mounts
   useEffect(() => {
@@ -36,7 +42,7 @@ function EmergencyPage() {
 
   const handleEmergencyRequest = () => {
     setIsLoading(true);
-    
+
     // Simulate API call to emergency services
     setTimeout(() => {
       setEmergencyRequested(true);
@@ -52,9 +58,16 @@ function EmergencyPage() {
           <Link to="/home" className="font-bold text-2xl">
             MediCheck<span className="text-white font-normal">Emergency</span>
           </Link>
-          <Link to="/home" className="text-white hover:text-red-100 transition">
-            Return to Main Site
-          </Link>
+          <button
+            type="button"
+            aria-level="Go back to previous page"
+            onClick={handleGoBack}
+
+            className="px-4 py-2 rounded-2xl hover:text-white text-red-600 bg-white hover:bg-red-600  border-2 border-red-600 hover:border-white flex items-center"
+            aria-describedby="go-back-tooltip"
+          >
+            <ArrowLeftFromLine />Go Back
+          </button>
         </div>
       </header>
 
@@ -81,7 +94,7 @@ function EmergencyPage() {
           <>
             {/* Page title */}
             <h1 className="text-3xl font-bold text-red-700 text-center mb-8">Emergency Assistance</h1>
-            
+
             {/* Information panel */}
             <div className="bg-white p-6 rounded-xl shadow-md mb-8">
               <h2 className="text-xl font-bold text-gray-800 mb-4">How This Works</h2>
@@ -186,9 +199,8 @@ function EmergencyPage() {
               <button
                 onClick={handleEmergencyRequest}
                 disabled={!location || isLoading}
-                className={`px-8 py-4 text-xl font-bold text-white rounded-xl shadow-lg transition ${
-                  !location || isLoading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
-                }`}
+                className={`px-8 py-4 text-xl font-bold text-white rounded-xl shadow-lg transition ${!location || isLoading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
+                  }`}
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center">
