@@ -1,5 +1,7 @@
 import { Team } from "../models/admin.model.js";
+import Hospital from "../models/hospital.model.js"
 import { getNextHospitalId } from "../services/counter.service.js";
+import bcrypt from "bcrypt"
 
 export const createMember = async (req, res) => {
   try {
@@ -79,6 +81,8 @@ export const createHospital = async (req, res) => {
 
     const savedHospital = await newHospital.save();
 
+    const token = savedHospital.generateAuthToken();
+
     res.status(201).json({
       message: "Hospital registered successfully",
       hospital: {
@@ -87,6 +91,7 @@ export const createHospital = async (req, res) => {
         email: savedHospital.email,
         contact: savedHospital.contact,
       },
+      token
     });
   } catch (error) {
     console.error("Error in /hospital:", error);
