@@ -1,158 +1,195 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Plus, Edit, Trash2 } from "lucide-react";
 
 function HealthGoals() {
-  const [goals, setGoals] = useState([
-    { id: 1, name: "Daily Steps", unit: "steps", target: 10000, current: 7250, percent: 72 },
-    { id: 2, name: "Water Intake", unit: "glasses", target: 8, current: 5, percent: 62 },
-    { id: 3, name: "Sleep", unit: "hours", target: 8, current: 6.5, percent: 81 }
-  ]);
+  const API_URL = import.meta.env.VITE_API_URL;
+  const tokenData = localStorage.getItem("authToken");
+  const { value } = JSON.parse(tokenData);
+  const token = value;
 
+  const [goals, setGoals] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({ name: '', unit: '', target: '', current: '' });
+  const [formData, setFormData] = useState({
+    name: "",
+    unit: "",
+    target: "",
+    current: "",
+    percent: 0,
+  });
 
   useEffect(() => {
-    if (showForm) {
-      document.getElementById("goalName")?.focus();
-    }
-  }, [showForm]);
+    fetchGoals();
+  }, []);
 
-  // Function to open create goal form
+  const fetchGoals = async () => {
+    try {
+      const res = await fetch(`${API_URL}/goals`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setGoals(data);
+    } catch (err) {
+      console.error("Failed to fetch goals:", err);
+    }
+  };
+
   const handleCreateClick = () => {
     setIsEditing(false);
     setEditingGoal(null);
-    setFormData({ name: '', unit: '', target: '', current: '' });
+    setFormData({ name: "", unit: "", target: "", current: "", percent: 0 });
     setShowForm(true);
   };
-  
-  // Function to close form
+
   const handleCloseForm = () => {
     setShowForm(false);
     setIsEditing(false);
     setEditingGoal(null);
   };
 
-  // Function to handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    if (name === "current") {
-      const targetValue = parseFloat(formData.target) || 100;
-      const currentValue = parseFloat(value);
-      const percent = Math.round(Math.min((currentValue / targetValue) * 100, 100));
-      
-      setFormData({ 
-        ...formData, 
-        [name]: value,
-        percent: percent
-      });
-    } else {
-      setFormData({ ...formData, [name]: value });
-      
-      // If target changed and we have a current value, recalculate the percent
-      if (name === "target" && formData.current) {
-        const targetValue = parseFloat(value) || 0;
-        const currentValue = parseFloat(formData.current);
-        if (targetValue > 0) {
-          const percent = Math.round(Math.min((currentValue / targetValue) * 100, 100));
-          setFormData(prev => ({ ...prev, percent: percent }));
-        }
+
+    const updatedForm = { ...formData, [name]: value };
+
+    if (name === "current" || name === "target") {
+      const currentValue =
+        name === "current" ? parseFloat(value) : parseFloat(formData.current);
+      const targetValue =
+        name === "target" ? parseFloat(value) : parseFloat(formData.target);
+
+      if (!isNaN(currentValue) && !isNaN(targetValue) && targetValue > 0) {
+        updatedForm.percent = Math.round(
+          Math.min((currentValue / targetValue) * 100, 100)
+        );
       }
     }
+
+    setFormData(updatedForm);
   };
 
-  // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const targetValue = parseFloat(formData.target);
     const currentValue = parseFloat(formData.current);
+
     if (isNaN(targetValue) || isNaN(currentValue) || targetValue <= 0) return;
 
-    const percent = Math.min((currentValue / targetValue) * 100, 100);
+    const percent = Math.round(Math.min((currentValue / targetValue) * 100, 100));
+
     const newGoal = {
       name: formData.name,
       unit: formData.unit,
       target: targetValue,
       current: currentValue,
-      percent: Math.round(percent)
+      percent,
     };
 
-    if (isEditing && editingGoal) {
-      // Update existing goal
-      setGoals(goals.map(goal => 
-        goal.id === editingGoal.id ? { ...newGoal, id: goal.id } : goal
-      ));
-    } else {
-      // Add new goal with a unique ID
-      const newId = goals.length > 0 ? Math.max(...goals.map(g => g.id)) + 1 : 1;
-      setGoals([...goals, { ...newGoal, id: newId }]);
-    }
+    try {
+      const endpoint = isEditing ? `${API_URL}/goals/${editingGoal._id}` : `${API_URL}/goals`;
+      const method = isEditing ? "PUT" : "POST";
 
-    setFormData({ name: '', unit: '', target: '', current: '' });
-    setShowForm(false);
-    setIsEditing(false);
-    setEditingGoal(null);
+      const res = await fetch(endpoint, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newGoal),
+      });
+
+      if (res.ok) {
+        await fetchGoals();
+        setShowForm(false);
+        setFormData({ name: "", unit: "", target: "", current: "", percent: 0 });
+        setIsEditing(false);
+        setEditingGoal(null);
+      } else {
+        console.error("Failed to save goal");
+      }
+    } catch (err) {
+      console.error("Error saving goal:", err);
+    }
   };
 
-  // Function to open the edit form for a goal
   const handleEditGoal = (goal) => {
     setIsEditing(true);
     setEditingGoal(goal);
     setFormData({
       name: goal.name,
       unit: goal.unit,
-      target: goal.target.toString(),
-      current: goal.current.toString(),
-      percent: goal.percent
+      target: goal.target,
+      current: goal.current,
+      percent: goal.percent,
     });
     setShowForm(true);
   };
 
-  // Function to delete a goal by filtering it out of the state
-  const handleDeleteGoal = (goalId) => {
-    setGoals(goals.filter((goal) => goal.id !== goalId));
+  const handleDeleteGoal = async (goalId) => {
+    try {
+      const res = await fetch(`${API_URL}/goals/${goalId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setGoals(goals.filter((goal) => goal._id !== goalId));
+      } else {
+        console.error("Failed to delete goal");
+      }
+    } catch (err) {
+      console.error("Error deleting goal:", err);
+    }
   };
 
-  // Function to update progress based on click position on progress bar
-  const handleProgressBarClick = (e, goalId, goal) => {
+  const handleProgressBarClick = (e, goal) => {
     const progressBar = e.currentTarget;
     const rect = progressBar.getBoundingClientRect();
-    const x = e.clientX - rect.left; // x position within the element
+    const x = e.clientX - rect.left;
     const percentClicked = Math.min(Math.max((x / rect.width) * 100, 0), 100);
     const newCurrentValue = (percentClicked / 100) * goal.target;
-    
-    setGoals(goals.map(g => {
-      if (g.id === goalId) {
-        return { 
-          ...g, 
-          current: parseFloat(newCurrentValue.toFixed(1)), 
-          percent: Math.round(percentClicked) 
-        };
-      }
-      return g;
-    }));
+
+    updateGoalProgress(goal._id, newCurrentValue);
   };
 
-  // Function to update progress directly from the UI
-  const handleProgressUpdate = (goalId, newValue) => {
-    setGoals(goals.map(goal => {
-      if (goal.id === goalId) {
-        const currentValue = parseFloat(newValue);
-        const percent = Math.round(Math.min((currentValue / goal.target) * 100, 100));
-        return { ...goal, current: currentValue, percent: percent };
+  const updateGoalProgress = async (goalId, newCurrent) => {
+    const goal = goals.find((g) => g._id === goalId);
+    const percent = Math.round(Math.min((newCurrent / goal.target) * 100, 100));
+
+    try {
+      const res = await fetch(`${API_URL}/goals/${goalId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ ...goal, current: newCurrent, percent }),
+      });
+
+      if (res.ok) {
+        await fetchGoals();
+      } else {
+        console.error("Failed to update progress");
       }
-      return goal;
-    }));
+    } catch (err) {
+      console.error("Error updating progress:", err);
+    }
   };
 
   return (
     <>
       <div className="bg-white border rounded-lg shadow-lg mb-6 p-6">
         <div className="flex justify-between items-center">
-          <h1 className="font-bold text-xl md:text-2xl text-gray-800">Health Goals</h1>
+          <h1 className="font-bold text-xl md:text-2xl text-gray-800">
+            Health Goals
+          </h1>
           <motion.button
             whileTap={{ scale: 0.95 }}
             className="hover:text-white font-semibold px-2 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-500 hover:shadow-lg transition duration-300 border-2 hover:border-gray-50 hover:scale-105 bg-white border-blue-500 text-blue-500"
@@ -169,11 +206,13 @@ function HealthGoals() {
             </div>
           ) : (
             goals.map((goal) => (
-              <div key={goal.id} className="mb-4">
+              <div key={goal._id} className="mb-4">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-medium">{goal.name}</span>
                   <div className="flex items-center gap-4">
-                    <span className="whitespace-nowrap">{goal.current} / {goal.target} {goal.unit}</span>
+                    <span className="whitespace-nowrap">
+                      {goal.current} / {goal.target} {goal.unit}
+                    </span>
                     <div className="flex items-center gap-1">
                       <motion.button
                         whileTap={{ scale: 0.95 }}
@@ -184,7 +223,7 @@ function HealthGoals() {
                       </motion.button>
                       <motion.button
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => handleDeleteGoal(goal.id)}
+                        onClick={() => handleDeleteGoal(goal._id)}
                         className="text-rose-600 hover:text-rose-800 p-1 rounded-full hover:bg-rose-50"
                       >
                         <Trash2 size={16} />
@@ -192,12 +231,13 @@ function HealthGoals() {
                     </div>
                   </div>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3 cursor-pointer relative"
-                onClick={(e)=>handleProgressBarClick(e, goal.id, goal)}
+                <div
+                  className="w-full bg-gray-200 rounded-full h-3 cursor-pointer relative"
+                  onClick={(e) => handleProgressBarClick(e, goal)}
                 >
                   <motion.div
                     className="bg-gradient-to-r from-red-400 via-yellow-300 to-green-600 h-3 rounded-full"
-                    initial={{ width: '0%' }}
+                    initial={{ width: "0%" }}
                     animate={{ width: `${goal.percent}%` }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                   />
@@ -225,7 +265,9 @@ function HealthGoals() {
             </h2>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="relative">
-                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">Goal Name *</label>
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
+                  Goal Name *
+                </label>
                 <input
                   id="goalName"
                   type="text"
@@ -237,7 +279,9 @@ function HealthGoals() {
                 />
               </div>
               <div className="relative">
-                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">Unit (e.g., steps, glasses) *</label>
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
+                  Unit (e.g., steps, glasses) *
+                </label>
                 <input
                   type="text"
                   name="unit"
@@ -248,7 +292,9 @@ function HealthGoals() {
                 />
               </div>
               <div className="relative">
-                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">Target Amount *</label>
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
+                  Target Amount *
+                </label>
                 <input
                   type="number"
                   name="target"
@@ -261,7 +307,9 @@ function HealthGoals() {
                 />
               </div>
               <div className="relative">
-                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">Current Progress *</label>
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
+                  Current Progress *
+                </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="range"
@@ -275,7 +323,7 @@ function HealthGoals() {
                   />
                   <span className="font-bold text-gray-700 min-w-16 text-right">
                     {formData.current || 0}
-                    {formData.percent ? ` (${formData.percent}%)` : ''}
+                    {formData.percent ? ` (${formData.percent}%)` : ""}
                   </span>
                 </div>
               </div>
@@ -291,9 +339,9 @@ function HealthGoals() {
                 <motion.button
                   type="submit"
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 font-bold py-2 bg-gradient-to-br from-green-600 via-green-400 to-green-200 text-white rounded-lg hover:scale-105 hover:shadow-md transition duration-300 ease-in-out"
+                  className="px-4 py-2 shadow-md text-white bg-blue-500 border border-blue-600 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
                 >
-                  {isEditing ? "Update" : "Save"}
+                  {isEditing ? "Update Goal" : "Save Goal"}
                 </motion.button>
               </div>
             </form>

@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import logo from "../../assets/logo.png";
 import { LuEyeClosed } from "react-icons/lu";
 import { RxEyeOpen } from "react-icons/rx";
-import { ArrowLeftFromLine } from 'lucide-react';
-const HospitalLogin = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [showPassword, setShowPassword] = useState(false);
+import { ArrowLeftFromLine } from "lucide-react";
+import { storeToken, isLoggedIn } from "../../utils/auth";
+import { useHealth } from "../../hooks/useHealth";
 
+const HospitalLogin = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const { updateLogin } = useHealth();
+  const URL = import.meta.env.VITE_API_URL;
+
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const handleTogglePassword = () => {
     setShowPassword((prevState) => !prevState);
@@ -21,10 +27,33 @@ const HospitalLogin = () => {
     window.history.back();
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Add login logic here
-    alert(`Logging in with email: ${formData.email}`);
+
+    try {
+      const res = await fetch(`${URL}/hospital/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        storeToken(data.token, data.firstname);
+        updateLogin(true);
+        setTimeout(() => {
+          navigate("/hospitalDashboard");
+        }, 2000);
+      } else {
+        alert("❌ Login failed!");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -36,7 +65,11 @@ const HospitalLogin = () => {
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <div>
-          <Link to="/" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
+          <Link
+            to="/"
+            className="flex items-center cursor-pointer"
+            aria-label="MediCheck Home"
+          >
             <motion.img
               src={logo}
               alt="logo"
@@ -45,18 +78,20 @@ const HospitalLogin = () => {
               animate={{ scale: 1 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
             />
-            <h1 className="text-blue-700 font-bold italic text-2xl my-1">MediCheck</h1>
+            <h1 className="text-blue-700 font-bold italic text-2xl my-1">
+              MediCheck
+            </h1>
           </Link>
         </div>
         {/* <div className="hidden md:flex flex-grow justify-end"></div> */}
-
       </motion.header>
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-white px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative w-full max-w-md bg-white rounded-xl shadow-xl p-8">
+          className="relative w-full max-w-md bg-white rounded-xl shadow-xl p-8"
+        >
           <motion.button
             type="button"
             aria-label="Go back to previous page"
@@ -65,8 +100,7 @@ const HospitalLogin = () => {
             whileTap={{
               scale: 0.95,
               x: -220, // Move left when clicked
-              transition: { duration: 1 } // Add a transition for the rotation
-
+              transition: { duration: 1 }, // Add a transition for the rotation
             }}
             className="absolute top-2 right-2 text-red-500 hover:text-red-700 flex items-center"
             aria-describedby="go-back-tooltip"
@@ -75,13 +109,20 @@ const HospitalLogin = () => {
           </motion.button>
 
           <div className="mb-6 text-center">
-            <h2 className="text-3xl font-extrabold text-blue-700">🏥 MediCare Hospital</h2>
+            <h2 className="text-3xl font-extrabold text-blue-700">
+              🏥 MediCare Hospital
+            </h2>
             <p className="text-gray-500 mt-2">Login to continue</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block font-medium text-gray-700">Email</label>
+              <label
+                htmlFor="email"
+                className="block font-medium text-gray-700"
+              >
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -92,7 +133,6 @@ const HospitalLogin = () => {
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 placeholder="Enter your email"
               />
-
             </div>
 
             <div className="relative">
@@ -101,7 +141,9 @@ const HospitalLogin = () => {
                 name="password"
                 id="password"
                 value={formData.password}
-                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, password: e.target.value }))
+                }
                 required
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 placeholder="Enter your password"
@@ -125,7 +167,10 @@ const HospitalLogin = () => {
           </form>
 
           <div className="mt-4 text-center text-sm text-gray-500">
-            Forgot your password? <span className="text-blue-600 cursor-pointer hover:underline">Reset it</span>
+            Forgot your password?{" "}
+            <span className="text-blue-600 cursor-pointer hover:underline">
+              Reset it
+            </span>
           </div>
         </motion.div>
       </div>

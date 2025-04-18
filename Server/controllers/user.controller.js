@@ -73,7 +73,7 @@ export const fileUpload = async (req, res) => {
       name: file.originalname,
       data: file.buffer.toString('base64'),
       contentType: file.mimetype,
-      userId: req.user.userId,
+      userId: req.user.id,
     });
 
     await image.save();
@@ -86,7 +86,7 @@ export const fileUpload = async (req, res) => {
 
 export const fileRetrive = async (req, res) => {
   try {
-    const images = await File.find({ userId: req.user.userId });
+    const images = await File.find({ userId: req.user.id });
     res.json(images);
   } catch (err) {
     console.error('Retrieval error:', err);
@@ -96,7 +96,7 @@ export const fileRetrive = async (req, res) => {
 
 export const fileDelete = async (req, res) => {
   try {
-    const file = await File.findOneAndDelete({ _id: req.params.id, userId: req.user.userId });
+    const file = await File.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
     if (!file) return res.status(404).json({ error: 'File not found' });
 
     res.json({ message: 'File deleted' });
