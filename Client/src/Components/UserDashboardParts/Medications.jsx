@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import { Plus, Trash2 } from "lucide-react";
 
 function Medications() {
-  const [meds, setMeds] = useState([
-    { id: 1, name: "Lisinopril", dosage: "10mg", schedule: "Daily - Morning", refill: "May 15", year: "2025" },
-    { id: 2, name: "Metformin", dosage: "500mg", schedule: "Twice daily", refill: "April 30", year: "2025" },
-  ]);
+  const API_URL = import.meta.env.VITE_API_URL;
+  const tokenData = localStorage.getItem("authToken");
+  const { value } = JSON.parse(tokenData);
+  const token = value;
 
+  const [meds, setMeds] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -15,8 +16,26 @@ function Medications() {
     schedule: "",
     month: "",
     date: "",
-    year: new Date().getFullYear().toString()
+    year: new Date().getFullYear().toString(),
   });
+
+  useEffect(() => {
+    fetchMedications();
+  }, []);
+
+  const fetchMedications = async () => {
+    try {
+      const res = await fetch(`${API_URL}/medications`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setMeds(data);
+    } catch (err) {
+      console.error("Failed to fetch medications:", err);
+    }
+  };
 
   useEffect(() => {
     if (showForm) {
@@ -33,31 +52,37 @@ function Medications() {
 
   const isLeapYear = (year) => {
     const yearNum = parseInt(year);
-    return ((yearNum % 4 === 0) && (yearNum % 100 !== 0)) || (yearNum % 400 === 0);
+    return (yearNum % 4 === 0 && yearNum % 100 !== 0) || yearNum % 400 === 0;
   };
 
   const getDaysInMonth = (month, year) => {
     const monthMap = {
-      "Jan": 31,
-      "Feb": isLeapYear(year) ? 29 : 28,
-      "Mar": 31,
-      "Apr": 30,
-      "May": 31,
-      "Jun": 30,
-      "Jul": 31,
-      "Aug": 31,
-      "Sep": 30,
-      "Oct": 31,
-      "Nov": 30,
-      "Dec": 31
+      Jan: 31,
+      Feb: isLeapYear(year) ? 29 : 28,
+      Mar: 31,
+      Apr: 30,
+      May: 31,
+      Jun: 30,
+      Jul: 31,
+      Aug: 31,
+      Sep: 30,
+      Oct: 31,
+      Nov: 30,
+      Dec: 31,
     };
     return monthMap[month] || 31;
   };
 
-  // Reset date if month changes or if year changes and affects February
   useEffect(() => {
-    if (formData.month === "Feb" && formData.date && parseInt(formData.date) > getDaysInMonth("Feb", formData.year)) {
-      setFormData(prev => ({ ...prev, date: getDaysInMonth("Feb", formData.year).toString() }));
+    if (
+      formData.month === "Feb" &&
+      formData.date &&
+      parseInt(formData.date) > getDaysInMonth("Feb", formData.year)
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        date: getDaysInMonth("Feb", formData.year).toString(),
+      }));
     }
   }, [formData.month, formData.year]);
 
@@ -70,44 +95,68 @@ function Medications() {
     }
   };
 
-  const generateNewId = () => {
-    return meds.length > 0 ? Math.max(...meds.map(med => med.id)) + 1 : 1;
-  };
-
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    const refill = `${formData.month} ${formData.date}`;
 
-    // Format the refill date string
-    const refillDate = `${formData.month} ${formData.date}`;
-
-    // Add new medication with a unique ID
     const newMed = {
-      id: generateNewId(),
       name: formData.name,
       dosage: formData.dosage,
       schedule: formData.schedule,
-      refill: refillDate,
-      year: formData.year
+      date: formData.date,
+      month: formData.month,
+      year: formData.year,
     };
 
-    setMeds([...meds, newMed]);
+    try {
+      const res = await fetch(`${API_URL}/medications`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newMed),
+      });
 
-    // Reset form data and close the popup
-    setFormData({
-      name: "",
-      dosage: "",
-      schedule: "",
-      month: "",
-      date: "",
-      year: new Date().getFullYear().toString()
-    });
-    setShowForm(false);
+      if (res.ok) {
+        const savedMed = await res.json();
+        setMeds((prev) => [...prev, savedMed]);
+        setShowForm(false);
+        setFormData({
+          name: "",
+          dosage: "",
+          schedule: "",
+          month: "",
+          date: "",
+          year: new Date().getFullYear().toString(),
+        });
+      } else {
+        console.error("Error adding medication");
+      }
+    } catch (err) {
+      console.error("Failed to submit medication:", err);
+    }
   };
 
-  const handleDelete = (id) => {
-    setMeds(meds.filter(med => med.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`${API_URL}/medications/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        setMeds((prev) =>
+          prev.filter((med) => med._id !== id && med.id !== id)
+        );
+      } else {
+        console.error("Error deleting medication");
+      }
+    } catch (err) {
+      console.error("Failed to delete medication:", err);
+    }
   };
-
   return (
     <>
       {/* Medications List */}
@@ -127,19 +176,26 @@ function Medications() {
         <hr className="mt-4" />
         <div className="mt-4 space-y-4 h-[270px] overflow-y-auto">
           {meds.map((med) => (
-            <div key={med.id} className="p-4 border rounded-xl flex justify-between items-center">
+            <div
+              key={med._id}
+              className="p-4 border rounded-xl flex justify-between items-center"
+            >
               <div className="flex flex-col">
-                <div className="font-semibold text-lg">{med.name} {med.dosage}</div>
+                <div className="font-semibold text-lg">
+                  {med.name} {med.dosage}
+                </div>
                 <div className="text-gray-500">{med.schedule}</div>
               </div>
               <div className="flex items-center">
                 <div className="flex flex-col items-end mr-3">
                   <div className="text-sm text-gray-500">Refill by</div>
-                  <div className="font-semibold">{med.refill} {med.year}</div>
+                  <div className="font-semibold">
+                    {med.date},{med.month} {med.year}
+                  </div>
                 </div>
                 <button
                   className="text-red-500 hover:text-red-700 transition-colors p-1"
-                  onClick={() => handleDelete(med.id)}
+                  onClick={() => handleDelete(med._id)}
                 >
                   <Trash2 size={20} />
                 </button>
@@ -159,7 +215,9 @@ function Medications() {
             transition={{ duration: 0.3 }}
             className="w-full max-w-xl bg-white border-2 p-6 rounded-lg shadow-lg border-blue-500"
           >
-            <h2 className="text-2xl font-bold mb-6 text-center">Add Medication</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">
+              Add Medication
+            </h2>
             <form onSubmit={handleFormSubmit} className="space-y-5">
               <div className="grid grid-cols-2 gap-4">
                 {/* Medication Name */}
@@ -227,14 +285,27 @@ function Medications() {
                     className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                     required
                   >
-                    <option value="" disabled>Select Month</option>
-                    {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map(
-                      (month, index) => (
-                        <option key={index} value={month}>
-                          {month}
-                        </option>
-                      )
-                    )}
+                    <option value="" disabled>
+                      Select Month
+                    </option>
+                    {[
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ].map((month, index) => (
+                      <option key={index} value={month}>
+                        {month}
+                      </option>
+                    ))}
                   </select>
                   <label
                     htmlFor="month"
@@ -255,13 +326,20 @@ function Medications() {
                     required
                     disabled={!formData.month}
                   >
-                    <option value="" disabled>Select Date</option>
+                    <option value="" disabled>
+                      Select Date
+                    </option>
                     {formData.month &&
-                      Array.from({ length: getDaysInMonth(formData.month, formData.year) }, (_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {i + 1}
-                        </option>
-                      ))}
+                      Array.from(
+                        {
+                          length: getDaysInMonth(formData.month, formData.year),
+                        },
+                        (_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            {i + 1}
+                          </option>
+                        )
+                      )}
                   </select>
                   <label
                     htmlFor="date"
@@ -281,11 +359,13 @@ function Medications() {
                     className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                     required
                   >
-                    {Array.from({ length: 26 }, (_, i) => 2025 + i).map(year => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
+                    {Array.from({ length: 26 }, (_, i) => 2025 + i).map(
+                      (year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      )
+                    )}
                   </select>
                   <label
                     htmlFor="year"

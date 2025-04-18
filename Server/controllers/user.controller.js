@@ -1,7 +1,7 @@
-import User, { File } from '../models/user.model.js';
-import bcrypt from 'bcrypt';
-import { validationResult } from 'express-validator';
-import hospital from '../models/hospital.model.js';
+import User, { File } from "../models/user.model.js";
+import bcrypt from "bcrypt";
+import { validationResult } from "express-validator";
+import hospital from "../models/hospital.model.js";
 
 export const registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -9,13 +9,13 @@ export const registerUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { fullname, email, phone, password } = req.body; 
+  const { fullname, email, phone, password } = req.body;
   const { firstname, lastname } = fullname || {};
 
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const user = new User({
@@ -43,18 +43,18 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const token = user.generateAuthToken();
-    const firstname = user.fullname.firstname
+    const firstname = user.fullname.firstname;
     res.status(200).json({ token, firstname });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -62,23 +62,56 @@ export const loginUser = async (req, res) => {
 };
 
 export const fileUpload = async (req, res) => {
-  const { name, data, contentType } = req.body;
-  const image = new File({
-    name,
-    data,
-    contentType,
-    userId: req.user.userId,
-  });
-  await image.save();
-  res.send({ message: "Image saved" });
-}
+  try {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const image = new File({
+      name: file.originalname,
+      data: file.buffer.toString('base64'),
+      contentType: file.mimetype,
+      userId: req.user.userId,
+    });
+
+    await image.save();
+    res.status(201).json(image);
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ error: 'Failed to upload image' });
+  }
+};
 
 export const fileRetrive = async (req, res) => {
-  const images = await File.find({ userId: req.user.userId });
-  res.json(images);
-}
+  try {
+    const images = await File.find({ userId: req.user.userId });
+    res.json(images);
+  } catch (err) {
+    console.error('Retrieval error:', err);
+    res.status(500).json({ error: 'Failed to fetch records' });
+  }
+};
 
-export const getHospitals = async (req,res)=>{
-  const hospitals = await hospital.find({},"id company")
-  res.json(hospitals)
-}
+export const fileDelete = async (req, res) => {
+  try {
+    const file = await File.findOneAndDelete({ _id: req.params.id, userId: req.user.userId });
+    if (!file) return res.status(404).json({ error: 'File not found' });
+
+    res.json({ message: 'File deleted' });
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.status(500).json({ error: 'Failed to delete file' });
+  }
+};
+
+export const getHospitals = async (req, res) => {
+  const hospitals = await hospital.find({}, "id company");
+  res.json(hospitals);
+};
+
+export const appointments = async (req, res) => {
+  const { name, date, time, doctor, hospitalId } = req.body;
+  const place = await hospital.find({id:hospitalId},"_id")
+};

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AppleWatch from "../../assets/AppleWatch.svg";  
+import BluetoothConnector from '../BluetoothConnector';
 
 const ConnectSmart = () => {
     const [time, setTime] = useState(new Date());
@@ -254,48 +255,7 @@ const ConnectSmart = () => {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            <button
-                                className={`w-full py-3 px-4 rounded-full flex items-center justify-center gap-2 text-white font-medium transition-all ${isConnected
-                                    ? "bg-green-500 hover:bg-green-600"
-                                    : "bg-blue-500 hover:bg-blue-600"
-                                    }`}
-                                onClick={handleConnect}
-                                disabled={isPairing || isConnected}
-                            >
-                                {isPairing ? (
-                                    <>
-                                        <motion.div
-                                            animate={{ rotate: 360 }}
-                                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                            className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                                        />
-                                        <span>Connecting...</span>
-                                    </>
-                                ) : isConnected ? (
-                                    <>
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        <span>Connected</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg width="16" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier"> 
-                                                <path d="M7 17L17 7L12 2V22L17 17L7 7" 
-                                                    stroke="#ffffff" 
-                                                    strokeWidth="2" 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round">
-                                                </path> 
-                                            </g>
-                                        </svg>
-                                        <span>Connect</span>
-                                    </>
-                                )}
-                            </button>
+                            <BluetoothConnector/>
                         </motion.div>
                     </div>
 

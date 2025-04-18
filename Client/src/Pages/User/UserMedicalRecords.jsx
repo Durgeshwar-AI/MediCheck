@@ -1,41 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import Header from '../../Components/UserDashboardParts/Header';
 import UserSidebar from '../../Components/UserDashboardParts/UserSidebar';
 
 const UserMedicalRecords = () => {
+  const URL = `${import.meta.env.VITE_API_URL}/user/files`;
+  const userId = localStorage.getItem('userId'); // Assuming userId is stored here
+
   const [records, setRecords] = useState([]);
   const [uploadError, setUploadError] = useState('');
 
-  const handleFileChange = (e) => {
+  // Fetch existing records
+  useEffect(() => {
+    const fetchRecords = async () => {
+      try {
+        const res = await axios.get(`${URL}/${userId}`);
+        setRecords(res.data);
+      } catch (err) {
+        console.error('Error fetching records:', err);
+      }
+    };
+
+    fetchRecords();
+  }, []);
+
+  const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);
     const validFiles = files.filter((file) => file.type.startsWith('image/'));
 
     if (validFiles.length !== files.length) {
       setUploadError('Only image files are allowed!');
-    } else {
-      setUploadError('');
+      return;
     }
 
-    const newRecords = validFiles.map((file) => ({
-      id: Date.now() + Math.random(),
-      name: file.name,
-      url: URL.createObjectURL(file),
-    }));
+    setUploadError('');
 
-    setRecords((prev) => [...prev, ...newRecords]);
+    for (const file of validFiles) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('userId', userId);
+
+      try {
+        const res = await axios.post(URL, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        setRecords((prev) => [...prev, res.data]);
+      } catch (err) {
+        console.error('Upload failed:', err);
+        setUploadError('Failed to upload file');
+      }
+    }
   };
 
-  const handleRemove = (id) => {
-    setRecords((prev) => prev.filter((record) => record.id !== id));
+  const handleRemove = async (id) => {
+    try {
+      await axios.delete(`${URL}/${id}`);
+      setRecords((prev) => prev.filter((record) => record._id !== id));
+    } catch (err) {
+      console.error('Failed to delete:', err);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header is placed at the top */}
       <Header />
-
-      {/* Main Container: Sidebar & Main Content */}
       <div className="flex flex-grow">
         <UserSidebar />
 
@@ -48,7 +79,6 @@ const UserMedicalRecords = () => {
             Upload Medical Records
           </motion.h2>
 
-          {/* File Upload Form */}
           <div className="max-w-xl w-full bg-white p-6 rounded-xl shadow-lg">
             <input
               type="file"
@@ -67,26 +97,23 @@ const UserMedicalRecords = () => {
             )}
           </div>
 
-          {/* Display Uploaded Records */}
           <div className="mt-8 w-full">
             <h3 className="text-xl font-semibold mb-4 text-gray-700 text-center">
               Your Records
             </h3>
             {records.length === 0 ? (
-              <p className="text-gray-500 text-center">
-                No records uploaded yet.
-              </p>
+              <p className="text-gray-500 text-center">No records uploaded yet.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {records.map((record) => (
                   <motion.div
-                    key={record.id}
+                    key={record._id}
                     className="bg-white shadow-md rounded-lg p-4 relative"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
                     <img
-                      src={record.url}
+                      src={`data:${record.contentType};base64,${record.data}`}
                       alt={record.name}
                       className="w-full h-48 object-cover rounded"
                     />
@@ -94,7 +121,7 @@ const UserMedicalRecords = () => {
                       {record.name}
                     </p>
                     <button
-                      onClick={() => handleRemove(record.id)}
+                      onClick={() => handleRemove(record._id)}
                       className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full text-xs hover:bg-red-600"
                     >
                       ✕

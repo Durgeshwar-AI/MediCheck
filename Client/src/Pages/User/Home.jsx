@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
 import dashboard from "../../assets/dashboard.png";
+import { useHealth } from "../../hooks/useHealth";
 
 // Testimonial data with added profile images and roles
 const testimonials = [
@@ -57,7 +58,7 @@ const features = [
 
 function HomePage() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const userLoggedIn = isLoggedIn();
+  const {userLoggedIn} = useHealth()
 
   // Handle testimonial navigation
   const nextTestimonial = () => {

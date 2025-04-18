@@ -9,6 +9,8 @@ import userRoutes from "./routes/user.routes.js";
 import hospitalRoutes from "./routes/hospital.routes.js";
 import bleRoutes from "./routes/ble.routes.js";
 import adminRoutes from "./routes/admin.route.js";
+import patientRoutes from "./routes/Patient.route.js";
+import medicationRoutes from "./routes/medication.route.js";
 
 dotenv.config();
 
@@ -45,6 +47,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/hospital", hospitalRoutes);
 app.use("/api/ble", bleRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/patient", patientRoutes);
+app.use("/api/medications", medicationRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running with Socket.IO support.");

@@ -1,7 +1,8 @@
 import express from "express";
 import { body } from "express-validator";
-import { registerUser, loginUser, fileUpload, fileRetrive, getHospitals } from "../controllers/user.controller.js";
+import { registerUser, loginUser, fileUpload, fileRetrive, getHospitals, fileDelete } from "../controllers/user.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
+import { upload } from "../middleware/multer.config.js";
 
 const router = express.Router();
 
@@ -37,10 +38,14 @@ router.post(
   loginUser
 );
 
-router.post("/files", authMiddleware, fileUpload);
+router.post("/files", authMiddleware, upload.single('file'), fileUpload);
 
 router.get("/files", authMiddleware, fileRetrive)
 
+router.delete("/files/:id", authMiddleware, fileDelete)
+
 router.get("/hospitals", getHospitals)
+
+router.post("/appointments", authMiddleware, )
 
 export default router;

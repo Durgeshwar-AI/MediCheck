@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { HealthContext } from '../hooks/useHealth';
-
-// Create a context to hold health data
-
 
 
 // Create a provider component
 export const HealthProvider = ({ children }) => {
+
+  const tokenData = localStorage.getItem("authToken");
+
   const [heartRate, setHeartRate] = useState('N/A');
   const [oxygen, setOxygen] = useState('N/A');
   const [bp, setBP] = useState('N/A');
   const [steps, setSteps] = useState('N/A');
   const [sleep, setSleep] = useState('N/A');
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [device, setDevice] = useState('N/A');
+  const [userLoggedIn, setUserLoggedIn] = useState(tokenData?true:false);
   const [deviceConnected, setDeviceConnected] = useState(false)
+  const [health, setHealth] = useState(null)
 
   // Function to update health data
   const updateHealthData = (data) => {
@@ -32,6 +34,14 @@ export const HealthProvider = ({ children }) => {
     setDeviceConnected(data)
   }
 
+  const updateHealth = (data) => {
+    setHealth(data)
+  }
+
+  const updateDevice = (data) =>{
+    setDevice(data)
+  }
+
   return (
     <HealthContext.Provider
       value={{
@@ -44,7 +54,11 @@ export const HealthProvider = ({ children }) => {
         userLoggedIn,
         updateLogin,
         deviceConnected,
-        updateConnection
+        updateConnection,
+        health,
+        updateHealth,
+        device,
+        setDevice
       }}
     >
       {children}

@@ -6,5 +6,5 @@ export async function getNextHospitalId() {
     { $inc: { seq: 1 } },
     { new: true, upsert: true }
   );
-  return `P-${result.seq}`;
+  return `H-${result.seq}`;
 }
