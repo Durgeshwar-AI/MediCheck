@@ -58,7 +58,7 @@ export const HealthProvider = ({ children }) => {
         health,
         updateHealth,
         device,
-        setDevice
+        updateDevice
       }}
     >
       {children}

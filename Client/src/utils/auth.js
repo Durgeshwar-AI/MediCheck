@@ -12,8 +12,6 @@ export const storeToken = (token,userName) => {
     expiry: expirationDate.getTime(),
   };
 
-  console.log(data)
-
   localStorage.setItem('authToken', JSON.stringify(data));
 };
 
