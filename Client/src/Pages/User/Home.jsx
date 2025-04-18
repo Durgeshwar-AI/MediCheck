@@ -7,6 +7,32 @@ import Navbar from "../../Components/Navbar";
 import dashboard from "../../assets/dashboard.png";
 import { useHealth } from "../../hooks/useHealth";
 
+import { HeartPulse, Stethoscope, ShieldCheck, Activity } from "lucide-react";
+
+// Define your features array
+const features = [
+  { title: "Heart Monitoring", desc: "Keep track of your heart rate and health.", icon: <HeartPulse size={32} className="text-blue-600" /> },
+  { title: "Doctor Consultation", desc: "Consult with doctors anytime, anywhere.", icon: <Stethoscope size={32} className="text-blue-600" /> },
+  { title: "Health Security", desc: "Ensure your health data is secure.", icon: <ShieldCheck size={32} className="text-blue-600" /> },
+  { title: "Fitness Tracking", desc: "Monitor your fitness activities and progress.", icon: <Activity size={32} className="text-blue-600" /> }
+];
+
+// Feature component
+const Feature = ({ title, desc, icon }) => (
+  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 border-t-4 border-blue-500">
+    {/* Icon Container */}
+    <div className="w-14 h-14 bg-blue-200 rounded-full flex items-center justify-center mb-5">
+      {icon}
+    </div>
+    {/* Feature Title */}
+    <h3 className="text-2xl font-semibold text-blue-700">{title}</h3>
+    {/* Feature Description */}
+    <p className="mt-3 text-gray-600 leading-relaxed">{desc}</p>
+  </div>
+);
+
+
+
 // Testimonial data with added profile images and roles
 const testimonials = [
   {
@@ -32,33 +58,10 @@ const testimonials = [
   },
 ];
 
-// Feature list with icons (we would use actual icons in a real implementation)
-const features = [
-  {
-    title: "Device Connectivity",
-    icon: "connect",
-    desc: "Connect with your smartwatch or health device to pull real-time vitals securely.",
-  },
-  {
-    title: "Health Insights",
-    icon: "chart",
-    desc: "AI-based trends and analytics tailored to your health history and goals.",
-  },
-  {
-    title: "24/7 Support",
-    icon: "support",
-    desc: "Need help? Our health support team is always ready to assist you.",
-  },
-  {
-    title: "Data Privacy",
-    icon: "shield",
-    desc: "Your health data stays private with military-grade encryption and security.",
-  },
-];
-
+// HomePage component
 function HomePage() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const {userLoggedIn} = useHealth()
+  const { userLoggedIn } = useHealth()
 
   // Handle testimonial navigation
   const nextTestimonial = () => {
@@ -75,42 +78,67 @@ function HomePage() {
   if (userLoggedIn) {
     return (
       <>
-      <Navbar/>
-      <div className="px-6">
-        <HeaderHome />
-        <div className="max-w-6xl mx-auto mt-12 bg-white rounded-2xl shadow-md p-8">
-          <h2 className="text-2xl font-bold text-blue-700">
-            Welcome back to MediCheck
-          </h2>
-          <p className="mt-2 text-gray-600">
-            Access your real-time health data and insights below.
-          </p>
+        <Navbar />
+        <div className="px-6">
+          <HeaderHome />
+          <div className="max-w-6xl mx-auto mt-12 bg-white rounded-2xl shadow-md p-8">
+            <h2 className="text-2xl font-bold text-blue-700">
+              Welcome back to MediCheck
+            </h2>
+            <p className="mt-2 text-gray-600">
+              Access your real-time health data and insights below.
+            </p>
 
-          <div className="grid md:grid-cols-2 gap-6 mt-8">
-            <div className="bg-blue-50 p-6 rounded-xl">
-              <h3 className="font-semibold text-blue-800">
-                Today&apos;s Summary
-              </h3>
-              {/* Placeholder for user dashboard content */}
-              <div className="h-48 flex items-center justify-center border border-dashed border-blue-300 rounded-lg mt-3">
-                <p className="text-blue-400">
-                  Your health metrics will appear here
-                </p>
+            <div className="grid md:grid-cols-2 gap-6 mt-8">
+              <div className="bg-blue-50 p-6 rounded-xl">
+                <h3 className="font-semibold text-blue-800">
+                  Today&apos;s Summary
+                </h3>
+                {/* Placeholder for user dashboard content */}
+                <div className="h-48 flex items-center justify-center border border-dashed border-blue-300 rounded-lg mt-3">
+                  <p className="text-blue-400">
+                    Your health metrics will appear here
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-6 rounded-xl">
+                <h3 className="font-semibold text-blue-800">Recent Activity</h3>
+                {/* Placeholder for activity feed */}
+                <div className="h-48 flex items-center justify-center border border-dashed border-blue-300 rounded-lg mt-3">
+                  <p className="text-blue-400">
+                    Your recent activities will appear here
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="bg-blue-50 p-6 rounded-xl">
-              <h3 className="font-semibold text-blue-800">Recent Activity</h3>
-              {/* Placeholder for activity feed */}
-              <div className="h-48 flex items-center justify-center border border-dashed border-blue-300 rounded-lg mt-3">
-                <p className="text-blue-400">
-                  Your recent activities will appear here
-                </p>
+            {/* Features Grid */}
+
+
+            <section className="py-8 my-4 px-6 rounded-xl bg-gradient-to-b from-blue-50 to-white">
+              <div className="max-w-6xl mx-auto">
+                {/* Section Heading */}
+                <div className="text-center mb-16">
+                  <h2 className="text-4xl font-bold text-blue-800">Comprehensive Health Monitoring</h2>
+                  <p className="mt-4 text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    MediCheck combines powerful technology with an intuitive experience to give you complete control over your health.
+                  </p>
+                </div>
+
+                {/* Features Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+                  {features.map((feature, i) => (
+                    <Feature key={i} title={feature.title} desc={feature.desc} icon={feature.icon} />
+                  ))}
+                </div>
               </div>
-            </div>
+            </section>
+
+
           </div>
         </div>
-      </div>
+        <Footer />
       </>
     );
   }
@@ -161,33 +189,20 @@ function HomePage() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-16 px-6">
+      <section className="py-8 my-4 px-6 rounded-xl bg-gradient-to-b from-blue-50 to-white">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-blue-800">
-              Comprehensive Health Monitoring
-            </h2>
-            <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-              MediCheck combines powerful technology with an intuitive
-              experience to give you complete control over your health.
+          {/* Section Heading */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-blue-800">Comprehensive Health Monitoring</h2>
+            <p className="mt-4 text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              MediCheck combines powerful technology with an intuitive experience to give you complete control over your health.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
             {features.map((feature, i) => (
-              <div
-                key={i}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-t-4 border-blue-500"
-              >
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                  {/* Placeholder for icon */}
-                  <div className="w-6 h-6 bg-blue-500 rounded"></div>
-                </div>
-                <h3 className="text-xl font-bold text-blue-700">
-                  {feature.title}
-                </h3>
-                <p className="mt-3 text-gray-600">{feature.desc}</p>
-              </div>
+              <Feature key={i} title={feature.title} desc={feature.desc} icon={feature.icon} />
             ))}
           </div>
         </div>
