@@ -4,7 +4,7 @@ import HeaderHome from "../../Components/HeaderHome";
 import { Link } from "react-router-dom";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
-import dashboard from "../../assets/dashboard.png";
+import dashboard from "../../assets/Dashboard.png";
 import { useHealth } from "../../hooks/useHealth";
 
 import { HeartPulse, Stethoscope, ShieldCheck, Activity } from "lucide-react";
