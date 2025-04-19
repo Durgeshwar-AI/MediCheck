@@ -2,14 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useHealth } from "../hooks/useHealth"; // Import the custom hook
 
 const BluetoothConnector = () => {
-  const { heartRate, oxygen, bp, steps, sleep, updateHealthData, health, updateHealth, device, updateDevice } = useHealth();
+  const {
+    heartRate,
+    oxygen,
+    bp,
+    steps,
+    sleep,
+    updateHealthData,
+    health,
+    updateHealth,
+    device,
+    updateDevice,
+    deviceConnected,
+    updateConnection
+  } = useHealth();
   const [connectedDevice, setConnectedDevice] = useState(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
 
   const sendDataToBackend = async (data) => {
     try {
-      const response = await fetch(`${API_URL}/api/ble/data`, {
+      const response = await fetch(`${API_URL}/ble/data`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,11 +33,11 @@ const BluetoothConnector = () => {
       if (!response.ok) {
         throw new Error("Failed to send data to backend");
       }
-      if(response!=health){
-        updateHealth(response)
-        alert(`Your health is ${health}`)
+      if (response != health) {
+        updateHealth(response);
+        alert(`Your health is ${health}`);
       }
-      
+
       console.log("Data sent to backend successfully");
     } catch (error) {
       console.error("Error sending data to backend:", error);
@@ -46,10 +59,11 @@ const BluetoothConnector = () => {
       });
 
       setConnectedDevice(conDevice);
-      updateDevice(conDevice)
+      updateDevice(conDevice);
+      updateConnection(true)
       const server = await conDevice.gatt.connect();
 
-      alert(`Connected to ${device}`)
+      alert(`Connected to ${device}`);
 
       const services = await server.getPrimaryServices();
       for (const service of services) {
@@ -63,7 +77,9 @@ const BluetoothConnector = () => {
       // Heart Rate
       try {
         const hrService = await server.getPrimaryService("heart_rate");
-        const hrChar = await hrService.getCharacteristic("heart_rate_measurement");
+        const hrChar = await hrService.getCharacteristic(
+          "heart_rate_measurement"
+        );
         await hrChar.startNotifications();
         hrChar.addEventListener("characteristicvaluechanged", (e) => {
           const value = e.target.value;
@@ -76,8 +92,12 @@ const BluetoothConnector = () => {
 
       // Blood Pressure
       try {
-        const bpService = await server.getPrimaryService("00001810-0000-1000-8000-00805f9b34fb");
-        const bpChar = await bpService.getCharacteristic("00002a35-0000-1000-8000-00805f9b34fb");
+        const bpService = await server.getPrimaryService(
+          "00001810-0000-1000-8000-00805f9b34fb"
+        );
+        const bpChar = await bpService.getCharacteristic(
+          "00002a35-0000-1000-8000-00805f9b34fb"
+        );
         await bpChar.startNotifications();
         bpChar.addEventListener("characteristicvaluechanged", (e) => {
           const value = e.target.value;
@@ -92,8 +112,12 @@ const BluetoothConnector = () => {
 
       // Oxygen Level (SpO2)
       try {
-        const spo2Service = await server.getPrimaryService("00001822-0000-1000-8000-00805f9b34fb");
-        const spo2Char = await spo2Service.getCharacteristic("00002a5f-0000-1000-8000-00805f9b34fb");
+        const spo2Service = await server.getPrimaryService(
+          "00001822-0000-1000-8000-00805f9b34fb"
+        );
+        const spo2Char = await spo2Service.getCharacteristic(
+          "00002a5f-0000-1000-8000-00805f9b34fb"
+        );
         await spo2Char.startNotifications();
         spo2Char.addEventListener("characteristicvaluechanged", (e) => {
           const value = e.target.value;
@@ -106,9 +130,13 @@ const BluetoothConnector = () => {
 
       // Steps and Sleep (Fitness Machine or Custom)
       try {
-        const stepsService = await server.getPrimaryService("00001826-0000-1000-8000-00805f9b34fb");
+        const stepsService = await server.getPrimaryService(
+          "00001826-0000-1000-8000-00805f9b34fb"
+        );
 
-        const stepsChar = await stepsService.getCharacteristic("CUSTOM_STEPS_UUID");
+        const stepsChar = await stepsService.getCharacteristic(
+          "CUSTOM_STEPS_UUID"
+        );
         await stepsChar.startNotifications();
         stepsChar.addEventListener("characteristicvaluechanged", (e) => {
           const value = e.target.value;
@@ -116,7 +144,9 @@ const BluetoothConnector = () => {
           updateHealthData({ steps: stepsCount });
         });
 
-        const sleepChar = await stepsService.getCharacteristic("CUSTOM_SLEEP_UUID");
+        const sleepChar = await stepsService.getCharacteristic(
+          "CUSTOM_SLEEP_UUID"
+        );
         await sleepChar.startNotifications();
         sleepChar.addEventListener("characteristicvaluechanged", (e) => {
           const value = e.target.value;
@@ -128,7 +158,6 @@ const BluetoothConnector = () => {
       } catch (err) {
         console.warn("Steps/Sleep service not available:", err.message);
       }
-
     } catch (error) {
       console.error("Connection failed:", error);
       alert("Failed to connect: " + error.message);
@@ -136,27 +165,30 @@ const BluetoothConnector = () => {
   };
 
   const handleDisconnect = () => {
-    setConnectedDevice(null)
-    updateDevice("N/A")
-  }
+    setConnectedDevice(null);
+    updateDevice("N/A");
+    updateConnection(false)
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      sendDataToBackend({
-        heartRate,
-        oxygen,
-        bp,
-        steps,
-        sleep,
-      });
-      console.log("Sending aggregated data to backend:", {
-        heartRate,
-        oxygen,
-        bp,
-        steps,
-        sleep,
-      });
-    }, 300000); // 5 minutes
+      if (deviceConnected) {
+        sendDataToBackend({
+          heartRate,
+          oxygen,
+          bp,
+          steps,
+          sleep,
+        });
+        console.log("Sending aggregated data to backend:", {
+          heartRate,
+          oxygen,
+          bp,
+          steps,
+          sleep,
+        });
+      }
+    }, 300000);
 
     return () => {
       clearInterval(interval);
