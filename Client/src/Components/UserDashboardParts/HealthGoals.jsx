@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, X } from "lucide-react";
 
 function HealthGoals() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -183,6 +183,22 @@ function HealthGoals() {
     }
   };
 
+  // Improved format number function
+  const formatNumber = (num) => {
+    if (!num && num !== 0) return "0";
+
+    const parsedNum = parseFloat(num);
+
+    // For whole numbers (integers), display without decimal points
+    if (Number.isInteger(parsedNum)) {
+      return parsedNum.toString();
+    }
+
+    // For numbers with decimal parts, limit to 2 decimal places
+    // and remove trailing zeros
+    return parsedNum.toFixed(2).replace(/\.?0+$/, '');
+  };
+
   return (
     <>
       <div className="bg-white border rounded-lg shadow-lg mb-6 p-6">
@@ -211,7 +227,7 @@ function HealthGoals() {
                   <span className="font-medium">{goal.name}</span>
                   <div className="flex items-center gap-4">
                     <span className="whitespace-nowrap">
-                      {goal.current} / {goal.target} {goal.unit}
+                      {formatNumber(goal.current)} / {formatNumber(goal.target)} {goal.unit}
                     </span>
                     <div className="flex items-center gap-1">
                       <motion.button
@@ -260,9 +276,21 @@ function HealthGoals() {
             transition={{ duration: 0.3 }}
             className="w-full max-w-xl bg-white border-2 p-6 rounded-lg shadow-lg border-blue-500"
           >
-            <h2 className="text-2xl text-blue-500 font-bold mb-6 text-center">
-              {isEditing ? "Edit Health Goal" : "Create Health Goal"}
-            </h2>
+            <div className="relative flex items-center justify-between mb-3">
+              <h2
+                className={`text-2xl font-bold mx-auto text-center ${isEditing ? "text-green-500" : "text-blue-500"}`}>
+                {isEditing ? "Edit Health Goal" : "Create Health Goal"}
+              </h2>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={handleCloseForm}
+                className="text-gray-600 p-2 rounded-full hover:bg-gray-200 transition duration-300 absolute -top-1 right-2"
+                aria-label="Close form"
+              >
+                <X size={20} />
+              </motion.button>
+            </div>
+            <hr className="border-gray-600 mb-6 " />
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="relative">
                 <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
@@ -322,7 +350,7 @@ function HealthGoals() {
                     required
                   />
                   <span className="font-bold text-gray-700 min-w-16 text-right">
-                    {formData.current || 0}
+                    {formatNumber(formData.current)}
                     {formData.percent ? ` (${formData.percent}%)` : ""}
                   </span>
                 </div>
@@ -339,7 +367,7 @@ function HealthGoals() {
                 <motion.button
                   type="submit"
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 shadow-md text-white bg-blue-500 border border-blue-600 rounded-lg font-bold hover:bg-blue-600 transition duration-300"
+                  className="px-4 py-2 shadow-md text-white bg-blue-500 rounded-lg font-bold  transition duration-300 hover:bg-green-200 hover:text-green-800 border border-white hover:border-green-800 "
                 >
                   {isEditing ? "Update Goal" : "Save Goal"}
                 </motion.button>

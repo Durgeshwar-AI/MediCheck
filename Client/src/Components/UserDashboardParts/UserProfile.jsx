@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { User, Settings } from "lucide-react";
 import LogoutButton from "../LogoutButton";
-import { useHealth } from "../../hooks/useHealth";
+// import { useHealth } from "../../hooks/useHealth";
 
 
 const UserProfile = () => {
@@ -9,7 +9,7 @@ const UserProfile = () => {
   const { userName } = JSON.parse(tokenData);
 
   const [userData, setUserData] = useState({
-    email: "john.doe@example.com",
+    email: "patient@example.com",
     bio: "Passionate about health and well-being!",
     avatar: "",
   });
@@ -42,7 +42,7 @@ const UserProfile = () => {
       </div>
 
       {/* Bio section */}
-      <div className=" w-full">
+      <div className=" w-full ml-10">
         <h3 className="text-sm font-semibold text-gray-500">About</h3>
         <p className="text-gray-700 italic">{userData.bio}</p>
       </div>
