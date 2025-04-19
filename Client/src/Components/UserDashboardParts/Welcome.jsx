@@ -1,4 +1,3 @@
-import { Calendar } from "lucide-react";
 import React from "react";
 import { useHealth } from "../../hooks/useHealth";
 import BluetoothConnector from "../BluetoothConnector";

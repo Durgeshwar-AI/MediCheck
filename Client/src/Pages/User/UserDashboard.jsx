@@ -50,7 +50,8 @@ const UserDashboard = () => {
 
               <div className="space-y-2">
                 <Appointment />
-                <Medications />
+                <div className="mt-8"><Medications /></div>
+                
                 {/* If you wish to add or uncomment any additional widgets,
                     such as QuickStats or MedicalHistory, they can be added here */}
               </div>
