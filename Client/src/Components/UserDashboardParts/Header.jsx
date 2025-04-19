@@ -5,7 +5,7 @@ import logo from "../../assets/logo.png";
 import {Link} from 'react-router-dom'
 import { motion } from "framer-motion";
 
-const URL = import.meta.env.VITE_URL;
+const URL = import.meta.env.VITE_URL || window.location.origin;
 
 function Header() {
   return (

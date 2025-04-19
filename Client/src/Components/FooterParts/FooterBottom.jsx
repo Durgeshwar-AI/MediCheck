@@ -3,7 +3,7 @@ import React from 'react';
 const FooterBottom = () => {
   const currentYear = new Date().getFullYear();
 
-  const URL = import.meta.env.VITE_URL
+  const URL = import.meta.env.VITE_URL || window.location.origin
   
   const links = [
     { name: 'Privacy Policy', url: `${URL}/policy` },

@@ -5,7 +5,7 @@ import logo from "../assets/logo.png";
 import LogoutButton from "./LogoutButton";
 import { useHealth } from "../hooks/useHealth";
 
-const URL = import.meta.env.VITE_URL;
+const URL = import.meta.env.VITE_URL|| window.location.origin;
 
 const MENU_ITEMS = [
   { name: "Home", path: `${URL}/home` },

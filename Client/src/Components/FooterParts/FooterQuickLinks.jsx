@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 
 
-const URL = import.meta.env.VITE_URL;
+const URL = import.meta.env.VITE_URL || window.location.origin;
 
 const FooterQuickLinks = () => {
   const links = [

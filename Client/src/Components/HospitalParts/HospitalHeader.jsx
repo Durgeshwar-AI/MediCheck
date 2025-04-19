@@ -6,7 +6,7 @@ import { FaUserMd } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import HospitalProfile from '../HospitalParts/HospitalProfile';
 
-const URL = import.meta.env.VITE_URL;
+const URL = import.meta.env.VITE_URL || window.location.origin;
 
 const HospitalHeader = () => {
   const maxLength = 7;

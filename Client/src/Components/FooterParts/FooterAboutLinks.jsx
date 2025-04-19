@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const FooterAboutLinks = () => {
 
-  const URL=import.meta.env.VITE_URL
+  const URL=import.meta.env.VITE_URL || window.location.origin
 
   const links = [
     { name: 'Our Story', url: `${URL}/about` },

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, FileText, Calendar, ChevronLeft, ChevronRight, User, BrainCog, LogOut, AlertTriangle } from "lucide-react";
 
-const URL = import.meta.env.VITE_URL;
+const URL = import.meta.env.VITE_URL || window.location.origin;
 
 const UserSidebar = ({ children }) => {
   const [expanded, setExpanded] = useState(true);
