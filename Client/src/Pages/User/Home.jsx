@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import HeaderHome from "../../Components/HeaderHome";
-import { isLoggedIn } from "../../utils/auth";
+// import { isLoggedIn } from "../../utils/auth";
 import { Link } from "react-router-dom";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";

@@ -192,7 +192,7 @@ function Appointment() {
       </div>
 
       {/* Appointment list */}
-      <div className="p-2 h-[auto] md:h-[280px] overflow-y-auto">
+      <div className="p-2 h-[291px] overflow-y-auto">
         {appointments.length === 0 ? (
           <div className="flex justify-center items-center h-32 text-gray-500">
             No appointments scheduled

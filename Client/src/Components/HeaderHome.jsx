@@ -30,13 +30,13 @@ function HeaderHome() {
 
         <Link to='/dashboard'>
           <motion.button
-            className="bg-white text-blue-600 border-2 hover:border-white hover:text-white hover:bg-blue-400 border-blue-300 shadow-lg py-2 px-6 rounded-full"
+            className="bg-white text-blue-600 border-2 hover:border-white hover:text-white hover:bg-blue-400 border-blue-300 shadow-lg py-2 px-4 mt-5 rounded-full flex items-center md:justify-center justify-end"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
             aria-label="View Full Dashboard"
           >
-            View Full Dashboard
+            <span className="md:block hidden">View Full </span> Dashboard
           </motion.button>
         </Link>
       </div>

@@ -56,7 +56,7 @@ const UserSidebar = ({ children }) => {
       {/* Mobile overlay to close sidebar */}
       {isMobile && expanded && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20"
+          className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-md z-20"
           aria-hidden="true"
           onClick={() => setExpanded(false)}
         />

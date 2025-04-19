@@ -9,7 +9,6 @@ function EmergencyPage() {
   const [emergencyRequested, setEmergencyRequested] = useState(false);
   const [emergencyType, setEmergencyType] = useState("medical");
 
-
   const handleGoBack = () => {
     window.history.back();
   };
@@ -60,23 +59,23 @@ function EmergencyPage() {
           </Link>
           <button
             type="button"
-            aria-level="Go back to previous page"
+            aria-label="Go back to previous page"
             onClick={handleGoBack}
-
-            className="px-4 py-2 rounded-2xl hover:text-white text-red-600 bg-white hover:bg-red-600  border-2 border-red-600 hover:border-white flex items-center"
+            className="px-4 py-2 rounded-2xl hover:text-white text-red-600 bg-white hover:bg-red-600 border-2 border-red-600 hover:border-white flex items-center gap-2"
             aria-describedby="go-back-tooltip"
           >
-            <ArrowLeftFromLine />Go Back
+            <ArrowLeftFromLine size={16} />
+            <span className="hidden sm:inline">Go Back</span>
           </button>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto py-8 px-6">
+      <main className="w-full mx-auto py-8 px-6 sm:px-6">
         {/* Emergency status alert */}
         {emergencyRequested ? (
           <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-8 rounded shadow-md">
-            <div className="flex items-center">
-              <div className="py-1">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center">
+              <div className="py-1 mb-2 sm:mb-0">
                 <svg className="w-8 h-8 mr-4 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                 </svg>
@@ -106,7 +105,7 @@ function EmergencyPage() {
               </ol>
               <div className="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800">
                 <p className="font-bold">Important:</p>
-                <p>If you are experiencing a life-threatening emergency, call your local emergency number immediately (e.g., 911 in the US).</p>
+                <p>If you are experiencing a life-threatening emergency, call your local emergency number immediately (e.g., 112 in India).</p>
               </div>
             </div>
 
@@ -135,7 +134,7 @@ function EmergencyPage() {
             {/* Emergency type selection */}
             <div className="bg-white p-6 rounded-xl shadow-md mb-8">
               <h2 className="text-xl font-bold text-gray-800 mb-4">Emergency Type</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <label className={`border-2 rounded-lg p-4 flex flex-col items-center cursor-pointer transition ${emergencyType === 'medical' ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}>
                   <input
                     type="radio"
@@ -190,7 +189,7 @@ function EmergencyPage() {
               <textarea
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 rows="3"
-                placeholder="Describe your emergency or any additional information that might help emergency responders..."
+                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
               ></textarea>
             </div>
 
@@ -199,7 +198,7 @@ function EmergencyPage() {
               <button
                 onClick={handleEmergencyRequest}
                 disabled={!location || isLoading}
-                className={`px-8 py-4 text-xl font-bold text-white rounded-xl shadow-lg transition ${!location || isLoading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
+                className={`px-6 py-3 sm:px-8 sm:py-4 text-lg sm:text-xl font-bold text-white rounded-xl shadow-lg transition ${!location || isLoading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"
                   }`}
               >
                 {isLoading ? (
@@ -221,22 +220,30 @@ function EmergencyPage() {
         {/* Emergency contacts */}
         <div className="bg-white p-6 rounded-xl shadow-md">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Emergency Contacts</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="border border-gray-200 rounded-lg p-4">
-              <div className="font-bold text-red-600">Emergency Services (US)</div>
-              <div className="text-xl font-bold">911</div>
+              <div className="font-bold text-red-600">National Emergency Number</div>
+              <div className="text-xl font-bold">112</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-4">
-              <div className="font-bold text-red-600">Poison Control (US)</div>
-              <div className="text-xl font-bold">1-800-222-1222</div>
+              <div className="font-bold text-red-600">Women Helpline</div>
+              <div className="text-xl font-bold">1098</div>
+            </div>
+            <div className="border border-gray-200 rounded-lg p-4">
+              <div className="font-bold text-red-600">Ambulance Service</div>
+              <div className="text-xl font-bold">108</div>
+            </div>
+            <div className="border border-gray-200 rounded-lg p-4">
+              <div className="font-bold text-red-600">Fire Department</div>
+              <div className="text-xl font-bold">101</div>
+            </div>
+            <div className="border border-gray-200 rounded-lg p-4">
+              <div className="font-bold text-red-600">Police Emergency</div>
+              <div className="text-xl font-bold">100</div>
             </div>
             <div className="border border-gray-200 rounded-lg p-4">
               <div className="font-bold text-red-600">MediCheck Support</div>
-              <div className="text-xl font-bold">1-888-MEDI-HELP</div>
-            </div>
-            <div className="border border-gray-200 rounded-lg p-4">
-              <div className="font-bold text-red-600">Mental Health Crisis Line</div>
-              <div className="text-xl font-bold">988</div>
+              <div className="text-xl font-bold">1800-123-4567</div>
             </div>
           </div>
         </div>
@@ -247,8 +254,8 @@ function EmergencyPage() {
         <div className="max-w-6xl mx-auto text-center">
           <p>© {new Date().getFullYear()} MediCheck. All rights reserved.</p>
           <p className="text-sm mt-2">
-            This is an emergency assistance service. For non-emergency medical concerns,
-            please <Link to="/" className="text-red-300 hover:text-white">return to the main site</Link>.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            <Link to="/" className="text-red-300 hover:text-white ml-1">Return to main site</Link>.
           </p>
         </div>
       </footer>
