@@ -25,6 +25,7 @@ import UserMedicalRecords from "./Pages/User/UserMedicalRecords";
 import { HealthProvider } from "./context/HealthDataContext";
 import UserAI from "./Pages/User/UserAI";
 import { useHealth } from "./hooks/useHealth";
+import ScrollToTop from "./utils/ScrollToTop";
 const App = () => {
   const { userLoggedIn, type } = useHealth();
 
@@ -53,6 +54,7 @@ const App = () => {
 
   return (
     <div>
+    <ScrollToTop/>
       <Routes>
         <Route path="/" element={<Landing />} />
         {type != "hospital" ? (
