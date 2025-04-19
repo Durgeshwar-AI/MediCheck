@@ -11,7 +11,7 @@ const createHealthReport = async (healthData) => {
     throw new Error("Groq API key not configured on the server.");
   }
 
-  const { heartRate, oxygen, bp, steps, sleep } = healthData;
+  const { heartRate, oxygen, bp, steps, sleep, symptoms, additionalData  } = healthData;
 
   let bpString = "";
   if (typeof bp === "object" && bp.systolic && bp.diastolic) {
@@ -47,6 +47,8 @@ const createHealthReport = async (healthData) => {
     - Blood Pressure: ${bpString}
     - Steps Taken: ${steps}
     - Sleep Duration: ${sleepString}
+    - Symptoms: ${symptoms}
+    - Additional Information: ${additionalData}
 
     Analyze these metrics and provide a brief summary of potential health implications or suggestions. Focus on clarity and actionable insights if possible. Keep the report under 150 words.
     `;
@@ -123,7 +125,7 @@ const checkHealth = async (healthData)=>{
         - Steps Taken: ${steps}
         - Sleep Duration: ${sleepString}
     
-        Analyze these metrics and Return only either OK, PROBLEM or EMERGENCY-CASE depending on the data. And a single line statement on where the problem is:
+        Analyze these metrics and Return only either OK, PROBLEM or EMERGENCY-CASE depending on the data. And a single line statement on where the problem is in the next para. In the first para only give a string of "OK", "PROBLEM" or "EMERGENCY-CASE"
         `;
     
       try {

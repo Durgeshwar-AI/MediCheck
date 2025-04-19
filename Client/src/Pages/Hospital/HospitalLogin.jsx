@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import logo from "../../assets/logo.png";
@@ -11,10 +11,20 @@ import { useHealth } from "../../hooks/useHealth";
 const HospitalLogin = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const { updateLogin } = useHealth();
+  const { updateLogin, updateType } = useHealth();
   const URL = import.meta.env.VITE_API_URL;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      updateLogin(true);
+      const tokenData = localStorage.getItem("authToken");
+      const { type } = JSON.parse(tokenData);
+      updateType(type);
+      navigate("/home");
+    }
+  }, [navigate, updateLogin]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -43,11 +53,10 @@ const HospitalLogin = () => {
       const data = await res.json();
 
       if (res.ok) {
-        storeToken(data.token, data.firstname);
+        storeToken(data.token, data.firstname, data.type);
         updateLogin(true);
-        setTimeout(() => {
-          navigate("/hospitalDashboard");
-        }, 2000);
+        updateType(data.type);
+        navigate("/hospitalDashboard");
       } else {
         alert("❌ Login failed!");
       }

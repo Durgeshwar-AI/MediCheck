@@ -15,10 +15,10 @@ const healthData = async (req,res)=>{
 export default healthData
 
 const report = async (req,res)=>{
-  const { heartRate, oxygen, bp, steps, sleep } = req.body;
+  const { heartRate, oxygen, bp, steps, sleep, symptoms, additionalData } = req.body;
 
   try {
-    const healthData = { heartRate, oxygen, bp, steps, sleep };
+    const healthData = { heartRate, oxygen, bp, steps, sleep, symptoms, additionalData  };
     const report = await createHealthReport(healthData);
     res.status(200).json({ report });
   } catch (error) {

@@ -6,7 +6,7 @@ import { useHealth } from '../../hooks/useHealth';
 
 const Hero = () => {
 
-  const {userLoggedIn} = useHealth()
+  const {userLoggedIn,type} = useHealth()
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -56,11 +56,15 @@ const Hero = () => {
                   Get Started
                 </button>
               </Link>)}
-              <Link to="/home">
+              {type=="hospital"?(<Link to="/hospitalDashboard">
+                <button className="px-8 py-3 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all duration-300">
+                  Hospital Dashboard
+                </button>
+              </Link>):(<Link to="/home">
                 <button className="px-8 py-3 border-2 border-blue-500 text-blue-600 font-medium rounded-full hover:bg-blue-50 transition-all duration-300">
                   Learn More
                 </button>
-              </Link>
+              </Link>)}
             </motion.div>
           </motion.div>
           

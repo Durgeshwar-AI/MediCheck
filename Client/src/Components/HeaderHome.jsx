@@ -2,6 +2,7 @@ import React from "react";
 import { useHealth } from "../hooks/useHealth";
 import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
+import BluetoothConnector from "./BluetoothConnector";
 
 function HeaderHome() {
   const tokenData = localStorage.getItem("authToken");
@@ -21,9 +22,7 @@ function HeaderHome() {
             {deviceConnected ? (
               ""
             ) : (
-              <button className="bg-white border-2 hover:font-bold border-blue-600 text-blue-600 px-4 py-2 rounded-md shadow:md hover:border-white hover:text-white hover:bg-blue-400">
-                Connect Device
-              </button>
+              <BluetoothConnector/>
             )}
           </div>
         </div>
