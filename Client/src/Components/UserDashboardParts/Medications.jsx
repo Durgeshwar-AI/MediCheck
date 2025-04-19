@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 
 function Medications() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -21,7 +21,7 @@ function Medications() {
 
   useEffect(() => {
     fetchMedications();
-  }, []);
+  });
 
   const fetchMedications = async () => {
     try {
@@ -175,33 +175,40 @@ function Medications() {
         </div>
         <hr className="mt-4" />
         <div className="mt-4 space-y-4 h-[270px] overflow-y-auto">
-          {meds.map((med) => (
-            <div
-              key={med._id}
-              className="p-4 border rounded-xl flex justify-between items-center"
-            >
-              <div className="flex flex-col">
-                <div className="font-semibold text-lg">
-                  {med.name} {med.dosage}
-                </div>
-                <div className="text-gray-500">{med.schedule}</div>
-              </div>
-              <div className="flex items-center">
-                <div className="flex flex-col items-end mr-3">
-                  <div className="text-sm text-gray-500">Refill by</div>
-                  <div className="font-semibold">
-                    {med.date},{med.month} {med.year}
-                  </div>
-                </div>
-                <button
-                  className="text-red-500 hover:text-red-700 transition-colors p-1"
-                  onClick={() => handleDelete(med._id)}
-                >
-                  <Trash2 size={20} />
-                </button>
-              </div>
+          {meds.length === 0 ? (
+            <div className="flex flex-col text-center items-center h-full text-gray-500">
+              <p className="text-base font-medium mt-15">No medication data stored yet</p>
+              <p className="text-xs mt-4">Click the Add button to create your first medication</p>
             </div>
-          ))}
+          ) : (
+            meds.map((med) => (
+              <div
+                key={med._id}
+                className="p-4 border rounded-xl flex justify-between items-center"
+              >
+                <div className="flex flex-col">
+                  <div className="font-semibold text-lg">
+                    {med.name} {med.dosage}
+                  </div>
+                  <div className="text-gray-500">{med.schedule}</div>
+                </div>
+                <div className="flex items-center">
+                  <div className="flex flex-col items-end mr-3">
+                    <div className="text-sm text-gray-500">Refill by</div>
+                    <div className="font-semibold">
+                      {med.date}, {med.month} {med.year}
+                    </div>
+                  </div>
+                  <button
+                    className="text-red-500 hover:text-red-700 transition-colors p-1"
+                    onClick={() => handleDelete(med._id)}
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -215,9 +222,17 @@ function Medications() {
             transition={{ duration: 0.3 }}
             className="w-full max-w-xl bg-white border-2 p-6 rounded-lg shadow-lg border-blue-500"
           >
-            <h2 className="text-2xl font-bold mb-6 text-center">
-              Add Medication
-            </h2>
+            <div className="relative flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-center w-full">Add Medication</h2>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={handleCloseForm}
+                className="text-gray-600 p-2 rounded-full hover:bg-gray-200 transition duration-300 absolute top-0 right-2"
+                aria-label="Close form"
+              >
+                <X size={20} />
+              </motion.button>
+            </div>
             <form onSubmit={handleFormSubmit} className="space-y-5">
               <div className="grid grid-cols-2 gap-4">
                 {/* Medication Name */}

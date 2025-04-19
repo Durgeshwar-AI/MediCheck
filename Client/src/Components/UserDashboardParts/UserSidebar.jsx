@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  Home,
-  FileText,
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  User,
-  BrainCog,
-  LogOut,
-  AlertTriangle,
-} from "lucide-react";
+import { Home, FileText, Calendar, ChevronLeft, ChevronRight, User, BrainCog, LogOut, AlertTriangle } from "lucide-react";
 
 const URL = import.meta.env.VITE_URL;
 
@@ -18,6 +8,9 @@ const UserSidebar = ({ children }) => {
   const [expanded, setExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const { pathname } = useLocation();
+  const tokenData = localStorage.getItem("authToken");
+  const { userName } = JSON.parse(tokenData);
+
 
   // Debounced resize handler for responsiveness
   useEffect(() => {
@@ -113,7 +106,7 @@ const UserSidebar = ({ children }) => {
               </div>
               {expanded && (
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-800">John Doe</p>
+                  <p className="text-sm font-medium text-gray-800">{userName}</p>
                   <p className="text-xs text-gray-500">patient@example.com</p>
                 </div>
               )}
