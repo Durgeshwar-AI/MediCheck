@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { HealthContext } from '../hooks/useHealth';
 
 
@@ -52,6 +52,16 @@ export const HealthProvider = ({ children }) => {
   const updateType = (data) => {
     setType(data)
   }
+
+  useEffect(()=>{
+    if(!deviceConnected){
+      setHeartRate('N/A');
+    setOxygen('N/A');
+    setBP('N/A');
+    setSteps('N/A');
+    setSleep('N/A');
+    }
+  },[deviceConnected])
 
   return (
     <HealthContext.Provider
