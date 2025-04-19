@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import logo from "../../assets/logo.png";
 import { LuEyeClosed } from "react-icons/lu";
 import { RxEyeOpen } from "react-icons/rx";
-import { ArrowLeftFromLine } from 'lucide-react';
+import { ArrowLeftFromLine } from "lucide-react";
 import { storeToken, isLoggedIn } from "../../utils/auth";
 import { useHealth } from "../../hooks/useHealth";
 
@@ -17,13 +17,15 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const { updateLogin } = useHealth();
+  const { updateLogin, updateType } = useHealth();
 
   // Redirect if already logged in
   useEffect(() => {
-    // Check directly from auth.js to ensure initial state is correct
     if (isLoggedIn()) {
       updateLogin(true);
+      const tokenData = localStorage.getItem("authToken");
+      const { type } = JSON.parse(tokenData);
+      updateType(type);
       navigate("/home");
     }
   }, [navigate, updateLogin]);
@@ -50,13 +52,13 @@ const Login = () => {
       const data = await res.json();
 
       if (res.ok) {
-        storeToken(data.token, data.firstname);
+        storeToken(data.token, data.firstname, data.type);
         setMessage("✅ Login successful!");
         updateLogin(true);
+        updateType(data.type);
         // redirect logic here if needed
-        setTimeout(() => {
-          navigate("/home");
-        }, 2000); // Redirect after 2 seconds
+        navigate("/home");
+        // Redirect after 2 seconds
       } else {
         setMessage(data.message || "❌ Login failed!");
       }
@@ -75,7 +77,11 @@ const Login = () => {
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <div>
-          <Link to="/" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
+          <Link
+            to="/"
+            className="flex items-center cursor-pointer"
+            aria-label="MediCheck Home"
+          >
             <motion.img
               src={logo}
               alt="logo"
@@ -84,11 +90,12 @@ const Login = () => {
               animate={{ scale: 1 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
             />
-            <h1 className="text-blue-700 font-bold italic text-2xl my-1">MediCheck</h1>
+            <h1 className="text-blue-700 font-bold italic text-2xl my-1">
+              MediCheck
+            </h1>
           </Link>
         </div>
         {/* <div className="hidden md:flex flex-grow justify-end"></div> */}
-
       </motion.header>
       <div className="bg-blue-50 flex items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">
@@ -98,22 +105,28 @@ const Login = () => {
             aria-level="Go back to previous page"
             onClick={handleGoBack}
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95, 
+            whileTap={{
+              scale: 0.95,
               x: -220, // Move left when clicked
-              transition: { duration: 1 } // Add a transition for the rotation
-             }}
+              transition: { duration: 1 }, // Add a transition for the rotation
+            }}
             className="absolute top-2 right-2 text-red-500 hover:text-red-700 flex items-center"
             aria-describedby="go-back-tooltip"
           >
-           <ArrowLeftFromLine/>
+            <ArrowLeftFromLine />
           </motion.button>
-
 
           <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
             Login to Medical Portal
           </h2>
           {message && (
-            <div className={`text-center mb-4 p-2 rounded ${message.includes("✅") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+            <div
+              className={`text-center mb-4 p-2 rounded ${
+                message.includes("✅")
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
               {message}
             </div>
           )}

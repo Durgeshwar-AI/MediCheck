@@ -6,6 +6,12 @@ import { HealthContext } from '../hooks/useHealth';
 export const HealthProvider = ({ children }) => {
 
   const tokenData = localStorage.getItem("authToken");
+  
+  if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+    console.log("reload")
+  }else{
+    if(tokenData && JSON.parse(tokenData).type == "hospital") localStorage.removeItem("authToken")
+  }
 
   const [heartRate, setHeartRate] = useState('N/A');
   const [oxygen, setOxygen] = useState('N/A');
@@ -16,6 +22,7 @@ export const HealthProvider = ({ children }) => {
   const [userLoggedIn, setUserLoggedIn] = useState(tokenData?true:false);
   const [deviceConnected, setDeviceConnected] = useState(false)
   const [health, setHealth] = useState(null)
+  const [type,setType]= useState(tokenData?JSON.parse(tokenData).type:null)
 
   // Function to update health data
   const updateHealthData = (data) => {
@@ -41,6 +48,10 @@ export const HealthProvider = ({ children }) => {
   const updateDevice = (data) =>{
     setDevice(data)
   }
+  
+  const updateType = (data) => {
+    setType(data)
+  }
 
   return (
     <HealthContext.Provider
@@ -58,7 +69,9 @@ export const HealthProvider = ({ children }) => {
         health,
         updateHealth,
         device,
-        updateDevice
+        updateDevice,
+        type,
+        updateType
       }}
     >
       {children}

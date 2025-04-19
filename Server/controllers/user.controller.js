@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
     await user.save();
 
     const token = user.generateAuthToken();
-    res.status(201).json({ token, firstname });
+    res.status(201).json({ token, firstname, type:"user" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -55,7 +55,7 @@ export const loginUser = async (req, res) => {
 
     const token = user.generateAuthToken();
     const firstname = user.fullname.firstname;
-    res.status(200).json({ token, firstname });
+    res.status(200).json({ token, firstname, type:"user" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

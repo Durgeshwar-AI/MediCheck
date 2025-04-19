@@ -4,7 +4,7 @@ import { easeInOut, motion } from "framer-motion";
 import logo from "../../assets/logo.png";
 import { LuEyeClosed } from "react-icons/lu";
 import { RxEyeOpen } from "react-icons/rx";
-import { ArrowLeftFromLine } from 'lucide-react';
+import { ArrowLeftFromLine } from "lucide-react";
 import { storeToken, isLoggedIn } from "../../utils/auth";
 import { useHealth } from "../../hooks/useHealth";
 
@@ -20,13 +20,16 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const { updateLogin } = useHealth();
+  const { updateLogin, updateType } = useHealth();
 
   // Redirect if already logged in
   useEffect(() => {
     // Check directly from auth.js to ensure initial state is correct
     if (isLoggedIn()) {
       updateLogin(true);
+      const tokenData = localStorage.getItem("authToken");
+      const { type } = JSON.parse(tokenData);
+      updateType(type);
       navigate("/home");
     }
   }, [navigate, updateLogin]);
@@ -81,14 +84,13 @@ const Register = () => {
 
       if (res.ok) {
         // Store token with 7-day expiration
-        storeToken(data.token, data.firstname);
+        storeToken(data.token, data.firstname, data.type);
         // localStorage.setItem("token", data.token);
         setMessage("✅ Registration successful!");
         // Redirect to home page after successful registration
         updateLogin(true);
-        setTimeout(() => {
-          navigate("/home");
-        }, 2000);
+        updateType(data.type);
+        navigate("/home");
       } else {
         setMessage(
           data.errors?.[0]?.msg || data.message || "❌ Registration failed!"
@@ -109,7 +111,11 @@ const Register = () => {
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <div>
-          <Link to="/" className="flex items-center cursor-pointer" aria-label="MediCheck Home">
+          <Link
+            to="/"
+            className="flex items-center cursor-pointer"
+            aria-label="MediCheck Home"
+          >
             <motion.img
               src={logo}
               alt="logo"
@@ -118,12 +124,12 @@ const Register = () => {
               animate={{ scale: 1 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
             />
-            <h1 className="text-blue-700 font-bold italic text-2xl my-1">MediCheck</h1>
+            <h1 className="text-blue-700 font-bold italic text-2xl my-1">
+              MediCheck
+            </h1>
           </Link>
         </div>
         <div className="hidden md:flex flex-grow justify-end"></div>
-
-
       </motion.header>
       <div className="bg-blue-50 flex items-center justify-center min-h-screen py-10">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">
@@ -133,17 +139,16 @@ const Register = () => {
             aria-level="Go back to previous page"
             onClick={handleGoBack}
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95, 
+            whileTap={{
+              scale: 0.95,
               x: -220, // Move left when clicked
-              transition: { duration: 1,ease:easeInOut } // Add a transition for the rotation
-
-             }}
+              transition: { duration: 1, ease: easeInOut }, // Add a transition for the rotation
+            }}
             className="absolute top-2 right-2 text-red-500 hover:text-red-700 flex items-center"
             aria-describedby="go-back-tooltip"
           >
-           <ArrowLeftFromLine/>
+            <ArrowLeftFromLine />
           </motion.button>
-
 
           <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
             Create an Account
@@ -231,7 +236,11 @@ const Register = () => {
             </motion.button>
           </form>
           {message && (
-            <p className={`text-center mt-4 font-medium ${message.includes("✅") ? "text-green-600" : "text-red-600"} text-xs`}>
+            <p
+              className={`text-center mt-4 font-medium ${
+                message.includes("✅") ? "text-green-600" : "text-red-600"
+              } text-xs`}
+            >
               {message}
             </p>
           )}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Home from "./Pages/User/Home";
 import { Routes, Route } from "react-router-dom";
 import Contact from "./Pages/User/Contact";
@@ -24,38 +24,82 @@ import UserAppointments from "./Pages/User/UserAppointments";
 import UserMedicalRecords from "./Pages/User/UserMedicalRecords";
 import { HealthProvider } from "./context/HealthDataContext";
 import UserAI from "./Pages/User/UserAI";
+import { useHealth } from "./hooks/useHealth";
 const App = () => {
+  const { userLoggedIn, type } = useHealth();
+
+  function autoDeleteToken() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
   
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expiryTime = payload.exp * 1000;
+  
+    const currentTime = Date.now();
+  
+    const timeout = expiryTime - currentTime;
+    if (timeout <= 0) {
+      localStorage.removeItem('authToken');
+    } else {
+      setTimeout(() => {
+        localStorage.removeItem('authToken');
+        window.location.href = '/';
+      }, timeout);
+    }
+  }
+  
+  autoDeleteToken();
+  
+
   return (
-    <HealthProvider>
-      <div>
+    <div>
       <Routes>
-        <Route path="/" element={<Landing/>} />
-        <Route path="/redirect" element={<Redirect/>} />
-        <Route path="/home" element={<Home/>} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/team" element={<Team />} />
-        <Route path="/support" element={<Support />} />
-        <Route path="/about" element={<About/>}/>
-        <Route path="/policy" element={<PrivacyPolicy/>}/>
-        <Route path="/terms" element={<TermsOfService/>}/>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/register' element={<Register/>}/>
-        <Route path='/hospitalDashboard' element={<HospitalDashboard/>}/>
-        <Route path='/hospitalEmergency' element={<HospitalEmergency/>}/>
-        <Route path='/hospitalAppointments' element={<HospitalAppointments/>}/>
-        <Route path='/hospitalPatients' element={<HospitalPatients/>}/>
-        <Route path='/hospitalDoctors' element={<HospitalDoctors/>}/>
-        <Route path='/hospitalFacilities' element={<HospitalFacilities/>}/>
-        <Route path='/hospitalLogin' element={<HospitalLogin/>}/>
-        <Route path='/dashboard' element={<UserDashboard/>}/>
-        <Route path='/appointments' element={<UserAppointments/>}/>
-        <Route path='/records' element={<UserMedicalRecords/>}/>
-        <Route path='/ai' element={<UserAI/>}/>
+        <Route path="/" element={<Landing />} />
+        {type != "hospital" ? (
+          <>
+            <Route path="/home" element={<Home />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/policy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+          </>
+        ) : (
+          <>
+            <Route path="/hospitalDashboard" element={<HospitalDashboard />} />
+            <Route path="/hospitalEmergency" element={<HospitalEmergency />} />
+            <Route
+              path="/hospitalAppointments"
+              element={<HospitalAppointments />}
+            />
+            <Route path="/hospitalPatients" element={<HospitalPatients />} />
+            <Route path="/hospitalDoctors" element={<HospitalDoctors />} />
+            <Route
+              path="/hospitalFacilities"
+              element={<HospitalFacilities />}
+            />
+          </>
+        )}
+        {type == "user" && userLoggedIn && (
+          <>
+            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route path="/appointments" element={<UserAppointments />} />
+            <Route path="/records" element={<UserMedicalRecords />} />
+            <Route path="/ai" element={<UserAI />} />
+          </>
+        )}
+        {!userLoggedIn && (
+          <>
+            <Route path="/redirect" element={<Redirect />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/hospitalLogin" element={<HospitalLogin />} />
+          </>
+        )}
         <Route path="*" element={<PageNotAvailable />} />
       </Routes>
     </div>
-    </HealthProvider>
   );
 };
 

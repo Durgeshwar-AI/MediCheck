@@ -25,7 +25,7 @@ export const loginHospital= async(req,res)=>{
     }
 
     const token = hospital.generateAuthToken();
-    res.status(200).json({ token });
+    res.status(200).json({ token, company: hospital.company, type:"hospital" });
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: error.message });
