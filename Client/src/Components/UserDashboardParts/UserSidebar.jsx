@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, FileText, Calendar, ChevronLeft, ChevronRight, User, BrainCog, LogOut, AlertTriangle } from "lucide-react";
 
-const URL = import.meta.env.VITE_URL || window.location.origin;
-
 const UserSidebar = ({ children }) => {
   const [expanded, setExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
@@ -37,9 +35,9 @@ const UserSidebar = ({ children }) => {
 
   // New navigation items
   const navItems = [
-    { name: "Dashboard", icon: <Home size={18} />, path: `${URL}/dashboard` },
-    { name: "Medical Records", icon: <FileText size={18} />, path: `${URL}/records` },
-    { name: "Appointments", icon: <Calendar size={18} />, path: `${URL}/appointments` },
+    { name: "Dashboard", icon: <Home size={18} />, path: `/dashboard` },
+    { name: "Medical Records", icon: <FileText size={18} />, path: `/records` },
+    { name: "Appointments", icon: <Calendar size={18} />, path: `/appointments` },
     { name: "Emergency", path: "/support", icon: <AlertTriangle size={20} /> },
     { name: "Ask AI", path: "/ai", icon: <BrainCog size={20} /> },
 
@@ -48,7 +46,7 @@ const UserSidebar = ({ children }) => {
   // Logout function: clear token and reload to login
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    window.location.href = `${URL}/`;
+    window.location.href = `/`;
   };
 
   return (

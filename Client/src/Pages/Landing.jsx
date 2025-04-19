@@ -9,15 +9,13 @@ import DownloadApp from "../Components/LandingParts/DownloadApp";
 import LogoutButton from "../Components/LogoutButton"
 import { motion } from "framer-motion";
 import {useHealth} from "../hooks/useHealth"
+import { Link } from "react-router-dom";
 
 const Landing = () => {
 
   const {userLoggedIn} = useHealth()
 
-  console.log(userLoggedIn)
-
-  const URL= import.meta.env.VITE_URL || window.location.origin
-  const navItems = [{name:'Home', path: `${URL}/home`}, {name: 'Emergency', path: `${URL}/support`}, {name:'About', path: `${URL}/about`}, {name:'Contact', path:`${URL}/contact`}];
+  const navItems = [{name:'Home', path: `/home`}, {name: 'Emergency', path: `/support`}, {name:'About', path: `/about`}, {name:'Contact', path:`/contact`}];
 
   return (
     <>
@@ -44,21 +42,21 @@ const Landing = () => {
               transition={{ type: "spring", stiffness: 300 }}
               className="cursor-pointer transition-colors"
             >
-              <a href={item.path}>{item.name}</a>
+              <Link to={item.path}>{item.name}</Link>
             </motion.li>
           ))}
         </ul>
 
         {/* Buttons */}
         <div className="flex gap-3">
-        {userLoggedIn?<LogoutButton/>:(<a href={`${URL}/redirect`}>
+        {userLoggedIn?<LogoutButton/>:(<Link to={`/redirect`}>
           <motion.button
             whileTap={{ scale: 0.95 }}
             className="shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(0,118,255,0.9)] px-8 py-2 bg-[#0070f3] rounded-md text-white font-light transition duration-200 ease-linear"
           >
             Login
           </motion.button>
-          </a>)}
+          </Link>)}
         </div>
       </motion.nav>
       <div className="w-screen-lg mx-auto">
