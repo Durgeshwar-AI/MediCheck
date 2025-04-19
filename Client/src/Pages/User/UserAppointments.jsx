@@ -135,18 +135,19 @@ const UserAppointments = () => {
     setAppointments(prev => prev.filter(app => app.id !== id));
   };
 
-  const upcomingAppointments = appointments.filter(
-    a => !isBefore(a.dateTime, new Date())
-  );
+  // Filter and sort appointments by date and time
+  const upcomingAppointments = appointments
+    .filter(a => !isBefore(a.dateTime, new Date()))
+    .sort((a, b) => a.dateTime - b.dateTime); // Sort by date/time (earliest first)
 
-  const pastAppointments = appointments.filter(
-    a => isBefore(a.dateTime, new Date())
-  );
+  const pastAppointments = appointments
+    .filter(a => isBefore(a.dateTime, new Date()))
+    .sort((a, b) => b.dateTime - a.dateTime); // Sort by date/time (most recent first)
 
   const renderAppointmentCard = (a) => (
     <div key={a.id} className="bg-white shadow-md rounded-lg p-4 border border-gray-200 mb-4 hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-center mb-3">
-        <h3 className="font-semibold text-blue-700 text-lg">Dr. {a.doctorName}</h3>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
+        <h3 className="font-semibold text-blue-700 text-lg mb-2 sm:mb-0">Dr. {a.doctorName}</h3>
         <div className="flex space-x-2">
           <button
             onClick={() => handleEdit(a)}
@@ -162,7 +163,7 @@ const UserAppointments = () => {
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="bg-blue-50 p-3 rounded-md">
           <div className="flex items-center mb-1">
             <span className="text-blue-800 font-medium mr-2">Specialty:</span>
@@ -199,18 +200,18 @@ const UserAppointments = () => {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleOpenForm}
-              className="bg-blue-500 text-white px-4 py-2 rounded-xl shadow-sm hover:text-blue-600 hover:bg-blue-200 border-2 border-white hover:border-blue-600 transition flex items-center gap-2"
+              className="bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-xl shadow-sm hover:text-blue-600 hover:bg-blue-200 border-2 border-white hover:border-blue-600 transition flex items-center gap-2 text-sm sm:text-base"
             >
-              <Plus size={28} /> <span>New Appointment</span>
+              <Plus size={20} /> <span>New Appointment</span>
             </motion.button>
           </div>
-          <div className="px-4">
+          <div className="px-2 sm:px-4">
             {/* Upcoming Appointments */}
             <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-2 ml-2 text-teal-500">
+              <h2 className="text-xl sm:text-2xl font-semibold mb-2 ml-2 text-teal-500">
                 Upcoming Appointments
               </h2>
-              <div className="h-0.5 w-88 bg-teal-500 shadow-2xs mb-4"></div>
+              <div className="h-0.5 w-full bg-teal-500 shadow-2xs mb-4"></div>
 
               {upcomingAppointments.length > 0 ? (
                 upcomingAppointments.map(renderAppointmentCard)
@@ -221,8 +222,8 @@ const UserAppointments = () => {
 
             {/* Past Appointments */}
             <div>
-              <h2 className="text-2xl font-semibold mb-2 ml-2 text-rose-500">Past Appointments</h2>
-              <div className="h-0.5 w-88 bg-rose-500 shadow-2xs mb-4"></div>
+              <h2 className="text-xl sm:text-2xl font-semibold mb-2 ml-2 text-rose-500">Past Appointments</h2>
+              <div className="h-0.5 w-full bg-rose-500 shadow-2xs mb-4"></div>
               {pastAppointments.length > 0 ? (
                 pastAppointments.map(renderAppointmentCard)
               ) : (
@@ -241,16 +242,16 @@ const UserAppointments = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.3 }}
-            className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md border border-blue-500"
+            className="bg-white p-4 sm:p-8 rounded-xl shadow-xl w-full max-w-md border border-blue-500 max-h-[90vh] overflow-y-auto"
           >
             <div className="relative flex justify-between items-center mb-3">
-              <h2 className={`text-2xl font-semibold ${isEditing ? "text-green-500" : "text-sky-500"}`}>
+              <h2 className={`text-xl sm:text-2xl font-semibold ${isEditing ? "text-green-500" : "text-sky-500"}`}>
                 {isEditing ? "Edit Appointment" : "Create Appointment"}
               </h2>
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={handleCloseForm}
-                className="text-gray-600 p-2 rounded-full hover:bg-gray-200 transition duration-300 absolute -top-1 right-2"
+                className="text-gray-600 p-2 rounded-full hover:bg-gray-200 transition duration-300"
               >
                 <X size={20} />
               </motion.button>
