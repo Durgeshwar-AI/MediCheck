@@ -17,7 +17,7 @@ const Landing = () => {
   console.log(userLoggedIn)
 
   const URL= import.meta.env.VITE_URL
-  const navItems = [{name:'Home', path: `${URL}/home`}, {name: 'Emergency', path: `${URL}/emergency`}, {name:'About', path: `${URL}/about`}, {name:'Contact', path:`${URL}/contact`}];
+  const navItems = [{name:'Home', path: `${URL}/home`}, {name: 'Emergency', path: `${URL}/support`}, {name:'About', path: `${URL}/about`}, {name:'Contact', path:`${URL}/contact`}];
 
   return (
     <>

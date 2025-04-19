@@ -64,7 +64,7 @@ const UserAiBot = () => {
   return (
    
     <motion.div
-      className="w-full max-w-2xl"
+      className="w-full h-full"
       initial={{ opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -30 }}
@@ -92,7 +92,7 @@ const UserAiBot = () => {
           <div className="flex flex-col  max-h-120"> {/* Fixed height issue */}
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto mb-6 pr-2">
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-4 h-[240px] md:h-[400px] lg:h-[500px] overflow-y-auto">
                 {messages.map((message, index) => (
                   <motion.div
                     key={index}
@@ -125,8 +125,10 @@ const UserAiBot = () => {
               </div>
             </div>
 
+          </div>
+        </div>
             {/* Input Area */}
-            <div className="border-t border-gray-200 ">
+            <div className="border-t border-gray-200 mt-6 ">
               <div className="bg-white rounded-xl shadow-md p-2">
                 <div className="flex flex-col gap-2">
                   <div className="relative">
@@ -184,8 +186,6 @@ const UserAiBot = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
         {/* Footer */}
         <div className="bg-gray-50 p-3 text-center text-xs text-gray-500 border-t border-gray-100">

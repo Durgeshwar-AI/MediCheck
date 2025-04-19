@@ -12,7 +12,7 @@ function Metrics({ metrics, connected }) {
     };
   
     return (
-      <div className="bg-white border rounded-lg shadow-sm">
+      <div className="bg-white border rounded-lg shadow-md">
         <MenuTop data="Current Health Metrics" />
         {connected ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 p-6">
