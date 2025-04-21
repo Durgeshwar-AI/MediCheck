@@ -128,12 +128,10 @@ const UserAiBot = () => {
 
         {/* Chat Content */}
         <div className="bg-gradient-to-b from-blue-50 to-indigo-50 w-full p-6">
-          <div className="flex flex-col  max-h-120">
-            {" "}
-            {/* Fixed height issue */}
-            {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto mb-6 pr-2">
-              <div className="flex flex-col space-y-4 h-[240px] md:h-[400px] lg:h-[500px] overflow-y-auto">
+          <div className="flex flex-col max-h-120"> 
+            {/* Messages Area with Custom Scrollbar */}
+            <div className="flex-1 overflow-y-auto mb-6 pr-1 custom-scrollbar">
+              <div className="flex flex-col space-y-4 h-[240px] md:h-[400px] lg:h-[500px]">
                 {messages.map((message, index) => (
                   <motion.div
                     key={index}
@@ -147,11 +145,10 @@ const UserAiBot = () => {
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`max-w-md p-4 rounded-2xl shadow-md ${
-                        message.sender === "user"
-                          ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-br-none"
-                          : "bg-white text-gray-800 rounded-bl-none"
-                      }`}
+                      className={`max-w-md p-4 rounded-2xl shadow-md ${message.sender === 'user'
+                        ? 'bg-gradient-to-r from-blue-400 via-indigo-500 to-indigo-600 text-white rounded-br-none mr-2'
+                        : 'bg-white text-gray-800 rounded-bl-none'
+                        }`}
                     >
                       <div className="whitespace-pre-line">{message.text}</div>
                     </div>
@@ -243,6 +240,26 @@ const UserAiBot = () => {
           immediate medical attention for serious conditions.
         </div>
       </div>
+      {/* Custom Scrollbar Styles */}
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(226, 232, 240, 0.6);
+          border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, #3b82f6, #4f46e5);
+          border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(to bottom, #2563eb, #4338ca);
+        }
+      `}</style>
     </motion.div>
   );
 };

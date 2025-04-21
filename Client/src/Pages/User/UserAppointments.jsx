@@ -147,7 +147,7 @@ const UserAppointments = () => {
   const renderAppointmentCard = (a) => (
     <div key={a.id} className="bg-white shadow-md rounded-lg p-4 border border-gray-200 mb-4 hover:shadow-lg transition-shadow">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
-        <h3 className="font-semibold text-blue-700 text-lg mb-2 sm:mb-0">Dr. {a.doctorName}</h3>
+        <h3 className="font-semibold text-blue-700 text-lg mb-2 sm:mb-0">{a.doctorName}</h3>
         <div className="flex space-x-2">
           <button
             onClick={() => handleEdit(a)}
