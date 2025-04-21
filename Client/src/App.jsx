@@ -26,35 +26,40 @@ import { HealthProvider } from "./context/HealthDataContext";
 import UserAI from "./Pages/User/UserAI";
 import { useHealth } from "./hooks/useHealth";
 import ScrollToTop from "./utils/ScrollToTop";
+import axios from "axios";
 const App = () => {
+  const URL = import.meta.env.VITE_API_URL;
   const { userLoggedIn, type } = useHealth();
 
+  useEffect(() => {
+    axios.get(`${URL}/test`)
+  }, []);
+
   function autoDeleteToken() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) return;
-  
-    const payload = JSON.parse(atob(token.split('.')[1]));
+
+    const payload = JSON.parse(atob(token.split(".")[1]));
     const expiryTime = payload.exp * 1000;
-  
+
     const currentTime = Date.now();
-  
+
     const timeout = expiryTime - currentTime;
     if (timeout <= 0) {
-      localStorage.removeItem('authToken');
+      localStorage.removeItem("authToken");
     } else {
       setTimeout(() => {
-        localStorage.removeItem('authToken');
-        window.location.href = '/';
+        localStorage.removeItem("authToken");
+        window.location.href = "/";
       }, timeout);
     }
   }
-  
+
   autoDeleteToken();
-  
 
   return (
     <div>
-    <ScrollToTop/>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Landing />} />
         {type != "hospital" ? (
