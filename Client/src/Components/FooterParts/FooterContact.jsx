@@ -5,11 +5,11 @@ const FooterContact = () => {
   return (
     <>
       <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4">Contact Us</h3>
-      <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
+      <ul className="space-y-2 md:space-y- text-sm md:text-base">
         <li className="flex">
           <FaMapMarkerAlt className="text-blue-300 mr-2 md:mr-3 mt-1 flex-shrink-0" />
           <span className="text-gray-300">
-            <address>Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus nemo autem officiis nulla ad, eaque alias blanditiis quos deserunt doloribus?</address>
+            <address>Lorem ipsum dolor sit amet. Temporibus nulla ad, eaque alias berunt doloribus?</address>
           </span>
         </li>
         <li className="flex">

@@ -10,24 +10,22 @@ const About = () => {
 
   const faqs = [
     {
-      question: "How do I find the nearest hospital?",
+      question: "How do I connect my smartwatch to MediCheck?",
       answer:
-        "Use our 'Nearby Hospitals' feature, which uses your location to show the closest hospitals with relevant services. You can filter results by specialty, available services, and insurance acceptance.",
+        "Go to Settings > Devices in your MediCheck app and follow the on-screen instructions to pair your device via Bluetooth.",
     },
     {
-      question: "Can I book appointments directly?",
+      question: "Is my health data secure with MediCheck?",
       answer:
-        "Yes! You can browse doctors by specialty and availability and book appointments through our platform. You'll receive confirmation via email and SMS, along with reminders as your appointment approaches.",
+        "Absolutely. We use end-to-end encryption and follow HIPAA guidelines to ensure your personal health information stays private and secure.",
     },
+    // {
+    //   question: "Can I export my health data from MediCheck?",
+    //   answer: "Yes, you can export your data in CSV or PDF format from the Account > Data Export section of your profile."
+    // },
     {
-      question: "Is my medical data safe?",
-      answer:
-        "Absolutely. We use industry-standard encryption and strict access controls to ensure your personal health data is secure. We're fully HIPAA compliant and never share your information with third parties without explicit consent.",
-    },
-    {
-      question: "Is CareConnect free to use?",
-      answer:
-        "Yes, our platform is free for patients. Hospitals and doctors may charge consultation fees as per their policies. Any applicable fees will be clearly displayed before you confirm an appointment.",
+      question: "How often does MediCheck sync with my device?",
+      answer: "MediCheck syncs automatically every 15 minutes when connected to your device. You can also trigger a manual sync anytime."
     },
     {
       question: "Can I access my previous medical records?",
@@ -37,33 +35,33 @@ const About = () => {
   ];
 
   const features = [
-    { 
-      icon: <MapPin className="w-8 h-8" />, 
+    {
+      icon: <MapPin className="w-8 h-8" />,
       title: "Nearby Hospitals",
       description: "Find healthcare facilities near you with real-time availability information."
     },
-    { 
-      icon: <Calendar className="w-8 h-8" />, 
+    {
+      icon: <Calendar className="w-8 h-8" />,
       title: "Appointment Booking",
       description: "Schedule visits with specialists and receive instant confirmations."
     },
-    { 
-      icon: <Star className="w-8 h-8" />, 
+    {
+      icon: <Star className="w-8 h-8" />,
       title: "Ratings & Reviews",
       description: "Read authentic feedback from other patients to make informed decisions."
     },
-    { 
-      icon: <FileText className="w-8 h-8" />, 
+    {
+      icon: <FileText className="w-8 h-8" />,
       title: "Health Records",
       description: "Keep all your medical documents organized and accessible in one secure place."
     },
-    { 
-      icon: <Clock className="w-8 h-8" />, 
+    {
+      icon: <Clock className="w-8 h-8" />,
       title: "Doctor Availability",
       description: "See real-time schedules and find appointments that fit your timetable."
     },
-    { 
-      icon: <AlertCircle className="w-8 h-8" />, 
+    {
+      icon: <AlertCircle className="w-8 h-8" />,
       title: "24/7 Emergency",
       description: "Quick access to emergency services and guidance when you need it most."
     },
@@ -119,7 +117,7 @@ const About = () => {
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
           {/* Hero Section */}
-          <motion.section 
+          <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -159,7 +157,7 @@ const About = () => {
           </motion.section>
 
           {/* What We Do Section */}
-          <motion.section 
+          <motion.section
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -190,7 +188,7 @@ const About = () => {
               </p>
               <ul className="space-y-2">
                 {["Fast access to medical care", "Transparent healthcare information", "Seamless appointment scheduling"].map((item, index) => (
-                  <motion.li 
+                  <motion.li
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -216,27 +214,25 @@ const About = () => {
                 Discover how our platform makes healthcare more accessible, efficient, and personalized for everyone.
               </p>
             </div>
-            
+
             {/* Tabs Navigation */}
             <div className="flex justify-center">
               <div className="inline-flex rounded-lg border border-gray-200 bg-white p-1">
                 <button
                   onClick={() => setActiveTab("patients")}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${
-                    activeTab === "patients" 
-                      ? "bg-blue-500 text-white" 
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${activeTab === "patients"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                    }`}
                 >
                   For Patients
                 </button>
                 <button
                   onClick={() => setActiveTab("providers")}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${
-                    activeTab === "providers" 
-                      ? "bg-blue-500 text-white" 
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${activeTab === "providers"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                    }`}
                 >
                   For Healthcare Providers
                 </button>
@@ -244,7 +240,7 @@ const About = () => {
             </div>
 
             {/* Features Grid */}
-            <motion.div 
+            <motion.div
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -270,7 +266,7 @@ const About = () => {
           </section>
 
           {/* Vision Section */}
-          <motion.section 
+          <motion.section
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -329,8 +325,8 @@ const About = () => {
                 Hear from patients and healthcare providers who use CareConnect.
               </p>
             </div>
-            
-            <motion.div 
+
+            <motion.div
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -345,9 +341,9 @@ const About = () => {
                 >
                   <div className="flex items-center gap-4 mb-4">
                     <div className="h-16 w-16 rounded-full overflow-hidden bg-gray-200">
-                      <img 
-                        src={testimonial.image} 
-                        alt={testimonial.name} 
+                      <img
+                        src={testimonial.image}
+                        alt={testimonial.name}
                         className="h-full w-full object-cover"
                       />
                     </div>
@@ -378,9 +374,9 @@ const About = () => {
                 Find answers to common questions about using CareConnect.
               </p>
             </div>
-            
+
             <div className="max-w-3xl mx-auto">
-              <motion.div 
+              <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="visible"
@@ -409,7 +405,7 @@ const About = () => {
                     <motion.div
                       id={`faq-answer-${index}`}
                       initial={false}
-                      animate={{ 
+                      animate={{
                         height: openIndex === index ? "auto" : 0,
                         opacity: openIndex === index ? 1 : 0
                       }}

@@ -200,9 +200,15 @@ const BluetoothConnector = () => {
       <div className="flex items-center justify-center mb-6">
         <button
           onClick={connectedDevice ? handleDisconnect : handleConnect}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300"
         >
-          {connectedDevice ? "Disconnect" : "Connect Device"}
+          {connectedDevice ? (
+            "Disconnect"
+          ) : (
+            <div className="flex items-center">
+              Connect <span className="md:block hidden ml-1.5">  Device</span>
+            </div >
+          )}
         </button>
       </div>
     </div>
