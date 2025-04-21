@@ -5,11 +5,12 @@ import { useHealth } from "../hooks/useHealth";
 
 const LogoutButton = () => {
   const navigate = useNavigate();
-  const { userLoggedIn, updateLogin } = useHealth();
+  const { userLoggedIn, updateLogin, updateType } = useHealth();
 
   const handleLogout = () => {
     updateLogin(false)
     removeToken();
+    updateType(null)
     navigate("/");
   };
 
