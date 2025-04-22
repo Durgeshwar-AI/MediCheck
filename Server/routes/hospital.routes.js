@@ -1,6 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
-import { loginHospital } from "../controllers/hospital.controller.js";
+import { getHospitals, loginHospital } from "../controllers/hospital.controller.js";
 
 const router = express.Router();
 
@@ -12,5 +12,7 @@ router.post(
   ],
   loginHospital
 );
+
+router.get("/",getHospitals)
 
 export default router;
