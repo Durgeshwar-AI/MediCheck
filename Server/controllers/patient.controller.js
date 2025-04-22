@@ -4,11 +4,13 @@ let patientCounter = 1000;
 export const addPatient = async (req, res) => {
   try {
     const formData = req.body;
+    const hospitalId = req.user.id
 
     patientCounter++;
     const newPatient = new Patient({
       ...formData,
       patientId: `P-${patientCounter}`,
+      hospitalId
     });
 
     await newPatient.save();
@@ -20,20 +22,22 @@ export const addPatient = async (req, res) => {
 };
 
 export const getAllPatients = async (req, res) => {
+  const hospitalId = req.user.id
   try {
-    const patients = await Patient.find().sort({ createdAt: -1 });
+    const patients = await Patient.find({hospitalId}).sort({ createdAt: -1 });
     res.json(patients);
   } catch (err) {
     res.status(500).json({ error: 'Failed to retrieve patients' });
   }
 };
 
-export const deletePatient = async (req, res) => {
+export const editPatient = async (req, res) => {
+  const { id } = req.params;
+  const { department, status } = req.body;
   try {
-    const { id } = req.params;
-    await Patient.findByIdAndDelete(id);
-    res.json({ message: 'Patient deleted successfully' });
+    const updated = await Patient.findByIdAndUpdate(id, { department, status }, { new: true });
+    res.json(updated);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete patient' });
+    res.status(500).json({ message: "Update failed" });
   }
 };

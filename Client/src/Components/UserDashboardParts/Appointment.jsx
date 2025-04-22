@@ -1,5 +1,5 @@
 import { Plus, X } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 
 function Appointment() {
@@ -87,9 +87,27 @@ function Appointment() {
       },
       body: JSON.stringify(payload),
     });
-    console.log(res.status);
+    if (res.ok) fetchAppointments();
     setShowForm(false);
   };
+
+  const fetchAppointments = useCallback(async () => {
+    try {
+      const response = await fetch(`${URL}/appointments`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setAppointments(data);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  }, [URL, token]);
+
+  useEffect(() => {
+    fetchAppointments();
+  }, [fetchAppointments]);
 
   return (
     <div className="bg-white border rounded-lg shadow-md mb-6 w-full max-w-4xl mx-auto">
@@ -113,7 +131,7 @@ function Appointment() {
           </div>
         ) : (
           appointments.map((appointment) => (
-            <Appointments key={appointment.id} appointment={appointment} />
+            <Appointments key={appointment._id} appointment={appointment} />
           ))
         )}
       </div>
@@ -326,7 +344,8 @@ function Appointment() {
 }
 
 function Appointments({ appointment }) {
-  const { date, month, time, hospitalName, doctorType } = appointment;
+  const { date, month, time, hospitalName, doctorType, status, amount } = appointment;
+
   const bgColors = {
     "General Physician": "bg-blue-100",
     ENT: "bg-purple-100",
@@ -342,23 +361,37 @@ function Appointments({ appointment }) {
     Pathology: "bg-lime-100",
   };
 
+  const statusColors = {
+    Pending: "bg-yellow-100 text-yellow-700",
+    Accepted: "bg-green-100 text-green-700",
+    Rejected: "bg-rose-100 text-rose-700",
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 mb-3 border rounded-lg hover:shadow-md transition-shadow">
       <div
-        className={`md:col-span-1 flex items-center justify-center ${
-          bgColors[doctorType] || "bg-gray-100"
-        } rounded-md p-2`}
+        className={`md:col-span-1 flex items-center justify-center ${bgColors[doctorType] || "bg-gray-100"} rounded-md p-2`}
       >
         <div className="flex flex-col items-center">
           <p className="text-2xl font-bold">{date}</p>
           <p className="text-sm">{month}</p>
         </div>
       </div>
-      <div className="md:col-span-4 flex flex-col justify-center">
+      <div className="md:col-span-4 flex flex-col justify-center gap-1">
         <p className="font-bold text-lg">{doctorType}</p>
         <p className="text-gray-600">
           {time} - {hospitalName}
         </p>
+        {status && (
+          <span
+            className={`w-fit px-3 py-1 text-sm rounded-full font-medium ${statusColors[status] || "bg-gray-200 text-gray-600"}`}
+          >
+            {status}
+          </span>
+        )}
+        {status === "Accepted" && amount && (
+          <p className="mt-2 text-lg font-semibold text-green-700">Amount: ${amount}</p>
+        )}
       </div>
     </div>
   );
