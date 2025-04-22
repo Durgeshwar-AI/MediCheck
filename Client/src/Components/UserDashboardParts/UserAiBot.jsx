@@ -130,7 +130,7 @@ const UserAiBot = () => {
         <div className="bg-gradient-to-b from-blue-50 to-indigo-50 w-full p-6">
           <div className="flex flex-col max-h-120"> 
             {/* Messages Area with Custom Scrollbar */}
-            <div className="flex-1 overflow-y-auto mb-6 pr-1 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto mb-6 pr-0.5 custom-scrollbar">
               <div className="flex flex-col space-y-4 h-[240px] md:h-[400px] lg:h-[500px]">
                 {messages.map((message, index) => (
                   <motion.div

@@ -1,10 +1,10 @@
 import React from "react";
 import Header from "../../Components/UserDashboardParts/Header";
 import Welcome from "../../Components/UserDashboardParts/Welcome";
-import QuickStats from "../../Components/UserDashboardParts/QuickStats";
+// import QuickStats from "../../Components/UserDashboardParts/QuickStats";
 import Metrics from "../../Components/UserDashboardParts/Metrics";
 import Appointment from "../../Components/UserDashboardParts/Appointment";
-import MedicalHistory from "../../Components/UserDashboardParts/MedicalHistory";
+// import MedicalHistory from "../../Components/UserDashboardParts/MedicalHistory";
 import HealthGoals from "../../Components/UserDashboardParts/HealthGoals";
 import Medications from "../../Components/UserDashboardParts/Medications";
 import UserSidebar from "../../Components/UserDashboardParts/UserSidebar";

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import HeaderHome from "../../Components/HeaderHome";
-// import { isLoggedIn } from "../../utils/auth";
 import { Link } from "react-router-dom";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
 import dashboard from "../../assets/Dashboard.png";
 import { useHealth } from "../../hooks/useHealth";
+import UserNews from "../../Components/UserDashboardParts/UserNews";
 
 import { HeartPulse, Stethoscope, ShieldCheck, Activity } from "lucide-react";
 
@@ -86,30 +86,12 @@ function HomePage() {
             <p className="mt-1 sm:mt-2 xl:mt-3 text-sm sm:text-base xl:text-lg 2xl:text-xl text-gray-600">
               Access your real-time health data and insights below.
             </p>
-
-            <div className="grid md:grid-cols-2 gap-4 sm:gap-6 xl:gap-8 2xl:gap-10 mt-6 sm:mt-8 xl:mt-12">
-              <div className="bg-blue-50 p-4 sm:p-6 xl:p-8 2xl:p-10 rounded-lg sm:rounded-xl">
-                <h3 className="font-semibold text-blue-800 text-sm sm:text-base xl:text-lg 2xl:text-xl">
-                  Today&apos;s Summary
-                </h3>
-                {/* Placeholder for user dashboard content */}
-                <div className="h-36 sm:h-48 xl:h-56 2xl:h-64 flex items-center justify-center border border-dashed border-blue-300 rounded-lg mt-2 sm:mt-3 xl:mt-4">
-                  <p className="text-blue-400 text-sm sm:text-base xl:text-lg 2xl:text-xl">
-                    Your health metrics will appear here
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-blue-50 p-4 sm:p-6 xl:p-8 2xl:p-10 rounded-lg sm:rounded-xl">
-                <h3 className="font-semibold text-blue-800 text-sm sm:text-base xl:text-lg 2xl:text-xl">Recent Activity</h3>
-                {/* Placeholder for activity feed */}
-                <div className="h-36 sm:h-48 xl:h-56 2xl:h-64 flex items-center justify-center border border-dashed border-blue-300 rounded-lg mt-2 sm:mt-3 xl:mt-4">
-                  <p className="text-blue-400 text-sm sm:text-base xl:text-lg 2xl:text-xl">
-                    Your recent activities will appear here
-                  </p>
-                </div>
-              </div>
-            </div>
+          </div>
+          <div className="mt-8 sm:mt-12 xl:mt-16 w-full">
+            {/* User News Section */}
+            <UserNews />
+          </div>
+          <div className="mt-8 sm:mt-12 xl:mt-16">
 
             {/* Features Grid */}
             <section className="py-6 sm:py-8 xl:py-12 2xl:py-16 my-4 xl:my-8 px-3 sm:px-6 xl:px-8 rounded-lg sm:rounded-xl bg-gradient-to-b from-blue-50 to-white">
@@ -152,6 +134,7 @@ function HomePage() {
             ahead of health concerns with personalized insights.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 sm:pt-6 xl:pt-8">
+            {/* If you had buttons intended here, add them */}
           </div>
         </div>
 
@@ -248,7 +231,6 @@ function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Testimonials Section with carousel */}
       <section className="py-10 sm:py-16 xl:py-20 2xl:py-24 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-24">
         <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto">

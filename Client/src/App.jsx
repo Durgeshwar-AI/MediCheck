@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Home from "./Pages/User/Home";
 import { Routes, Route } from "react-router-dom";
 import Contact from "./Pages/User/Contact";

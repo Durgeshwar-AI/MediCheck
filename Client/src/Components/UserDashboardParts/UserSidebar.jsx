@@ -62,7 +62,7 @@ const UserSidebar = ({ children }) => {
 
       {/* Sidebar */}
       <aside
-        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky ${expanded ? "w-48" : "w-16"
+        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky ${expanded ? "w-48" : "w-12"
           }`}
       >
         <nav className="p-3 mt-2">
@@ -95,12 +95,12 @@ const UserSidebar = ({ children }) => {
         </nav>
 
         {/* Footer section with user profile and logout */}
-        <div className="absolute bottom-5 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
+        <div className="absolute bottom-5 -left-1 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
           <div className="flex items-center justify-between">
             {/* User Profile */}
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                <User size={20} />
+              <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                <User size={18} />
               </div>
               {expanded && (
                 <div className="ml-3">
@@ -117,9 +117,9 @@ const UserSidebar = ({ children }) => {
               aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
             >
               {expanded ? (
-                <ChevronLeft size={20} className="text-red-600 bg-blue-300 border border-red-700-500 rounded-full" />
+                <ChevronLeft size={16} className="text-red-600 bg-blue-300 border border-red-700-500 rounded-full" />
               ) : (
-                <ChevronRight size={20} className="text-blue-600 bg-red-300 border border-blue-700 rounded-full" />
+                <ChevronRight size={16} className="text-blue-600 bg-red-300 border border-blue-700 rounded-full" />
               )}
             </button>
           </div>
