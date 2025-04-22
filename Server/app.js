@@ -12,6 +12,7 @@ import adminRoutes from "./routes/admin.route.js";
 import patientRoutes from "./routes/Patient.route.js";
 import medicationRoutes from "./routes/medication.route.js";
 import goalRoutes from "./routes/goal.route.js";
+import appointmentRoutes from "./routes/appointment.route.js"
 import { rateLimit } from 'express-rate-limit'
 
 dotenv.config();
@@ -60,6 +61,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/patient", patientRoutes);
 app.use("/api/medications", medicationRoutes);
 app.use("/api/goals", goalRoutes);
+app.use("/api/appointments", appointmentRoutes)
 
 app.get("/", (req, res) => {
   res.send("Server is running with Socket.IO support.");

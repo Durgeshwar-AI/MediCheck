@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Home from "./Pages/User/Home";
 import { Routes, Route } from "react-router-dom";
 import Contact from "./Pages/User/Contact";
@@ -22,7 +22,6 @@ import HospitalLogin from "./Pages/Hospital/HospitalLogin";
 import Redirect from "./Pages/Redirect";
 import UserAppointments from "./Pages/User/UserAppointments";
 import UserMedicalRecords from "./Pages/User/UserMedicalRecords";
-import { HealthProvider } from "./context/HealthDataContext";
 import UserAI from "./Pages/User/UserAI";
 import { useHealth } from "./hooks/useHealth";
 const App = () => {

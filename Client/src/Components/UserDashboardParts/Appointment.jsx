@@ -1,117 +1,65 @@
-import { Plus, X, Trash2, Edit } from "lucide-react";
-import React, { useState } from "react";
+import { Plus, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 function Appointment() {
-  // State for the appointments list
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      month: "Mar",
-      date: 15,
-      doctorName: "Dr. Smith",
-      time: "09:00",
-      hospitalName: "Memorial Hospital",
-      doctorType: "Cardiology",
-    },
-    {
-      id: 2,
-      month: "Mar",
-      date: 23,
-      doctorName: "Dr. Johnson",
-      time: "11:30",
-      hospitalName: "City Lab Center",
-      doctorType: "Pathology",
-    },
-  ]);
+  const URL = import.meta.env.VITE_API_URL;
+  const tokenData = localStorage.getItem("authToken");
+  const { value } = JSON.parse(tokenData);
+  const token = value;
 
-  // State to show/hide the create appointment popup
+  const [appointments, setAppointments] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  
-  // State to track if we're editing an existing appointment
-  const [isEditing, setIsEditing] = useState(false);
-  
-  // State to track current appointment ID for editing
-  const [currentAppointmentId, setCurrentAppointmentId] = useState(null);
-
-  // Form data state for new appointment
   const [formData, setFormData] = useState({
     month: "",
     date: "",
-    doctorName: "",
     time: "",
     hospitalName: "",
     doctorType: "General Physician",
+    name: "",
+    age: "",
   });
 
-  // Helper function returns days based on month selection.
+  const [hospitals, setHospitals] = useState([]);
+
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      const response = await fetch(`${URL}/hospital`);
+      const data = await response.json();
+      setHospitals(data);
+    };
+    fetchHospitals();
+  }, []);
+
   const getDaysInMonth = (month) => {
     switch (month) {
       case "Feb":
-        return new Date().getFullYear() % 4 === 0 ? 29 : 28; // Leap year check
+        return new Date().getFullYear() % 4 === 0 ? 29 : 28;
       case "Apr":
       case "Jun":
       case "Sep":
       case "Nov":
         return 30;
-      case "Jan":
-      case "Mar":
-      case "May":
-      case "Jul":
-      case "Aug":
-      case "Oct":
-      case "Dec":
-        return 31;
       default:
         return 31;
     }
   };
 
-  // Open the popup for creating a new appointment
   const handleCreateClick = () => {
-    setIsEditing(false);
-    setCurrentAppointmentId(null);
-    // Reset form data to empty values
     setFormData({
       month: "",
       date: "",
-      doctorName: "",
       time: "",
       hospitalName: "",
       doctorType: "General Physician",
-    });
-    setShowForm(true);
-  };
-  
-  // Open the popup for editing an existing appointment
-  const handleEditClick = (appointment) => {
-    setIsEditing(true);
-    setCurrentAppointmentId(appointment.id);
-    // Populate form with existing appointment data
-    setFormData({
-      month: appointment.month,
-      date: appointment.date.toString(),
-      doctorName: appointment.doctorName,
-      time: appointment.time,
-      hospitalName: appointment.hospitalName,
-      doctorType: appointment.doctorType,
+      name: "",
+      age: "",
     });
     setShowForm(true);
   };
 
-  // Close the popup
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setIsEditing(false);
-  };
+  const handleCloseForm = () => setShowForm(false);
 
-  // Delete an appointment based on ID
-  const handleDeleteAppointment = (id) => {
-    setAppointments(appointments.filter(appointment => appointment.id !== id));
-  };
-
-  // Update form data state as the user types.
-  // For "month" we reset date if a new month is selected.
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "month") {
@@ -121,67 +69,34 @@ function Appointment() {
     }
   };
 
-  // Generate a unique ID for new appointments
-  const generateNewId = () => {
-    return appointments.length > 0 
-      ? Math.max(...appointments.map(app => app.id)) + 1 
-      : 1;
-  };
-
-  // Add the new appointment to the list or update existing and close the modal
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (isEditing) {
-      // Update existing appointment
-      setAppointments(
-        appointments.map(app => 
-          app.id === currentAppointmentId 
-            ? {
-                ...app,
-                month: formData.month,
-                date: parseInt(formData.date),
-                doctorName: formData.doctorName,
-                time: formData.time,
-                hospitalName: formData.hospitalName,
-                doctorType: formData.doctorType,
-              }
-            : app
-        )
-      );
-    } else {
-      // Add new appointment with a unique ID
-      setAppointments([
-        ...appointments,
-        {
-          id: generateNewId(),
-          month: formData.month,
-          date: parseInt(formData.date),
-          doctorName: formData.doctorName,
-          time: formData.time,
-          hospitalName: formData.hospitalName,
-          doctorType: formData.doctorType,
-        },
-      ]);
-    }
+    const payload = {
+      ...formData,
+      id: Date.now(),
+      date: formData.date.toString(),
+      age: formData.age.toString(),
+    };
 
-    // Reset form data and close the popup
-    setFormData({
-      month: "",
-      date: "",
-      doctorName: "",
-      time: "",
-      hospitalName: "",
-      doctorType: "General Physician",
+    const res = await fetch(`${URL}/appointments/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
     });
+    console.log(res.status);
     setShowForm(false);
-    setIsEditing(false);
   };
 
   return (
     <div className="bg-white border rounded-lg shadow-md mb-6 w-full max-w-4xl mx-auto">
       <div className="p-4 border-b flex justify-between items-center">
-        <span className="font-bold text-xl text-gray-800">Upcoming Appointments</span>
+        <span className="font-bold text-xl text-gray-800">
+          Upcoming Appointments
+        </span>
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={handleCreateClick}
@@ -191,7 +106,6 @@ function Appointment() {
         </motion.button>
       </div>
 
-      {/* Appointment list */}
       <div className="p-2 h-[291px] overflow-y-auto">
         {appointments.length === 0 ? (
           <div className="flex justify-center items-center h-32 text-gray-500">
@@ -199,29 +113,21 @@ function Appointment() {
           </div>
         ) : (
           appointments.map((appointment) => (
-            <Appointments
-              key={appointment.id}
-              appointment={appointment}
-              onDelete={() => handleDeleteAppointment(appointment.id)}
-              onEdit={() => handleEditClick(appointment)}
-            />
+            <Appointments key={appointment.id} appointment={appointment} />
           ))
         )}
       </div>
 
-      {/* Popup modal form */}
       {showForm && (
-        <div className="fixed inset-0 z-50 bg-transparent bg-opacity-50 backdrop-blur-md flex justify-center items-center p-6 ">
+        <div className="fixed inset-0 z-50 bg-transparent bg-opacity-50 backdrop-blur-md flex justify-center items-center p-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3 }}
             className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md border border-blue-500"
           >
             <div className="relative flex justify-between items-center mb-3">
-              <h2 className={`text-2xl font-semibold  ${isEditing ? "text-green-500" : "text-sky-500"}`}>
-                {isEditing ? "Edit Appointment" : "Create Appointment"}
+              <h2 className="text-2xl font-semibold text-sky-500">
+                Create Appointment
               </h2>
               <motion.button
                 whileTap={{ scale: 0.9 }}
@@ -231,160 +137,170 @@ function Appointment() {
                 <X size={20} />
               </motion.button>
             </div>
-            <hr className="border-gray-600 mb-6 " />
+            <hr className="border-gray-600 mb-6" />
             <form onSubmit={handleFormSubmit} className="space-y-5">
-              {/* Grid Layout for Month and Date */}
+              <div className="relative">
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  placeholder="Enter Patient Name"
+                  required
+                />
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
+                  Patient Name *
+                </label>
+              </div>
+
+              <div className="relative">
+                <input
+                  type="number"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleInputChange}
+                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  placeholder="Enter Patient Age"
+                  min="0"
+                  required
+                />
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
+                  Patient Age *
+                </label>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
-                {/* Month Select */}
                 <div className="relative">
                   <select
                     name="month"
-                    id="month"
                     value={formData.month}
                     onChange={handleInputChange}
                     className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                     required
                   >
-                    <option value="" disabled>Select Month</option>
-                    <option value="Jan">January</option>
-                    <option value="Feb">February</option>
-                    <option value="Mar">March</option>
-                    <option value="Apr">April</option>
-                    <option value="May">May</option>
-                    <option value="Jun">June</option>
-                    <option value="Jul">July</option>
-                    <option value="Aug">August</option>
-                    <option value="Sep">September</option>
-                    <option value="Oct">October</option>
-                    <option value="Nov">November</option>
-                    <option value="Dec">December</option>
+                    <option value="" disabled>
+                      Select Month
+                    </option>
+                    {[
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ].map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
                   </select>
-                  <label
-                    htmlFor="month"
-                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
-                  >
+                  <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
                     Month *
                   </label>
                 </div>
-                {/* Date Select (dynamic based on month) */}
                 <div className="relative">
                   <select
                     name="date"
-                    id="date"
                     value={formData.date}
                     onChange={handleInputChange}
                     className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                     required
                     disabled={!formData.month}
                   >
-                    <option value="" disabled>Select Date</option>
+                    <option value="" disabled>
+                      Select Date
+                    </option>
                     {formData.month &&
-                      Array.from({ length: getDaysInMonth(formData.month) }, (_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {i + 1}
-                        </option>
-                      ))}
+                      Array.from(
+                        { length: getDaysInMonth(formData.month) },
+                        (_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            {i + 1}
+                          </option>
+                        )
+                      )}
                   </select>
-                  <label
-                    htmlFor="date"
-                    className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
-                  >
+                  <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
                     Date *
                   </label>
                 </div>
               </div>
 
-              {/* Time Field (using native time picker) */}
               <div className="relative">
                 <input
                   type="time"
                   name="time"
-                  id="time"
                   value={formData.time}
                   onChange={handleInputChange}
                   className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   required
                 />
-                <label
-                  htmlFor="time"
-                  className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
-                >
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
                   Time *
                 </label>
               </div>
 
-              {/* Doctor's Name Field (Changed from Appointment Name) */}
               <div className="relative">
-                <input
-                  type="text"
-                  name="doctorName"
-                  id="doctorName"
-                  value={formData.doctorName}
-                  onChange={handleInputChange}
-                  placeholder=""
-                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-                  required
-                />
-                <label
-                  htmlFor="doctorName"
-                  className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
-                >
-                  Doctor&apos;s Name *
-                </label>
-              </div>
-
-              {/* Hospital Name Field (Changed from Location) */}
-              <div className="relative">
-                <input
-                  type="text"
+                <select
                   name="hospitalName"
-                  id="hospitalName"
                   value={formData.hospitalName}
                   onChange={handleInputChange}
-                  placeholder=""
-                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   required
-                />
-                <label
-                  htmlFor="hospitalName"
-                  className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
                 >
+                  <option value="" disabled>
+                    Select Hospital
+                  </option>
+                  {hospitals.map((hosp, idx) => (
+                    <option key={idx} value={hosp}>
+                      {hosp}
+                    </option>
+                  ))}
+                </select>
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
                   Hospital Name *
                 </label>
               </div>
 
-              {/* Doctor Type Select (Changed from Appointment Type) */}
               <div className="relative">
                 <select
                   name="doctorType"
-                  id="doctorType"
                   value={formData.doctorType}
                   onChange={handleInputChange}
                   className="block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                 >
-                  <option value="General Physician">General Physician</option>
-                  <option value="Cardiology">Cardiology</option>
-                  <option value="Dermatology">Dermatology</option>
-                  <option value="ENT">ENT</option>
-                  <option value="Gynecology">Gynecology</option>
-                  <option value="Neurology">Neurology</option>
-                  <option value="Ophthalmology">Ophthalmology</option>
-                  <option value="Orthopedics">Orthopedics</option>
-                  <option value="Pediatrics">Pediatrics</option>
-                  <option value="Psychiatry">Psychiatry</option>
-                  <option value="Radiology">Radiology</option>
-                  <option value="Pathology">Pathology</option>
+                  {[
+                    "General Physician",
+                    "Cardiology",
+                    "Dermatology",
+                    "ENT",
+                    "Gynecology",
+                    "Neurology",
+                    "Ophthalmology",
+                    "Orthopedics",
+                    "Pediatrics",
+                    "Psychiatry",
+                    "Radiology",
+                    "Pathology",
+                  ].map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
                 </select>
-                <label
-                  htmlFor="doctorType"
-                  className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500"
-                >
-                  Doctor&apos;s Specialty
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
+                  Doctor's Specialty
                 </label>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-4 pt-4">
+              <div className="flex justify-end gap-4 pt-4">
                 <motion.button
                   type="button"
                   onClick={handleCloseForm}
@@ -398,7 +314,7 @@ function Appointment() {
                   whileTap={{ scale: 0.9 }}
                   className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-green-200 hover:text-green-800 border border-white hover:border-green-800 transition"
                 >
-                  {isEditing ? "Update" : "Save"}
+                  Save
                 </motion.button>
               </div>
             </form>
@@ -409,58 +325,40 @@ function Appointment() {
   );
 }
 
-// Component to display each appointment
-function Appointments({ appointment, onDelete, onEdit }) {
-  const { date, month, doctorName, time, hospitalName, doctorType } = appointment;
-  
+function Appointments({ appointment }) {
+  const { date, month, time, hospitalName, doctorType } = appointment;
   const bgColors = {
     "General Physician": "bg-blue-100",
-    "ENT": "bg-purple-100",
-    "Cardiology": "bg-red-100",
-    "Dermatology": "bg-green-100",
-    "Gynecology": "bg-pink-100",
-    "Neurology": "bg-yellow-100",
-    "Ophthalmology": "bg-indigo-100",
-    "Orthopedics": "bg-orange-100",
-    "Pediatrics": "bg-teal-100",
-    "Psychiatry": "bg-cyan-100",
-    "Radiology": "bg-amber-100",
-    "Pathology": "bg-lime-100",
+    ENT: "bg-purple-100",
+    Cardiology: "bg-red-100",
+    Dermatology: "bg-green-100",
+    Gynecology: "bg-pink-100",
+    Neurology: "bg-yellow-100",
+    Ophthalmology: "bg-indigo-100",
+    Orthopedics: "bg-orange-100",
+    Pediatrics: "bg-teal-100",
+    Psychiatry: "bg-cyan-100",
+    Radiology: "bg-amber-100",
+    Pathology: "bg-lime-100",
   };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 mb-3 border rounded-lg hover:shadow-md transition-shadow">
-      <div className={`md:col-span-1 flex items-center justify-center ${bgColors[doctorType] || "bg-gray-100"} rounded-md p-2`}>
+      <div
+        className={`md:col-span-1 flex items-center justify-center ${
+          bgColors[doctorType] || "bg-gray-100"
+        } rounded-md p-2`}
+      >
         <div className="flex flex-col items-center">
           <p className="text-2xl font-bold">{date}</p>
           <p className="text-sm">{month}</p>
         </div>
       </div>
       <div className="md:col-span-4 flex flex-col justify-center">
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="font-bold text-lg">{doctorName} - {doctorType}</p>
-            <p className="text-gray-600">
-              {time} - {hospitalName}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <motion.button
-              onClick={onEdit}
-              whileTap={{ scale: 0.9 }}
-              className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50"
-            >
-              <Edit size={18} />
-            </motion.button>
-            <motion.button
-              onClick={onDelete}
-              whileTap={{ scale: 0.9 }}
-              className="text-rose-600 hover:text-rose-800 p-1 rounded-full hover:bg-rose-50"
-            >
-              <Trash2 size={18} />
-            </motion.button>
-          </div>
-        </div>
+        <p className="font-bold text-lg">{doctorType}</p>
+        <p className="text-gray-600">
+          {time} - {hospitalName}
+        </p>
       </div>
     </div>
   );
