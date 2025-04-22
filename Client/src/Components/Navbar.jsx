@@ -34,12 +34,12 @@ const Navbar = () => {
     
     if (!userLoggedIn) {
       return (
-        <a
+        <Link
           href={`${URL}/register`}
           className={`${baseClassName} border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double`}
         >
           Join Us
-        </a>
+        </Link>
       );
     } else if (userLoggedIn) {
       return (

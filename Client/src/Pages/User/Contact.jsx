@@ -77,7 +77,7 @@ function Contact() {
                   <div>
                     <h3 className="font-medium text-gray-800">Call Us</h3>
                     <p className="text-blue-600">+91 1800-123-4567</p>
-                    <p className="text-sm text-gray-500">Mon-Fri, 9am-5pm IST</p>
+                    <p className="text-sm text-gray-500">Mon-Sun, 24X7</p>
                   </div>
                 </div>
 
@@ -169,7 +169,7 @@ function Contact() {
                           onChange={handleChange}
                           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           required
-                          placeholder="John Doe"
+                          placeholder="User Name"
                         />
                       </div>
                     </div>
@@ -235,10 +235,10 @@ function Contact() {
                   <div className="flex justify-end">
                     <button
                       type="submit"
-                      className="px-5 py-2 md:px-6 md:py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-md flex items-center"
+                      className="px-4 py-2 md:px-5 md:py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-md flex items-center"
                     >
-                      <Send size={18} className="mr-2" />
-                      <span className="hidden md:block">Send Message</span>
+                      <Send size={18} className="mx-auto" />
+                      <span className="hidden md:block md:ml-2">Send Message</span>
                     </button>
                   </div>
                 </form>
@@ -261,14 +261,18 @@ function Contact() {
                 q: "Is my health data secure with MediCheck?",
                 a: "Absolutely. We use end-to-end encryption and follow HIPAA guidelines to ensure your personal health information stays private and secure."
               },
-              {
-                q: "Can I export my health data from MediCheck?",
-                a: "Yes, you can export your data in CSV or PDF format from the Account > Data Export section of your profile."
-              },
+              // {
+              //   q: "Can I export my health data from MediCheck?",
+              //   a: "Yes, you can export your data in CSV or PDF format from the Account > Data Export section of your profile."
+              // },
               {
                 q: "How often does MediCheck sync with my device?",
                 a: "MediCheck syncs automatically every 15 minutes when connected to your device. You can also trigger a manual sync anytime."
-              }
+              },
+              {
+                q: "Can I access my previous medical records?",
+                a: "Yes, CareConnect allows you to securely store and access your medical history, prescriptions, test results, and treatment plans all in one place. You control who has access to this information.",
+              },
             ].map((item, i) => (
               <div key={i} className="bg-white p-5 md:p-6 rounded-xl shadow-md">
                 <div className="flex items-start">
