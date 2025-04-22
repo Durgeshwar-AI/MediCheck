@@ -2,7 +2,6 @@ import Appointment from "../models/appointments.model.js";
 import { GetHospitalId } from "../services/appointments.service.js";
 
 export const createAppointment = async (req, res) => {
-  console.log("working");
   try {
     const { name, age, hospitalName, date, month, time, doctorType } = req.body;
     const userId = req.user.id;
@@ -28,3 +27,14 @@ export const createAppointment = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const getAppointments = async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const data = await Appointment.find({ userId });
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
