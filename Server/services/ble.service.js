@@ -14,14 +14,18 @@ const createHealthReport = async (healthData) => {
   const { heartRate, oxygen, bp, steps, sleep, symptoms, additionalData } =
     healthData;
 
-    const prompt = `
+  let prompt = "";
+
+  if (
+    !heartRate == "N/A" ||
+    !oxygen == "N/A" ||
+    !bp == "N/A" ||
+    !steps == "N/A" ||
+    !sleep == "N/A"
+  ) {
+    prompt = `
     Analyze the following daily health data and generate a concise health report (under 150 words).
     Input Data:
-    ${heartRate !== 'N/A' ? `- Heart Rate: ${heartRate} bpm` : ''}
-    ${oxygen!='N/A'?`- Blood Oxygen (SpO2): ${oxygen}`: "" }
-    ${bp!='N/A'?`- Blood Pressure: ${bp}`:''}
-    ${steps!='N/A'? `- Steps Taken: ${steps}`: ''}
-    ${sleep!='N/A'?`- Sleep Duration: ${sleep}`:''}
     - Current Symptoms Experienced: ${symptoms}
     - Additional Information/Context: ${additionalData}
     
@@ -36,8 +40,30 @@ const createHealthReport = async (healthData) => {
     - If crucial data (specifically Heart Rate, SpO2, Blood Pressure, or Current Symptoms) is missing, state that a full assessment is limited. Politely ask the user if they can provide the missing metric(s) in the additional data field [mention specific missing crucial metric(s), e.g., Blood Pressure, SpO2] for a more complete picture.
     - If only non-crucial data (Steps, Sleep, Additional Info) is missing, simply note its absence without requesting it.
     `;
+  } else {
+    prompt = `
+    Analyze the following daily health data and generate a concise health report (under 150 words).
+    Input Data:
+    - Heart Rate: ${heartRate} bpm
+    - Blood Oxygen (SpO2): ${oxygen}
+    - Blood Pressure: ${bp}
+    - Steps Taken: ${steps}
+    - Sleep Duration: ${sleep}
+    - Current Symptoms Experienced: ${symptoms}
+    - Additional Information/Context: ${additionalData}
     
-
+    Report Requirements:
+    - Briefly analyze the provided metrics against typical healthy ranges (where applicable).
+    - Summarize potential health implications based on the data and any reported symptoms.
+    - Offer brief, actionable suggestions or points of observation if relevant.
+    - Maintain clarity and conciseness, staying under the 150-word limit.
+    
+    Handling Missing Data:
+    - If any data points are missing or marked as 'N/A', acknowledge this in the report.
+    - If crucial data (specifically Heart Rate, SpO2, Blood Pressure, or Current Symptoms) is missing, state that a full assessment is limited. Politely ask the user if they can provide the missing metric(s) in the additional data field [mention specific missing crucial metric(s), e.g., Blood Pressure, SpO2] for a more complete picture.
+    - If only non-crucial data (Steps, Sleep, Additional Info) is missing, simply note its absence without requesting it.
+    `;
+  }
   try {
     const chatCompletion = await groq.chat.completions.create({
       messages: [

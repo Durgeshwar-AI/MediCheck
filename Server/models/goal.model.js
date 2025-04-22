@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const goalsSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Hospital",
+    ref: "User",
     required: true,
   },
   name: {
