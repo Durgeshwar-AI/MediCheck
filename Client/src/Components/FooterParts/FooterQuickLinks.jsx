@@ -2,15 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 
-
-const URL = import.meta.env.VITE_URL;
-
 const FooterQuickLinks = () => {
   const links = [
-    { name: "Home", path: `${URL}/home` },
-    { name: "Emergency", path: `${URL}/support` },
-    { name: "Our Team", path: `${URL}/team` },
-    { name: "Contact Us", path: `${URL}/contact` },
+    { name: "Home", path: `/home` },
+    { name: "Emergency", path: `/support` },
+    { name: "Our Team", path: `/team` },
+    { name: "Contact Us", path: `/contact` },
   ];
 
   return (

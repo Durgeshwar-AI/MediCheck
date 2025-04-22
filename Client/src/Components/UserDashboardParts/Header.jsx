@@ -5,14 +5,13 @@ import logo from "../../assets/logo.png";
 import {Link} from 'react-router-dom'
 import { motion } from "framer-motion";
 
-const URL = import.meta.env.VITE_URL;
 
 function Header() {
   return (
     <header className="sticky top-0 z-10 bg-white border-b shadow-sm px-4 py-2">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <Link to={`${URL}/home`}>
+          <Link to={`/home`}>
         <div className="flex flex-row">
           <motion.img
             src={logo}

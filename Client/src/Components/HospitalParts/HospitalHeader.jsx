@@ -6,8 +6,6 @@ import { FaUserMd } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import HospitalProfile from '../HospitalParts/HospitalProfile';
 
-const URL = import.meta.env.VITE_URL;
-
 const HospitalHeader = () => {
   const maxLength = 7;
   const userName = "Dr. Krishna Kumar Roy";
@@ -32,7 +30,7 @@ const HospitalHeader = () => {
       <div className="mx-auto flex flex-col md:flex-row justify-between items-center">
         {/* Left Section: Logo and Title */}
         <div className="flex items-center space-x-4 mb-4 md:mb-0">
-          <Link to={`${URL}/home`}>
+          <Link to={`/home`}>
             <motion.img
               src={logo}
               alt="MediCheck Logo"

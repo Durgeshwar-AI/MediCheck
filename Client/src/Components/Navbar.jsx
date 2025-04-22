@@ -5,13 +5,11 @@ import logo from "../assets/logo.png";
 import LogoutButton from "./LogoutButton";
 import { useHealth } from "../hooks/useHealth";
 
-const URL = import.meta.env.VITE_URL;
-
 const MENU_ITEMS = [
-  { name: "Home", path: `${URL}/home` },
-  { name: "Emergency", path: `${URL}/support` },
-  { name: "Our Team", path: `${URL}/team` },
-  { name: "Contact Us", path: `${URL}/contact` },
+  { name: "Home", path: `/home` },
+  { name: "Emergency", path: `/support` },
+  { name: "Our Team", path: `/team` },
+  { name: "Contact Us", path: `/contact` },
 ];
 
 const Navbar = () => {
@@ -36,12 +34,12 @@ const Navbar = () => {
     
     if (!userLoggedIn) {
       return (
-        <a
+        <Link
           href={`${URL}/register`}
           className={`${baseClassName} border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double`}
         >
           Join Us
-        </a>
+        </Link>
       );
     } else if (userLoggedIn) {
       return (
