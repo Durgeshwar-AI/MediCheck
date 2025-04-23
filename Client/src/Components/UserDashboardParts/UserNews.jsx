@@ -15,8 +15,8 @@ const UserNews = () => {
     const [page, setPage] = useState(1);
     const [direction, setDirection] = useState(null);
     const [isTransitioning, setIsTransitioning] = useState(false);
-    const [nextPage, setNextPage] = useState(null);
-    const pageSize = 10;
+    const [hasMorePages, setHasMorePages] = useState(true);
+    const pageSize = 5;
 
     // Example API key for demonstration - replace with your actual implementation
     const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
@@ -24,7 +24,7 @@ const UserNews = () => {
     useEffect(() => {
         // Fetch news data from API on component mount
         fetchNewsFromAPI(1);
-    }, []); // Fixed empty dependency array
+    }, []); 
 
     const fetchNewsFromAPI = async (pageNum) => {
         try {
@@ -35,13 +35,8 @@ const UserNews = () => {
                 throw new Error('News API key is missing. Please check your environment variables.');
             }
 
-            // Build the URL - for initial page or for next_page token
-            let url = `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=medical&language=en&category=education,environment,health,top`;
-
-            // If we're loading more and have a nextPage token, use it
-            if (pageNum > 1 && nextPage) {
-                url = `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=medical&language=en&category=health&page=${nextPage}`;
-            }
+            // Build the URL with proper parameters for TheNewsAPI
+            const url = `https://api.thenewsapi.com/v1/news/all?api_token=${API_KEY}&categories=health,science&language=en&search=(health OR medical)&language=en&categories=health,medical&page=${pageNum}&limit=${pageSize}`;
 
             const response = await fetch(url);
 
@@ -51,10 +46,10 @@ const UserNews = () => {
 
             const data = await response.json();
 
-            // Check response data integrity
-            if (data.status === 'success' && data.results) {
+            // Check response data integrity for TheNewsAPI structure
+            if (data.data && Array.isArray(data.data)) {
                 // Filter out invalid articles (those without images or descriptions)
-                const validArticles = data.results.filter(article =>
+                const validArticles = data.data.filter(article =>
                     article && (article.image_url || article.description)
                 );
 
@@ -62,19 +57,15 @@ const UserNews = () => {
                     setArticles(validArticles);
                 } else {
                     // Ensure we don't add duplicates when appending
-                    const existingUrls = new Set(articles.map(a => a.link));
-                    const newArticles = validArticles.filter(article => !existingUrls.has(article.link));
+                    const existingUuids = new Set(articles.map(a => a.uuid));
+                    const newArticles = validArticles.filter(article => !existingUuids.has(article.uuid));
                     setArticles(prev => [...prev, ...newArticles]);
                 }
 
                 setPage(pageNum);
 
-                // Store next_page token for pagination
-                if (data.nextPage) {
-                    setNextPage(data.nextPage);
-                } else {
-                    setNextPage(null);
-                }
+                // Check if there are more pages available
+                setHasMorePages(data.meta && data.meta.found > pageNum * pageSize);
             } else {
                 throw new Error(data.message || 'Failed to fetch news');
             }
@@ -88,7 +79,7 @@ const UserNews = () => {
     };
 
     const loadMoreArticles = () => {
-        if (!loadingMore && nextPage) {
+        if (!loadingMore && hasMorePages) {
             fetchNewsFromAPI(page + 1);
         }
     };
@@ -99,7 +90,7 @@ const UserNews = () => {
             setIsTransitioning(true);
             setCurrentIndex(currentIndex + 1);
             setTimeout(() => setIsTransitioning(false), 300);
-        } else if (currentIndex === articles.length - 1 && !loadingMore && nextPage) {
+        } else if (currentIndex === articles.length - 1 && !loadingMore && hasMorePages) {
             loadMoreArticles();
         }
     };
@@ -257,17 +248,17 @@ const UserNews = () => {
                 </button>
 
                 <button
-    onClick={nextCard}
-    disabled={currentIndex === articles.length - 1 || loadingMore || isTransitioning}
-    className={`absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-4 md:translate-x-8 
+                    onClick={nextCard}
+                    disabled={currentIndex === articles.length - 1 || loadingMore || isTransitioning}
+                    className={`absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-4 md:translate-x-8 
         bg-indigo-500 text-white p-1.5 md:p-2 rounded-full shadow-lg 
         disabled:opacity-40 
         hover:bg-indigo-600 transition-all 
         ${currentIndex === articles.length - 1 ? 'hidden opacity-0' : 'block opacity-90 hover:opacity-100'}`}
-    aria-label="Next article"
->
-    <ChevronRight size={24} />
-</button>
+                    aria-label="Next article"
+                >
+                    <ChevronRight size={24} />
+                </button>
 
                 <motion.div
                     key={currentIndex}
@@ -297,7 +288,7 @@ const UserNews = () => {
                                     : 'translateX(0)',
                             }}
                         >
-                            {shouldShowLoadMore && nextPage ? (
+                            {shouldShowLoadMore && hasMorePages ? (
                                 <div className="flex flex-col items-center justify-center h-full p-8 text-center">
                                     <div>
                                         <div className="w-32 h-32 mb-8 rounded-full bg-blue-100 flex items-center justify-center mx-auto">
@@ -339,20 +330,20 @@ const UserNews = () => {
                                     <div className="absolute bottom-0 left-0 right-0 h-3/7 bg-gray-700/60 p-4 md:p-6">
                                         <div className="flex flex-wrap justify-between items-start mb-2 gap-2">
                                             <span className="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">
-                                                {currentArticle?.source_name || 'Unknown Source'}
+                                                {currentArticle?.source || 'Unknown Source'}
                                             </span>
                                             <span className="text-gray-300 text-sm italic">
-                                                {formatDate(currentArticle?.pubDate)}
+                                                {formatDate(currentArticle?.published_at)}
                                             </span>
                                         </div>
                                         <h3 className="text-xl md:text-2xl font-bold text-white mb-2 line-clamp-2">
                                             {currentArticle?.title || 'No title available'}
                                         </h3>
                                         <p className="text-gray-200 mb-4 line-clamp-2">
-                                            {currentArticle?.description || 'No description available.'}
+                                            {currentArticle?.description || currentArticle?.snippet || 'No description available.'}
                                         </p>
                                         <Link
-                                            to={currentArticle?.link}
+                                            to={currentArticle?.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 hover:font-bold transition-transform hover:scale-105"
