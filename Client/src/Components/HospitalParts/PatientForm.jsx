@@ -1,34 +1,73 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import axios from "axios";
 
 const PatientForm = ({ onSubmit, onCancel }) => {
+  const URL = import.meta.env.VITE_API_URL;
+  const tokenData = localStorage.getItem("authToken");
+  const { value } = JSON.parse(tokenData);
+  const token = value;
+
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    gender: '',
-    bloodGroup: '',
-    admissionReason: '',
-    medicalHistory: '',
-    allergies: '',
-    ongoingMedications: '',
-    additionalRemarks: '',
-    address: '',
-    phone: '',
-    email: '',
-    insuranceNumber: '',
-    emergencyContact: '',
-    emergencyPhone: '',
+    firstName: "",
+    lastName: "",
+    age: "",
+    gender: "",
+    bloodGroup: "",
+    admissionReason: "",
+    medicalHistory: "",
+    allergies: "",
+    ongoingMedications: "",
+    additionalRemarks: "",
+    address: "",
+    phone: "",
+    email: "",
+    insuranceNumber: "",
+    emergencyContact: "",
+    emergencyPhone: "",
+    department: "",
+    status: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    try {
+      const response = await axios.post(`${URL}/patient`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Patient registered:", response.data);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        age: "",
+        gender: "",
+        bloodGroup: "",
+        admissionReason: "",
+        medicalHistory: "",
+        allergies: "",
+        ongoingMedications: "",
+        additionalRemarks: "",
+        address: "",
+        phone: "",
+        email: "",
+        insuranceNumber: "",
+        emergencyContact: "",
+        emergencyPhone: "",
+        department: "",
+        status: "",
+      });
+    } catch (error) {
+      console.error("Error registering patient:", error);
+    }
   };
 
   return (
@@ -39,18 +78,30 @@ const PatientForm = ({ onSubmit, onCancel }) => {
       transition={{ duration: 0.3 }}
     >
       <div className="sticky top-0 z-10 pb-2 sm:pb-3 md:pb-4">
-        <h2 className="text-xl sm:text-2xl text-center bg-transparent font-bold mb-1">Patient Registration Form</h2>
+        <h2 className="text-xl sm:text-2xl text-center bg-transparent font-bold mb-1">
+          Patient Registration Form
+        </h2>
         <div className="w-36 sm:w-48 md:w-60 h-0.5 bg-blue-500 mx-auto mb-2 sm:mb-3 rounded-full"></div>
       </div>
 
-      <div className="overflow-y-auto max-h-[400px] sm:max-h-[500px] md:max-h-[580px] pr-1 sm:pr-2" style={{ scrollbarWidth: 'thin' }}>
-        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 md:space-y-5">
+      <div
+        className="overflow-y-auto max-h-[400px] sm:max-h-[500px] md:max-h-[580px] pr-1 sm:pr-2"
+        style={{ scrollbarWidth: "thin" }}
+      >
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-3 sm:space-y-4 md:space-y-5"
+        >
           {/* Personal Information Section */}
           <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">Personal Information</h3>
+            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">
+              Personal Information
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">First Name</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  First Name
+                </label>
                 <input
                   type="text"
                   name="firstName"
@@ -61,7 +112,9 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                 />
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Last Name</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Last Name
+                </label>
                 <input
                   type="text"
                   name="lastName"
@@ -72,18 +125,22 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                 />
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Age</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Age
+                </label>
                 <input
                   type="number"
                   name="age"
-                  value={formData.dateOfBirth}
+                  value={formData.age}
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
                   required
                 />
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Gender</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Gender
+                </label>
                 <select
                   name="gender"
                   value={formData.gender}
@@ -98,7 +155,9 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                 </select>
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Blood Group</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Blood Group
+                </label>
                 <select
                   name="bloodGroup"
                   value={formData.bloodGroup}
@@ -122,10 +181,14 @@ const PatientForm = ({ onSubmit, onCancel }) => {
 
           {/* Medical Information Section */}
           <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">Medical Information</h3>
+            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">
+              Medical Information
+            </h3>
             <div className="space-y-2 sm:space-y-3">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Condition</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Condition
+                </label>
                 <input
                   type="text"
                   name="admissionReason"
@@ -137,7 +200,9 @@ const PatientForm = ({ onSubmit, onCancel }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700">Allergies</label>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                    Allergies
+                  </label>
                   <input
                     type="text"
                     name="allergies"
@@ -148,7 +213,9 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                 </div>
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Additional Remarks</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Additional Remarks
+                </label>
                 <textarea
                   name="additionalRemarks"
                   value={formData.additionalRemarks}
@@ -162,10 +229,14 @@ const PatientForm = ({ onSubmit, onCancel }) => {
 
           {/* Contact Information Section */}
           <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">Contact Information</h3>
+            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">
+              Contact Information
+            </h3>
             <div className="space-y-2 sm:space-y-3">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700">Address</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Address
+                </label>
                 <textarea
                   name="address"
                   value={formData.address}
@@ -177,7 +248,9 @@ const PatientForm = ({ onSubmit, onCancel }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700">Phone</label>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                    Phone
+                  </label>
                   <input
                     type="tel"
                     name="phone"
@@ -188,7 +261,9 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700">Email</label>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                    Email
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -197,6 +272,85 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Department & Status Section */}
+          <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2 sm:mb-3">
+              Department & Status
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Department
+                </label>
+                <select
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                  required
+                >
+                  <option value="">Select Department</option>
+                  <option value="General Physician" className="bg-blue-100">
+                    General Physician
+                  </option>
+                  <option value="ENT" className="bg-purple-100">
+                    ENT
+                  </option>
+                  <option value="Cardiology" className="bg-red-100">
+                    Cardiology
+                  </option>
+                  <option value="Dermatology" className="bg-green-100">
+                    Dermatology
+                  </option>
+                  <option value="Gynecology" className="bg-pink-100">
+                    Gynecology
+                  </option>
+                  <option value="Neurology" className="bg-yellow-100">
+                    Neurology
+                  </option>
+                  <option value="Ophthalmology" className="bg-indigo-100">
+                    Ophthalmology
+                  </option>
+                  <option value="Orthopedics" className="bg-orange-100">
+                    Orthopedics
+                  </option>
+                  <option value="Pediatrics" className="bg-teal-100">
+                    Pediatrics
+                  </option>
+                  <option value="Psychiatry" className="bg-cyan-100">
+                    Psychiatry
+                  </option>
+                  <option value="Radiology" className="bg-amber-100">
+                    Radiology
+                  </option>
+                  <option value="Pathology" className="bg-lime-100">
+                    Pathology
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                  Status
+                </label>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                  required
+                >
+                  <option value="">Select Status</option>
+                  <option value="Stable">Stable</option>
+                  <option value="Active">Active</option>
+                  <option value="Recovering">Recovering</option>
+                  <option value="Under Observation">Under Observation</option>
+                  <option value="Critical">Critical</option>
+                  <option value="Discharged">Discharged</option>
+                </select>
               </div>
             </div>
           </div>
@@ -224,6 +378,6 @@ const PatientForm = ({ onSubmit, onCancel }) => {
       </div>
     </motion.div>
   );
-}
+};
 
 export default PatientForm;

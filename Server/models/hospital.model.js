@@ -25,7 +25,7 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  license: {
+  expertise: {
     type: String,
     required: true,
   },
@@ -33,7 +33,7 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  speciality: {
+  experience: {
     type: String,
     required: true,
   },

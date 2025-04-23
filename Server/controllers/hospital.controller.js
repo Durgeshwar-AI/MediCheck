@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import Hospital from "../models/hospital.model.js";
+import Hospital, { doctor } from "../models/hospital.model.js";
 import bcrypt from "bcrypt";
 
 export const loginHospital = async (req, res) => {
@@ -47,3 +47,34 @@ export const getHospitals = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch hospitals", details: err.message });
   }
 };
+
+export const addDoctor = async (req,res)=>{
+  console.log("working")
+  const hospital = req.user.id
+  try{
+    const doc = new doctor({...req.body,hospital})
+    await doc.save();
+    res.status(200).json({message:"Doctor added"})
+  }catch (err) {
+    res.status(500).json({ error: err });
+  }
+}
+
+export const getDoctors = async (req,res)=>{
+  const hospital = req.user.id
+  try{
+    const doctors = await doctor.find({hospital})
+    res.json(doctors)
+  }catch (err) {
+    res.status(500).json({ error: err });
+  }
+}
+
+export const deleteDoc = async (req,res) =>{
+  try {
+    const doc = await doctor.findOneAndDelete({ _id: req.params.id});
+    res.json({ message: 'Doctor deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete' });
+  }
+}
