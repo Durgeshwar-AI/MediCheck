@@ -84,7 +84,7 @@ function HomePage() {
               Welcome back to MediCheck
             </h2>
             <p className="mt-1 sm:mt-2 xl:mt-3 text-sm sm:text-base xl:text-lg 2xl:text-xl text-gray-600">
-              Access your real-time health data and insights below.
+              Your health data is just a click away. Explore your dashboard to see your latest health metrics and insights. 
             </p>
           </div>
           <div className="mt-8 sm:mt-12 xl:mt-16 w-full">

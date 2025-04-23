@@ -181,7 +181,7 @@ const UserNews = () => {
             <div className="flex items-center justify-center h-64 w-full">
                 <div className="flex flex-col items-center bg-white p-8 rounded-xl shadow">
                     <div className="animate-spin">
-                        <RefreshCw size={40} className="text-indigo-600" />
+                        <RefreshCw size={40} className="text-blue-600" />
                     </div>
                     <div className="mt-4 text-lg font-medium text-gray-600">Loading latest health news...</div>
                 </div>
@@ -214,7 +214,7 @@ const UserNews = () => {
                     <p className="font-medium mb-4">We couldn&apos;t find any health news articles at the moment.</p>
                     <button
                         onClick={handleRetry}
-                        className="mt-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center justify-center mx-auto transition-all"
+                        className="mt-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center mx-auto transition-all"
                     >
                         <RefreshCw size={16} className="mr-2" /> Refresh
                     </button>
@@ -228,7 +228,7 @@ const UserNews = () => {
 
     return (
         <div className="w-full mx-auto p-4 md:p-6 bg-gradient-to-b from-gray-50 to-gray-100 rounded-xl shadow-xl">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-center text-indigo-800 mb-6">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-center text-blue-800 mb-6">
                 Latest Health News
             </h2>
     
@@ -238,9 +238,9 @@ const UserNews = () => {
                     onClick={prevCard}
                     disabled={currentIndex === 0 || isTransitioning}
                     className={`absolute left-0 top-1/2 z-10 -translate-y-1/2 -translate-x-4 md:-translate-x-8 
-                        bg-indigo-600 text-white p-2 md:p-3 rounded-full shadow-lg 
+                        bg-indigo-500 text-white p-1.5 md:p-2 rounded-full shadow-lg 
                         disabled:opacity-40 
-                        hover:bg-indigo-700 transition-all 
+                        hover:bg-indigo-600 transition-all 
                         ${currentIndex === 0 ? 'hidden opacity-0' : 'block opacity-90 hover:opacity-100'}`}
                     aria-label="Previous article"
                 >
@@ -251,9 +251,9 @@ const UserNews = () => {
                     onClick={nextCard}
                     disabled={currentIndex === articles.length - 1 || loadingMore || isTransitioning}
                     className={`absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-4 md:translate-x-8 
-                        bg-indigo-600 text-white p-2 md:p-3 rounded-full shadow-lg 
+                        bg-indigo-500 text-white p-1.5 md:p-2 rounded-full shadow-lg 
                         disabled:opacity-40 
-                        hover:bg-indigo-700 transition-all 
+                        hover:bg-indigo-600 transition-all 
                         ${currentIndex === articles.length - 1 ? 'hidden opacity-0' : 'block opacity-90 hover:opacity-100'}`}
                     aria-label="Next article"
                 >
@@ -272,7 +272,7 @@ const UserNews = () => {
                 >
                     {/* Card Container */}
                     <div
-                        className="overflow-hidden rounded-xl shadow-lg border border-gray-200"
+                        className="overflow-hidden rounded-xl "
                         onTouchStart={handleTouchStart}
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
@@ -291,19 +291,19 @@ const UserNews = () => {
                             {shouldShowLoadMore && page * pageSize < 100 ? (
                                 <div className="flex flex-col items-center justify-center h-full p-8 text-center">
                                     <div>
-                                        <div className="w-32 h-32 mb-8 rounded-full bg-indigo-100 flex items-center justify-center mx-auto">
-                                            <RefreshCw size={48} className="text-indigo-600" />
+                                        <div className="w-32 h-32 mb-8 rounded-full bg-blue-100 flex items-center justify-center mx-auto">
+                                            <RefreshCw size={48} className="text-blue-600" />
                                         </div>
-                                        <h3 className="text-2xl font-bold text-indigo-800 mb-4">
+                                        <h3 className="text-2xl font-bold text-blue-800 mb-4">
                                             Ready for more news?
                                         </h3>
                                         <p className="text-gray-600 mb-8">
-                                            You've seen all available articles. Load more to continue exploring health updates.
+                                            You&apos;ve seen all available articles. Load more to continue exploring health updates.
                                         </p>
                                         <button
                                             onClick={loadMoreArticles}
                                             disabled={loadingMore}
-                                            className="px-6 py-3 bg-indigo-600 text-white rounded-full shadow hover:bg-indigo-700 transition-all flex items-center justify-center mx-auto"
+                                            className="px-6 py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition-all flex items-center justify-center mx-auto"
                                         >
                                             {loadingMore ? (
                                                 <>
@@ -326,12 +326,12 @@ const UserNews = () => {
                                         backgroundPosition: 'center',
                                     }}
                                 >
-                                    <div className="absolute top-2 right-2 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow z-20">
+                                    <div className="absolute top-2 right-2 bg-indigo-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow z-20">
                                         {currentIndex + 1} / {articles.length}
                                     </div>
                                     <div className="absolute bottom-0 left-0 right-0 h-3/7 bg-gray-700/60 p-4 md:p-6">
                                         <div className="flex flex-wrap justify-between items-start mb-2 gap-2">
-                                            <span className="bg-indigo-100 text-indigo-800 text-xs font-medium px-3 py-1 rounded-full">
+                                            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">
                                                 {currentArticle?.source?.name || 'Unknown Source'}
                                             </span>
                                             <span className="text-gray-300 text-sm italic">
@@ -348,7 +348,7 @@ const UserNews = () => {
                                             to={currentArticle?.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition-transform hover:scale-105"
+                                            className="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 hover:font-bold transition-transform hover:scale-105"
                                         >
                                             Read full article <ExternalLink size={16} className="ml-2" />
                                         </Link>
@@ -367,10 +367,10 @@ const UserNews = () => {
                                 key={index}
                                 className={`h-2 rounded-full transition-all ${
                                     index === currentIndex
-                                        ? 'bg-indigo-600 w-6'
+                                        ? 'bg-blue-600 w-6'
                                         : Math.abs(index - currentIndex) <= 5
-                                        ? 'bg-gray-300 hover:bg-indigo-400 w-2'
-                                        : 'hidden md:block bg-gray-300 hover:bg-indigo-400 w-2'
+                                        ? 'bg-gray-300 hover:bg-blue-400 w-2'
+                                        : 'hidden md:block bg-gray-300 hover:bg-blue-400 w-2'
                                 }`}
                                 onClick={() => {
                                     if (!isTransitioning) {
