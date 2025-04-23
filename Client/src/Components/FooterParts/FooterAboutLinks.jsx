@@ -1,14 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { HashLink } from 'react-router-hash-link';
 
 const FooterAboutLinks = () => {
+
   const links = [
-    { name: 'Our Story', url: '#' },
-    { name: 'Vision & Mission', url: '#' },
-    { name: 'Our Doctors', url: '#' },
-    { name: 'Careers', url: '#' },
-    { name: 'FAQ', url: '#' },
+    { name: 'Our Story', url: `/about` },
+    { name: 'Vision & Mission', url: `/about#vision`},
+    { name: 'Features', url:`/about#features` },
+    { name: 'FAQ', url: `/about#faq` },
   ];
+  
 
   return (
     <>
@@ -22,14 +24,14 @@ const FooterAboutLinks = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <a
-              href={link.url}
+            <HashLink
+              to={link.url}
               className="group relative inline-block items-center hover:text-blue-300 transition-colors"
             >
               <span className="mr-2">›</span>
               {link.name}
               <span className="absolute bottom-0 left-0 w-[105%] h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
-            </a>
+            </HashLink>
           </motion.li>
         ))}
       </motion.ul>
