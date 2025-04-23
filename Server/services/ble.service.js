@@ -163,5 +163,9 @@ const checkHealth = async (healthData) => {
   }
 };
 
+const checkSymptoms = ()=>{
+  
+}
+
 export default createHealthReport;
 export { checkHealth };
