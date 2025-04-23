@@ -11,6 +11,7 @@ function Appointment() {
   const [appointments, setAppointments] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
+    year: "",
     month: "",
     date: "",
     time: "",
@@ -31,22 +32,17 @@ function Appointment() {
     fetchHospitals();
   }, []);
 
-  const getDaysInMonth = (month) => {
-    switch (month) {
-      case "Feb":
-        return new Date().getFullYear() % 4 === 0 ? 29 : 28;
-      case "Apr":
-      case "Jun":
-      case "Sep":
-      case "Nov":
-        return 30;
-      default:
-        return 31;
-    }
+  const getDaysInMonth = (month, year) => {
+    const index = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ].indexOf(month);
+    return new Date(year, index + 1, 0).getDate();
   };
 
   const handleCreateClick = () => {
     setFormData({
+      year: "",
       month: "",
       date: "",
       time: "",
@@ -77,6 +73,7 @@ function Appointment() {
       id: Date.now(),
       date: formData.date.toString(),
       age: formData.age.toString(),
+      year: formData.year.toString(),
     };
 
     const res = await fetch(`${URL}/appointments/create`, {
@@ -157,6 +154,8 @@ function Appointment() {
             </div>
             <hr className="border-gray-600 mb-6" />
             <form onSubmit={handleFormSubmit} className="space-y-5">
+
+              {/* Patient Name */}
               <div className="relative">
                 <input
                   type="text"
@@ -172,6 +171,7 @@ function Appointment() {
                 </label>
               </div>
 
+              {/* Age */}
               <div className="relative">
                 <input
                   type="number"
@@ -188,6 +188,33 @@ function Appointment() {
                 </label>
               </div>
 
+              {/* Year */}
+              <div className="relative">
+                <select
+                  name="year"
+                  value={formData.year}
+                  onChange={handleInputChange}
+                  className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                  required
+                >
+                  <option value="" disabled>
+                    Select Year
+                  </option>
+                  {[...new Set([
+                    new Date().getFullYear(),
+                    new Date(new Date().setMonth(new Date().getMonth() + 2)).getFullYear(),
+                  ])].map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+                <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
+                  Year *
+                </label>
+              </div>
+
+              {/* Month and Date */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
                   <select
@@ -201,18 +228,8 @@ function Appointment() {
                       Select Month
                     </option>
                     {[
-                      "Jan",
-                      "Feb",
-                      "Mar",
-                      "Apr",
-                      "May",
-                      "Jun",
-                      "Jul",
-                      "Aug",
-                      "Sep",
-                      "Oct",
-                      "Nov",
-                      "Dec",
+                      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
                     ].map((m) => (
                       <option key={m} value={m}>
                         {m}
@@ -230,20 +247,35 @@ function Appointment() {
                     onChange={handleInputChange}
                     className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                     required
-                    disabled={!formData.month}
+                    disabled={!formData.month || !formData.year}
                   >
                     <option value="" disabled>
                       Select Date
                     </option>
-                    {formData.month &&
-                      Array.from(
-                        { length: getDaysInMonth(formData.month) },
-                        (_, i) => (
-                          <option key={i + 1} value={i + 1}>
-                            {i + 1}
-                          </option>
-                        )
-                      )}
+                    {formData.month && formData.year &&
+                      (() => {
+                        const start = new Date();
+                        start.setDate(start.getDate() + 1);
+                        const end = new Date();
+                        end.setMonth(end.getMonth() + 2);
+                        const selectedMonthIndex = [
+                          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+                        ].indexOf(formData.month);
+                        const daysInMonth = getDaysInMonth(formData.month, formData.year);
+                        const options = [];
+                        for (let day = 1; day <= daysInMonth; day++) {
+                          const date = new Date(formData.year, selectedMonthIndex, day);
+                          if (date >= start && date <= end) {
+                            options.push(
+                              <option key={day} value={day}>
+                                {day}
+                              </option>
+                            );
+                          }
+                        }
+                        return options;
+                      })()}
                   </select>
                   <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
                     Date *
@@ -251,6 +283,7 @@ function Appointment() {
                 </div>
               </div>
 
+              {/* Time */}
               <div className="relative">
                 <input
                   type="time"
@@ -259,12 +292,15 @@ function Appointment() {
                   onChange={handleInputChange}
                   className="peer block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   required
+                  min="07:00"
+                  max="17:00"
                 />
                 <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
-                  Time *
+                  Time (7 AM to 5 PM) *
                 </label>
               </div>
 
+              {/* Hospital */}
               <div className="relative">
                 <select
                   name="hospitalName"
@@ -287,6 +323,7 @@ function Appointment() {
                 </label>
               </div>
 
+              {/* Doctor Type */}
               <div className="relative">
                 <select
                   name="doctorType"
@@ -295,18 +332,9 @@ function Appointment() {
                   className="block w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                 >
                   {[
-                    "General Physician",
-                    "Cardiology",
-                    "Dermatology",
-                    "ENT",
-                    "Gynecology",
-                    "Neurology",
-                    "Ophthalmology",
-                    "Orthopedics",
-                    "Pediatrics",
-                    "Psychiatry",
-                    "Radiology",
-                    "Pathology",
+                    "General Physician", "Cardiology", "Dermatology", "ENT",
+                    "Gynecology", "Neurology", "Ophthalmology", "Orthopedics",
+                    "Pediatrics", "Psychiatry", "Radiology", "Pathology",
                   ].map((type) => (
                     <option key={type} value={type}>
                       {type}
@@ -318,6 +346,7 @@ function Appointment() {
                 </label>
               </div>
 
+              {/* Buttons */}
               <div className="flex justify-end gap-4 pt-4">
                 <motion.button
                   type="button"
@@ -369,9 +398,7 @@ function Appointments({ appointment }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 mb-3 border rounded-lg hover:shadow-md transition-shadow">
-      <div
-        className={`md:col-span-1 flex items-center justify-center ${bgColors[doctorType] || "bg-gray-100"} rounded-md p-2`}
-      >
+      <div className={`md:col-span-1 flex items-center justify-center ${bgColors[doctorType] || "bg-gray-100"} rounded-md p-2`}>
         <div className="flex flex-col items-center">
           <p className="text-2xl font-bold">{date}</p>
           <p className="text-sm">{month}</p>
@@ -379,13 +406,9 @@ function Appointments({ appointment }) {
       </div>
       <div className="md:col-span-4 flex flex-col justify-center gap-1">
         <p className="font-bold text-lg">{doctorType}</p>
-        <p className="text-gray-600">
-          {time} - {hospitalName}
-        </p>
+        <p className="text-gray-600">{time} - {hospitalName}</p>
         {status && (
-          <span
-            className={`w-fit px-3 py-1 text-sm rounded-full font-medium ${statusColors[status] || "bg-gray-200 text-gray-600"}`}
-          >
+          <span className={`w-fit px-3 py-1 text-sm rounded-full font-medium ${statusColors[status] || "bg-gray-200 text-gray-600"}`}>
             {status}
           </span>
         )}

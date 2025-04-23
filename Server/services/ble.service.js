@@ -17,11 +17,11 @@ const createHealthReport = async (healthData) => {
   let prompt = "";
 
   if (
-    !heartRate == "N/A" ||
-    !oxygen == "N/A" ||
-    !bp == "N/A" ||
-    !steps == "N/A" ||
-    !sleep == "N/A"
+    heartRate != "N/A" ||
+    oxygen != "N/A" ||
+    bp != "N/A" ||
+    steps != "N/A" ||
+    sleep != "N/A"
   ) {
     prompt = `
     Analyze the following daily health data and generate a concise health report (under 150 words).

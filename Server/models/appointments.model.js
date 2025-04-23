@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const appointmentSchema = mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"User",
+    ref: "User",
     required: true,
   },
   name: {
@@ -22,13 +22,17 @@ const appointmentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  year: {
+    type: String,
+    required: true,
+  },
   time: {
     type: String,
     required: true,
   },
   hospitalId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"Hospital",
+    ref: "Hospital",
     required: true,
   },
   hospitalName: {
