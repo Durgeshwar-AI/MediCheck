@@ -15,7 +15,8 @@ const UserNews = () => {
     const [page, setPage] = useState(1);
     const [direction, setDirection] = useState(null);
     const [isTransitioning, setIsTransitioning] = useState(false);
-    const pageSize = 12;
+    const [nextPage, setNextPage] = useState(null);
+    const pageSize = 10;
 
     // Example API key for demonstration - replace with your actual implementation
     const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
@@ -23,20 +24,26 @@ const UserNews = () => {
     useEffect(() => {
         // Fetch news data from API on component mount
         fetchNewsFromAPI(1);
-    }, );
+    }, []); // Fixed empty dependency array
 
     const fetchNewsFromAPI = async (pageNum) => {
         try {
             pageNum === 1 ? setLoading(true) : setLoadingMore(true);
 
             // In a real application, ensure API key is fetched correctly
-            // Either use environment variables or a more secure method
             if (!API_KEY) {
                 throw new Error('News API key is missing. Please check your environment variables.');
             }
 
-            // Fetch news data
-            const response = await fetch(`https://newsapi.org/v2/top-headlines?category=health&apiKey=${API_KEY}&pageSize=${pageSize}&page=${pageNum}`);
+            // Build the URL - for initial page or for next_page token
+            let url = `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=medical&language=en&category=education,environment,health,top`;
+
+            // If we're loading more and have a nextPage token, use it
+            if (pageNum > 1 && nextPage) {
+                url = `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=medical&language=en&category=health&page=${nextPage}`;
+            }
+
+            const response = await fetch(url);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -45,22 +52,29 @@ const UserNews = () => {
             const data = await response.json();
 
             // Check response data integrity
-            if (data.status === 'ok' && data.articles) {
+            if (data.status === 'success' && data.results) {
                 // Filter out invalid articles (those without images or descriptions)
-                const validArticles = data.articles.filter(article =>
-                    article && (article.urlToImage || article.description)
+                const validArticles = data.results.filter(article =>
+                    article && (article.image_url || article.description)
                 );
 
                 if (pageNum === 1) {
                     setArticles(validArticles);
                 } else {
                     // Ensure we don't add duplicates when appending
-                    const existingUrls = new Set(articles.map(a => a.url));
-                    const newArticles = validArticles.filter(article => !existingUrls.has(article.url));
+                    const existingUrls = new Set(articles.map(a => a.link));
+                    const newArticles = validArticles.filter(article => !existingUrls.has(article.link));
                     setArticles(prev => [...prev, ...newArticles]);
                 }
 
                 setPage(pageNum);
+
+                // Store next_page token for pagination
+                if (data.nextPage) {
+                    setNextPage(data.nextPage);
+                } else {
+                    setNextPage(null);
+                }
             } else {
                 throw new Error(data.message || 'Failed to fetch news');
             }
@@ -74,7 +88,7 @@ const UserNews = () => {
     };
 
     const loadMoreArticles = () => {
-        if (!loadingMore) {
+        if (!loadingMore && nextPage) {
             fetchNewsFromAPI(page + 1);
         }
     };
@@ -85,7 +99,7 @@ const UserNews = () => {
             setIsTransitioning(true);
             setCurrentIndex(currentIndex + 1);
             setTimeout(() => setIsTransitioning(false), 300);
-        } else if (currentIndex === articles.length - 1 && !loadingMore) {
+        } else if (currentIndex === articles.length - 1 && !loadingMore && nextPage) {
             loadMoreArticles();
         }
     };
@@ -171,11 +185,6 @@ const UserNews = () => {
         fetchNewsFromAPI(1);
     };
 
-    // Placeholder image URL - use a reliable source
-    const getPlaceholderImage = () => {
-        return "https://via.placeholder.com/600x300?text=No+Image+Available";
-    };
-
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64 w-full">
@@ -231,7 +240,7 @@ const UserNews = () => {
             <h2 className="text-2xl md:text-3xl font-extrabold text-center text-blue-800 mb-6">
                 Latest Health News
             </h2>
-    
+
             <div className="relative">
                 {/* Navigation Buttons */}
                 <button
@@ -246,20 +255,20 @@ const UserNews = () => {
                 >
                     <ChevronLeft size={24} />
                 </button>
-    
+
                 <button
-                    onClick={nextCard}
-                    disabled={currentIndex === articles.length - 1 || loadingMore || isTransitioning}
-                    className={`absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-4 md:translate-x-8 
-                        bg-indigo-500 text-white p-1.5 md:p-2 rounded-full shadow-lg 
-                        disabled:opacity-40 
-                        hover:bg-indigo-600 transition-all 
-                        ${currentIndex === articles.length - 1 ? 'hidden opacity-0' : 'block opacity-90 hover:opacity-100'}`}
-                    aria-label="Next article"
-                >
-                    <ChevronRight size={24} />
-                </button>
-    
+    onClick={nextCard}
+    disabled={currentIndex === articles.length - 1 || loadingMore || isTransitioning}
+    className={`absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-4 md:translate-x-8 
+        bg-indigo-500 text-white p-1.5 md:p-2 rounded-full shadow-lg 
+        disabled:opacity-40 
+        hover:bg-indigo-600 transition-all 
+        ${currentIndex === articles.length - 1 ? 'hidden opacity-0' : 'block opacity-90 hover:opacity-100'}`}
+    aria-label="Next article"
+>
+    <ChevronRight size={24} />
+</button>
+
                 <motion.div
                     key={currentIndex}
                     custom={direction}
@@ -272,7 +281,7 @@ const UserNews = () => {
                 >
                     {/* Card Container */}
                     <div
-                        className="overflow-hidden rounded-xl "
+                        className="overflow-hidden rounded-xl"
                         onTouchStart={handleTouchStart}
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
@@ -288,7 +297,7 @@ const UserNews = () => {
                                     : 'translateX(0)',
                             }}
                         >
-                            {shouldShowLoadMore && page * pageSize < 100 ? (
+                            {shouldShowLoadMore && nextPage ? (
                                 <div className="flex flex-col items-center justify-center h-full p-8 text-center">
                                     <div>
                                         <div className="w-32 h-32 mb-8 rounded-full bg-blue-100 flex items-center justify-center mx-auto">
@@ -319,23 +328,21 @@ const UserNews = () => {
                             ) : (
                                 // Vertical card with background image and overlay
                                 <div
-                                    className="relative w-full h-140 bg-cover bg-center rounded-xl overflow-hidden"
+                                    className={`relative w-full h-140 rounded-xl overflow-hidden ${currentArticle?.image_url ? 'bg-cover bg-center' : 'bg-sky-300'}`}
                                     style={{
-                                        backgroundImage: `url(${currentArticle?.urlToImage || getPlaceholderImage()})`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
+                                        backgroundImage: currentArticle?.image_url ? `url(${currentArticle.image_url})` : undefined,
                                     }}
                                 >
                                     <div className="absolute top-2 right-2 bg-indigo-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow z-20">
-                                        {currentIndex + 1} / {articles.length -1}
+                                        {currentIndex + 1} / {articles.length}
                                     </div>
                                     <div className="absolute bottom-0 left-0 right-0 h-3/7 bg-gray-700/60 p-4 md:p-6">
                                         <div className="flex flex-wrap justify-between items-start mb-2 gap-2">
                                             <span className="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">
-                                                {currentArticle?.source?.name || 'Unknown Source'}
+                                                {currentArticle?.source_name || 'Unknown Source'}
                                             </span>
                                             <span className="text-gray-300 text-sm italic">
-                                                {formatDate(currentArticle?.publishedAt)}
+                                                {formatDate(currentArticle?.pubDate)}
                                             </span>
                                         </div>
                                         <h3 className="text-xl md:text-2xl font-bold text-white mb-2 line-clamp-2">
@@ -345,7 +352,7 @@ const UserNews = () => {
                                             {currentArticle?.description || 'No description available.'}
                                         </p>
                                         <Link
-                                            to={currentArticle?.url}
+                                            to={currentArticle?.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 hover:font-bold transition-transform hover:scale-105"
@@ -358,20 +365,19 @@ const UserNews = () => {
                         </div>
                     </div>
                 </motion.div>
-    
+
                 {/* Pagination Indicators */}
                 <div className="flex justify-center mt-4 overflow-x-auto pb-2 px-4">
                     <div className="flex space-x-1">
                         {articles.map((_, index) => (
                             <button
                                 key={index}
-                                className={`h-2 rounded-full transition-all ${
-                                    index === currentIndex
-                                        ? 'bg-blue-600 w-6'
-                                        : Math.abs(index - currentIndex) <= 5
+                                className={`h-2 rounded-full transition-all ${index === currentIndex
+                                    ? 'bg-blue-600 w-6'
+                                    : Math.abs(index - currentIndex) <= 5
                                         ? 'bg-gray-300 hover:bg-blue-400 w-2'
                                         : 'hidden md:block bg-gray-300 hover:bg-blue-400 w-2'
-                                }`}
+                                    }`}
                                 onClick={() => {
                                     if (!isTransitioning) {
                                         setIsTransitioning(true);
