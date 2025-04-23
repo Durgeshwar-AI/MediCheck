@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ExternalLink, RefreshCw } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const UserNews = () => {
     const [articles, setArticles] = useState([]);
@@ -12,7 +14,11 @@ const UserNews = () => {
     const [isSwiping, setIsSwiping] = useState(false);
     const [page, setPage] = useState(1);
     const [direction, setDirection] = useState(null);
-    const pageSize = 15;
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    const pageSize = 8;
+
+    // Example API key for demonstration - replace with your actual implementation
+    const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
     useEffect(() => {
         // Fetch news data from API on component mount
@@ -22,33 +28,38 @@ const UserNews = () => {
     const fetchNewsFromAPI = async (pageNum) => {
         try {
             pageNum === 1 ? setLoading(true) : setLoadingMore(true);
-    
-            // Ensure API key is fetched correctly - more robust approach
-            const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-    
+
+            // In a real application, ensure API key is fetched correctly
+            // Either use environment variables or a more secure method
             if (!API_KEY) {
                 throw new Error('News API key is missing. Please check your environment variables.');
             }
-    
+
             // Fetch news data
             const response = await fetch(`https://newsapi.org/v2/top-headlines?category=health&apiKey=${API_KEY}&pageSize=${pageSize}&page=${pageNum}`);
-    
+
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-    
+
             const data = await response.json();
-    
+
             // Check response data integrity
             if (data.status === 'ok' && data.articles) {
-                const validArticles = data.articles.filter(article => article.urlToImage && article.description);
-                
+                // Filter out invalid articles (those without images or descriptions)
+                const validArticles = data.articles.filter(article =>
+                    article && (article.urlToImage || article.description)
+                );
+
                 if (pageNum === 1) {
                     setArticles(validArticles);
                 } else {
-                    setArticles(prev => [...prev, ...validArticles]);
+                    // Ensure we don't add duplicates when appending
+                    const existingUrls = new Set(articles.map(a => a.url));
+                    const newArticles = validArticles.filter(article => !existingUrls.has(article.url));
+                    setArticles(prev => [...prev, ...newArticles]);
                 }
-                
+
                 setPage(pageNum);
             } else {
                 throw new Error(data.message || 'Failed to fetch news');
@@ -63,21 +74,51 @@ const UserNews = () => {
     };
 
     const loadMoreArticles = () => {
-        fetchNewsFromAPI(page + 1);
+        if (!loadingMore) {
+            fetchNewsFromAPI(page + 1);
+        }
     };
 
     const nextCard = () => {
-        if (currentIndex < articles.length - 1) {
+        if (currentIndex < articles.length - 1 && !isTransitioning) {
             setDirection('right');
+            setIsTransitioning(true);
             setCurrentIndex(currentIndex + 1);
+            setTimeout(() => setIsTransitioning(false), 300);
+        } else if (currentIndex === articles.length - 1 && !loadingMore) {
+            loadMoreArticles();
         }
     };
 
     const prevCard = () => {
-        if (currentIndex > 0) {
+        if (currentIndex > 0 && !isTransitioning) {
             setDirection('left');
+            setIsTransitioning(true);
             setCurrentIndex(currentIndex - 1);
+            setTimeout(() => setIsTransitioning(false), 300);
         }
+    };
+
+    const swipeVariants = {
+        enter: (direction) => ({
+            x: direction === 'right' ? 1000 : -1000,
+            opacity: 0
+        }),
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1
+        },
+        exit: (direction) => ({
+            zIndex: 0,
+            x: direction === 'right' ? -1000 : 1000,
+            opacity: 0
+        })
+    };
+
+    const swipeTransition = {
+        x: { type: "spring", stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 }
     };
 
     const handleTouchStart = (e) => {
@@ -100,11 +141,9 @@ const UserNews = () => {
             const threshold = 75; // Minimum swipe distance
 
             if (Math.abs(diff) > threshold) {
-                if (diff > 0) {
-                    setDirection('right');
+                if (diff > 0 && currentIndex < articles.length - 1) {
                     nextCard(); // Swipe left = next card
-                } else {
-                    setDirection('left');
+                } else if (diff < 0 && currentIndex > 0) {
                     prevCard(); // Swipe right = previous card
                 }
             }
@@ -116,6 +155,7 @@ const UserNews = () => {
 
     const formatDate = (dateString) => {
         try {
+            if (!dateString) return 'Date unavailable';
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString(undefined, options);
         } catch (err) {
@@ -127,43 +167,23 @@ const UserNews = () => {
     // Add a retry function for API failures
     const handleRetry = () => {
         setError(null);
+        setCurrentIndex(0);
         fetchNewsFromAPI(1);
     };
 
-    const getInitialCardStyle = (direction) => {
-        return direction === 'right' ? { 
-            x: 300, 
-            opacity: 0, 
-            scale: 0.9 
-        } : { 
-            x: -300, 
-            opacity: 0, 
-            scale: 0.9 
-        };
-    };
-
-    const getExitCardStyle = (direction) => {
-        return direction === 'right' ? { 
-            x: -300, 
-            opacity: 0, 
-            scale: 0.9,
-            transition: { duration: 0.4 }
-        } : { 
-            x: 300, 
-            opacity: 0, 
-            scale: 0.9,
-            transition: { duration: 0.4 }
-        };
+    // Placeholder image URL - use a reliable source
+    const getPlaceholderImage = () => {
+        return "https://via.placeholder.com/600x300?text=No+Image+Available";
     };
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="flex flex-col items-center">
+            <div className="flex items-center justify-center h-64 w-full">
+                <div className="flex flex-col items-center bg-white p-8 rounded-xl shadow">
                     <div className="animate-spin">
-                        <RefreshCw size={36} className="text-indigo-600" />
+                        <RefreshCw size={40} className="text-indigo-600" />
                     </div>
-                    <div className="mt-4 text-lg font-medium text-gray-600">Loading latest news...</div>
+                    <div className="mt-4 text-lg font-medium text-gray-600">Loading latest health news...</div>
                 </div>
             </div>
         );
@@ -171,166 +191,198 @@ const UserNews = () => {
 
     if (error) {
         return (
-            <div className="p-6 bg-red-50 text-red-700 rounded-lg shadow">
-                <p className="font-medium mb-2">{error}</p>
-                <button 
-                    onClick={handleRetry}
-                    className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 flex items-center transition-all"
-                >
-                    <RefreshCw size={16} className="mr-2" /> Retry
-                </button>
+            <div className="p-8 bg-white border border-red-100 rounded-xl shadow-lg max-w-md mx-auto">
+                <div className="bg-red-50 text-red-700 rounded-lg p-6">
+                    <h3 className="text-xl font-semibold mb-2">Unable to Load News</h3>
+                    <p className="mb-4">{error}</p>
+                    <button
+                        onClick={handleRetry}
+                        className="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center transition-all"
+                    >
+                        <RefreshCw size={16} className="mr-2" /> Try Again
+                    </button>
+                </div>
             </div>
         );
     }
 
     if (articles.length === 0) {
         return (
-            <div className="p-6 bg-gray-50 text-gray-700 rounded-lg shadow">
-                <p className="font-medium mb-2">No news articles available at the moment.</p>
-                <button 
-                    onClick={handleRetry}
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center transition-all"
-                >
-                    <RefreshCw size={16} className="mr-2" /> Refresh
-                </button>
+            <div className="p-8 bg-white rounded-xl shadow-lg max-w-md mx-auto">
+                <div className="bg-gray-50 text-gray-700 rounded-lg p-6 text-center">
+                    <h3 className="text-xl font-semibold mb-2">No News Available</h3>
+                    <p className="font-medium mb-4">We couldn&apos;t find any health news articles at the moment.</p>
+                    <button
+                        onClick={handleRetry}
+                        className="mt-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center justify-center mx-auto transition-all"
+                    >
+                        <RefreshCw size={16} className="mr-2" /> Refresh
+                    </button>
+                </div>
             </div>
         );
     }
 
-    const shouldShowLoadMore = currentIndex === articles.length - 1 && currentIndex >= pageSize - 1;
+    const shouldShowLoadMore = currentIndex === articles.length - 1;
+    const currentArticle = articles[currentIndex];
 
     return (
-        <div className="w-full mx-auto p-6 bg-gradient-to-b from-gray-50 to-gray-100 rounded-xl shadow-2xl">
-            <h2 className="text-3xl font-extrabold text-center text-indigo-800 mb-8">
+        <div className="w-full mx-auto p-4 md:p-6 bg-gradient-to-b from-gray-50 to-gray-100 rounded-xl shadow-xl">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-center text-indigo-800 mb-6">
                 Latest Health News
             </h2>
-            
+    
             <div className="relative">
                 {/* Navigation Buttons */}
                 <button
                     onClick={prevCard}
-                    disabled={currentIndex === 0}
-                    className="absolute left-0 top-1/2 z-10 -translate-y-1/2 -translate-x-8 bg-indigo-600 text-white p-3 rounded-full shadow-lg disabled:opacity-40 hover:bg-indigo-700 transition-all"
+                    disabled={currentIndex === 0 || isTransitioning}
+                    className={`absolute left-0 top-1/2 z-10 -translate-y-1/2 -translate-x-4 md:-translate-x-8 
+                        bg-indigo-600 text-white p-2 md:p-3 rounded-full shadow-lg 
+                        disabled:opacity-40 
+                        hover:bg-indigo-700 transition-all 
+                        ${currentIndex === 0 ? 'hidden opacity-0' : 'block opacity-90 hover:opacity-100'}`}
+                    aria-label="Previous article"
                 >
                     <ChevronLeft size={24} />
                 </button>
-                
+    
                 <button
                     onClick={nextCard}
-                    disabled={currentIndex === articles.length - 1 && !shouldShowLoadMore}
-                    className="absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-8 bg-indigo-600 text-white p-3 rounded-full shadow-lg disabled:opacity-40 hover:bg-indigo-700 transition-all"
+                    disabled={currentIndex === articles.length - 1 || loadingMore || isTransitioning}
+                    className={`absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-4 md:translate-x-8 
+                        bg-indigo-600 text-white p-2 md:p-3 rounded-full shadow-lg 
+                        disabled:opacity-40 
+                        hover:bg-indigo-700 transition-all 
+                        ${currentIndex === articles.length - 1 ? 'hidden opacity-0' : 'block opacity-90 hover:opacity-100'}`}
+                    aria-label="Next article"
                 >
                     <ChevronRight size={24} />
                 </button>
-
-                {/* Card Container */}
-                <div
-                    className="overflow-hidden rounded-xl bg-white shadow-lg border border-gray-200"
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
+    
+                <motion.div
+                    key={currentIndex}
+                    custom={direction}
+                    variants={swipeVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={swipeTransition}
+                    className="relative bg-transparent rounded-xl"
                 >
+                    {/* Card Container */}
                     <div
-                        key={currentIndex}
-                        className="relative bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-xl transition-all duration-400"
-                        style={{
-                            transform: isSwiping ? `translateX(${currentX - startX}px)` : 'translateX(0)',
-                        }}
+                        className="overflow-hidden rounded-xl shadow-lg border border-gray-200"
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
                     >
-                        {shouldShowLoadMore ? (
-                            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                                <div>
-                                    <img 
-                                        src="/api/placeholder/400/250" 
-                                        alt="View more news"
-                                        className="w-48 h-48 mb-8 rounded-full object-cover mx-auto opacity-70"
-                                    />
-                                    <h3 className="text-2xl font-bold text-indigo-800 mb-4">
-                                        Ready for more news?
-                                    </h3>
-                                    <p className="text-gray-600 mb-8">
-                                        You&apos;ve seen all available articles. Load more to continue exploring health updates.
-                                    </p>
-                                    <button
-                                        onClick={loadMoreArticles}
-                                        disabled={loadingMore}
-                                        className="px-6 py-3 bg-indigo-600 text-white rounded-full shadow hover:bg-indigo-700 transition-all flex items-center justify-center mx-auto"
-                                    >
-                                        {loadingMore ? (
-                                            <>
-                                                <div className="animate-spin mr-2">
-                                                    <RefreshCw size={18} />
-                                                </div>
-                                                Loading...
-                                            </>
-                                        ) : (
-                                            <>View More News</>
-                                        )}
-                                    </button>
+                        <div
+                            key={`card-${currentIndex}`}
+                            className={`relative bg-transparent rounded-xl transition-all duration-300 ease-in-out
+                                ${isTransitioning ? 'opacity-80 scale-95' : 'opacity-100 scale-100'}
+                                ${isSwiping ? 'transition-none' : ''}`}
+                            style={{
+                                transform: isSwiping
+                                    ? `translateX(${currentX - startX}px)`
+                                    : 'translateX(0)',
+                            }}
+                        >
+                            {shouldShowLoadMore && page * pageSize < 100 ? (
+                                <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                                    <div>
+                                        <div className="w-32 h-32 mb-8 rounded-full bg-indigo-100 flex items-center justify-center mx-auto">
+                                            <RefreshCw size={48} className="text-indigo-600" />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-indigo-800 mb-4">
+                                            Ready for more news?
+                                        </h3>
+                                        <p className="text-gray-600 mb-8">
+                                            You've seen all available articles. Load more to continue exploring health updates.
+                                        </p>
+                                        <button
+                                            onClick={loadMoreArticles}
+                                            disabled={loadingMore}
+                                            className="px-6 py-3 bg-indigo-600 text-white rounded-full shadow hover:bg-indigo-700 transition-all flex items-center justify-center mx-auto"
+                                        >
+                                            {loadingMore ? (
+                                                <>
+                                                    <RefreshCw size={18} className="mr-2 animate-spin" />
+                                                    Loading more articles...
+                                                </>
+                                            ) : (
+                                                <>Load More Articles</>
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <>
-                                <div className="relative">
-                                    <img
-                                        src={articles[currentIndex]?.urlToImage || "/api/placeholder/600/300"}
-                                        alt={articles[currentIndex]?.title}
-                                        className="w-full h-60 object-cover rounded-t-xl"
-                                        onError={(e) => {
-                                            e.target.src = "/api/placeholder/600/300";
-                                        }}
-                                    />
-                                    <div className="absolute top-2 right-2 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
+                            ) : (
+                                // Vertical card with background image and overlay
+                                <div
+                                    className="relative w-full h-140 bg-cover bg-center rounded-xl overflow-hidden"
+                                    style={{
+                                        backgroundImage: `url(${currentArticle?.urlToImage || getPlaceholderImage()})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                    }}
+                                >
+                                    <div className="absolute top-2 right-2 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow z-20">
                                         {currentIndex + 1} / {articles.length}
                                     </div>
-                                </div>
-                                <div className="p-6">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <span className="bg-indigo-100 text-indigo-800 text-xs font-medium px-3 py-1 rounded-full">
-                                            {articles[currentIndex]?.source?.name || 'Unknown Source'}
-                                        </span>
-                                        <span className="text-gray-500 text-sm italic">
-                                            {formatDate(articles[currentIndex]?.publishedAt)}
-                                        </span>
+                                    <div className="absolute bottom-0 left-0 right-0 h-3/7 bg-gray-700/60 p-4 md:p-6">
+                                        <div className="flex flex-wrap justify-between items-start mb-2 gap-2">
+                                            <span className="bg-indigo-100 text-indigo-800 text-xs font-medium px-3 py-1 rounded-full">
+                                                {currentArticle?.source?.name || 'Unknown Source'}
+                                            </span>
+                                            <span className="text-gray-300 text-sm italic">
+                                                {formatDate(currentArticle?.publishedAt)}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-xl md:text-2xl font-bold text-white mb-2 line-clamp-2">
+                                            {currentArticle?.title || 'No title available'}
+                                        </h3>
+                                        <p className="text-gray-200 mb-4 line-clamp-2">
+                                            {currentArticle?.description || 'No description available.'}
+                                        </p>
+                                        <Link
+                                            to={currentArticle?.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition-transform hover:scale-105"
+                                        >
+                                            Read full article <ExternalLink size={16} className="ml-2" />
+                                        </Link>
                                     </div>
-                                    <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                                        {articles[currentIndex]?.title}
-                                    </h3>
-                                    <p className="text-gray-600 mb-6 leading-relaxed">
-                                        {articles[currentIndex]?.description || 'No description available.'}
-                                    </p>
-                                    <a
-                                        href={articles[currentIndex]?.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition"
-                                    >
-                                        Read full article <ExternalLink size={16} className="ml-2" />
-                                    </a>
                                 </div>
-                            </>
-                        )}
+                            )}
+                        </div>
                     </div>
-                </div>
-
+                </motion.div>
+    
                 {/* Pagination Indicators */}
-                <div className="flex justify-center mt-6 overflow-x-auto pb-2 px-4">
-                    <div className="flex space-x-2">
+                <div className="flex justify-center mt-4 overflow-x-auto pb-2 px-4">
+                    <div className="flex space-x-1">
                         {articles.map((_, index) => (
                             <button
                                 key={index}
-                                className={`w-3 h-3 mx-1 rounded-full transition-all ${
-                                    index === currentIndex 
-                                        ? 'bg-indigo-600 w-6' 
-                                        : (Math.abs(index - currentIndex) <= 5 
-                                            ? 'bg-gray-300 hover:bg-indigo-400'
-                                            : 'hidden md:block bg-gray-300 hover:bg-indigo-400'
-                                        )
+                                className={`h-2 rounded-full transition-all ${
+                                    index === currentIndex
+                                        ? 'bg-indigo-600 w-6'
+                                        : Math.abs(index - currentIndex) <= 5
+                                        ? 'bg-gray-300 hover:bg-indigo-400 w-2'
+                                        : 'hidden md:block bg-gray-300 hover:bg-indigo-400 w-2'
                                 }`}
                                 onClick={() => {
-                                    setDirection(index > currentIndex ? 'right' : 'left');
-                                    setCurrentIndex(index);
+                                    if (!isTransitioning) {
+                                        setIsTransitioning(true);
+                                        setDirection(index > currentIndex ? 'right' : 'left');
+                                        setTimeout(() => {
+                                            setCurrentIndex(index);
+                                            setIsTransitioning(false);
+                                        }, 300);
+                                    }
                                 }}
+                                aria-label={`Go to article ${index + 1}`}
                             />
                         ))}
                     </div>
