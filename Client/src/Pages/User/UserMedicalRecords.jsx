@@ -6,16 +6,24 @@ import UserSidebar from '../../Components/UserDashboardParts/UserSidebar';
 
 const UserMedicalRecords = () => {
   const URL = `${import.meta.env.VITE_API_URL}/user/files`;
-  const userId = localStorage.getItem('userId'); // Assuming userId is stored here
+  const tokenData = localStorage.getItem("authToken");
+  const { value } = JSON.parse(tokenData);
+  const token = value;
 
   const [records, setRecords] = useState([]);
   const [uploadError, setUploadError] = useState('');
 
   // Fetch existing records
+
   useEffect(() => {
     const fetchRecords = async () => {
       try {
-        const res = await axios.get(`${URL}/${userId}`);
+        const res = await axios.get(`${URL}`,{
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setRecords(res.data);
       } catch (err) {
         console.error('Error fetching records:', err);
@@ -39,12 +47,11 @@ const UserMedicalRecords = () => {
     for (const file of validFiles) {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('userId', userId);
-
       try {
         const res = await axios.post(URL, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
           },
         });
         setRecords((prev) => [...prev, res.data]);
@@ -57,7 +64,11 @@ const UserMedicalRecords = () => {
 
   const handleRemove = async (id) => {
     try {
-      await axios.delete(`${URL}/${id}`);
+      await axios.delete(`${URL}/${id}`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        });
       setRecords((prev) => prev.filter((record) => record._id !== id));
     } catch (err) {
       console.error('Failed to delete:', err);

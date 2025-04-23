@@ -87,8 +87,8 @@ const Register = () => {
         storeToken(
           data.token,
           data.firstname,
-          data.type,
           data.email,
+          data.type,
           data.company
         );
         // localStorage.setItem("token", data.token);
