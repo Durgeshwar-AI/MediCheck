@@ -52,7 +52,7 @@ const Login = () => {
       const data = await res.json();
 
       if (res.ok) {
-        storeToken(data.token, data.firstname, data.type);
+        storeToken(data.token, data.firstname,data.email,data.company, data.type);
         setMessage("✅ Login successful!");
         updateLogin(true);
         updateType(data.type);

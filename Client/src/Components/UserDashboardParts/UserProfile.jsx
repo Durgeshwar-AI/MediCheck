@@ -6,11 +6,10 @@ import LogoutButton from "../LogoutButton";
 
 const UserProfile = () => {
   const tokenData = localStorage.getItem("authToken");
-  const { userName } = JSON.parse(tokenData);
+  const { userName, email } = JSON.parse(tokenData);
 
   const [userData, setUserData] = useState({
-    email: "patient@example.com",
-    bio: "Passionate about health and well-being!",
+    email: email,
     avatar: "",
   });
 
@@ -39,12 +38,6 @@ const UserProfile = () => {
           <h2 className="text-xl font-bold text-gray-800">{userName}</h2>
           <p className="text-gray-600 text-sm">{userData.email}</p>
         </div>
-      </div>
-
-      {/* Bio section */}
-      <div className=" w-full ml-10">
-        <h3 className="text-sm font-semibold text-gray-500">About</h3>
-        <p className="text-gray-700 italic">{userData.bio}</p>
       </div>
       <div className="">
         <LogoutButton />

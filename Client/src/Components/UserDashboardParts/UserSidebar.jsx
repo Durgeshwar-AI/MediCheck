@@ -7,7 +7,7 @@ const UserSidebar = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const { pathname } = useLocation();
   const tokenData = localStorage.getItem("authToken");
-  const { userName } = JSON.parse(tokenData);
+  const { userName,email } = JSON.parse(tokenData);
 
 
   // Debounced resize handler for responsiveness
@@ -105,7 +105,7 @@ const UserSidebar = ({ children }) => {
               {expanded && (
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-800">{userName}</p>
-                  <p className="text-xs text-gray-500">patient@example.com</p>
+                  <p className="text-xs text-gray-500">{email}</p>
                 </div>
               )}
             </div>

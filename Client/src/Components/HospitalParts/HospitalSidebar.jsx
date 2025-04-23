@@ -13,12 +13,15 @@ import {
 } from "lucide-react";
 
 const HospitalSidebar = ({ children }) => {
+  const tokenData = localStorage.getItem("authToken");
+  const { company } = JSON.parse(tokenData);
+
   const [expanded, setExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const maxLength = 7; 
-  const userName = "Dr. Krishna Kumar Roy";
+  const userName = company
 
   const getInitials = (name) => {
     const words = name.split(" ");
