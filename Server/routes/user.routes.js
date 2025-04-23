@@ -1,9 +1,12 @@
 import express from "express";
 import { body } from "express-validator";
-import { registerUser, loginUser } from "../controllers/user.controller.js";
+import { registerUser, loginUser, fileUpload, fileRetrive, getHospitals, fileDelete } from "../controllers/user.controller.js";
+import authMiddleware from "../middleware/auth.middleware.js";
+import { upload } from "../middleware/multer.config.js";
 
 const router = express.Router();
 
+// Register Route
 router.post(
   "/register",
   [
@@ -11,6 +14,10 @@ router.post(
     body("fullname.firstname")
       .isLength({ min: 3 })
       .withMessage("First Name should be at least 3 characters long"),
+    body("fullname.lastname")
+      .optional()
+      .isLength({ min: 1 })
+      .withMessage("Last Name should not be empty if provided"),
     body("password")
       .isLength({ min: 8 })
       .withMessage("Password must be at least 8 characters long"),
@@ -20,6 +27,8 @@ router.post(
   ],
   registerUser
 );
+
+// Login Route
 router.post(
   "/login",
   [
@@ -28,5 +37,15 @@ router.post(
   ],
   loginUser
 );
+
+router.post("/files", authMiddleware, upload.single('file'), fileUpload);
+
+router.get("/files", authMiddleware, fileRetrive)
+
+router.delete("/files/:id", authMiddleware, fileDelete)
+
+router.get("/hospitals", getHospitals)
+
+router.post("/appointments", authMiddleware, )
 
 export default router;
