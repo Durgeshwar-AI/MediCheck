@@ -36,7 +36,7 @@ const HospitalDoctors = () => {
       })
       .then((res) => setDoctors(res.data))
       .catch((err) => console.error("Error fetching doctors:", err));
-  }, []);
+  }, [doctors]);
 
   // Add a doctor
   const handleAddDoctor = () => {

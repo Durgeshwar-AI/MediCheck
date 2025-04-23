@@ -195,7 +195,7 @@ const HospitalPatients = () => {
       <BackToTopButton />
 
       {isModalOpen && selectedPatient && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <div className="fixed inset-0 z-50 bg-transparent bg-opacity-50 backdrop-blur-md flex items-center justify-center ">
           <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">Edit Patient</h3>
 
@@ -233,14 +233,14 @@ const HospitalPatients = () => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded-md"
-              >
+                className="px-4 py-2 shadow-md text-rose-600 border rounded-lg font-bold hover:bg-red-100 hover:text-rose-700 transition duration-300"
+                >
                 Cancel
               </button>
               <button
                 onClick={handleSaveChanges}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md"
-              >
+                className="px-4 py-2 shadow-md text-white bg-blue-500 rounded-lg font-bold  transition duration-300 hover:bg-green-200 hover:text-green-800 border border-white hover:border-green-800 "
+                >
                 Save
               </button>
             </div>

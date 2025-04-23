@@ -73,12 +73,15 @@ const UserSidebar = ({ children }) => {
                 <li key={item.name} className="relative group">
                   <Link
                     to={item.path}
-                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all ${active
-                      ? "bg-blue-50 text-blue-600 font-medium"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-blue-500"
-                      }`}
+                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all  ${
+                      active
+                        ? "bg-blue-50 text-red-600 font-medium"
+                        : "text-gray-600 hover:font-bold hover:text-blue-500 hover:bg-gray-50"
+                    }`}
                   >
-                    <span className={active ? "text-blue-600" : "text-gray-500"}>
+                    <span className={`${
+                        active ? "text-red-600" : "text-gray-500 hover:font-bold hover:text-blue-500"
+                      }`}>
                       {item.icon}
                     </span>
                     {expanded && <span className="ml-3 whitespace-nowrap">{item.name}</span>}
