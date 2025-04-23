@@ -1,45 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 import HospitalHeader from '../../Components/HospitalParts/HospitalHeader';
 import HospitalSidebar from '../../Components/HospitalParts/HospitalSidebar';
 import HospitalStatsCard from '../../Components/HospitalParts/HospitalStatsCard';
 import BackToTopButton from '../../Components/FooterParts/BackToTopButton';
 
-const initialAppointments = [
-  { id: 'A-001', name: 'Ishita Kapoor', age: 31, time: '10:00 AM', status: 'pending', date: '2025-04-15' },
-  { id: 'A-002', name: 'Raj Malhotra', age: 47, time: '11:30 AM', status: 'pending', date: '2025-04-15' },
-  { id: 'A-003', name: 'Neha Sharma', age: 29, time: '01:00 PM', status: 'confirmed', date: '2025-04-15' },
-  { id: 'A-004', name: 'Arjun Verma', age: 35, time: '03:00 PM', status: 'confirmed', date: '2025-04-14' }
-];
-
 const HospitalAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAppointments(initialAppointments);
-      setIsLoaded(true);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
+  const fetchAppointments = async () => {
+    try {
+      const URL = import.meta.env.VITE_API_URL;
+      const tokenData = localStorage.getItem("authToken");
+      const { value } = JSON.parse(tokenData);
+      const token = value;
 
-  const handleAccept = (id) => {
-    setAppointments(prev =>
-      prev.map(app => app.id === id ? { ...app, status: 'confirmed' } : app)
-    );
+      const response = await axios.get(`${URL}/appointments/hospital`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data)
+      setAppointments(response.data);
+      setIsLoaded(true);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+      setIsLoaded(true);
+    }
   };
 
-  const handleReject = (id) => {
-    setAppointments(prev =>
-      prev.map(app => app.id === id ? { ...app, status: 'rejected' } : app)
-    );
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  const handleAccept = async (id) => {
+    try {
+      const URL = import.meta.env.VITE_API_URL;
+      await axios.put(`${URL}/appointments/${id}/accept`);
+      fetchAppointments();
+    } catch (err) {
+      console.error("Error accepting appointment:", err);
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      const URL = import.meta.env.VITE_API_URL;
+      await axios.put(`${URL}/appointments/${id}/reject`);
+      fetchAppointments();
+    } catch (err) {
+      console.error("Error rejecting appointment:", err);
+    }
   };
 
   const today = new Date().toISOString().split('T')[0];
+
   const pendingAppointments = appointments.filter(app => app.status === 'pending');
-  const todaysAppointments = appointments.filter(app => app.status === 'confirmed' && app.date === today);
+  const todaysAppointments = appointments.filter(app => app.status === 'accepted');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -61,7 +81,7 @@ const HospitalAppointments = () => {
         <main className="flex-grow p-6 overflow-auto">
           {isLoaded ? (
             <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-6">
-              
+
               <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <HospitalStatsCard title="Pending Appointments" value={pendingAppointments.length} icon="📩" bgColor="bg-yellow-100" />
                 <HospitalStatsCard title="Today's Appointments" value={todaysAppointments.length} icon="📅" bgColor="bg-blue-100" />
@@ -75,7 +95,7 @@ const HospitalAppointments = () => {
                   <div className="space-y-4">
                     {pendingAppointments.map(app => (
                       <motion.div
-                        key={app.id}
+                        key={app._id}
                         className="bg-white p-4 shadow-md rounded-xl border-l-4 border-yellow-500"
                         variants={itemVariants}
                       >
@@ -83,19 +103,19 @@ const HospitalAppointments = () => {
                           <div>
                             <h3 className="text-lg font-bold">{app.name} ({app.age} yrs)</h3>
                             <p className="text-sm text-gray-600">Requested Time: {app.time}</p>
-                            <p className="text-sm text-gray-600">Requested Date: {app.date}</p>
+                            <p className="text-sm text-gray-600">Requested Date: {app.date}/{app.month}/{app.year}</p>
                             <p className="text-sm font-semibold mt-1 text-yellow-700 capitalize">Status: {app.status}</p>
                           </div>
                           <div className="flex gap-2">
                             <button
                               className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm"
-                              onClick={() => handleAccept(app.id)}
+                              onClick={() => handleAccept(app._id)}
                             >
                               Accept
                             </button>
                             <button
                               className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm"
-                              onClick={() => handleReject(app.id)}
+                              onClick={() => handleReject(app._id)}
                             >
                               Reject
                             </button>
@@ -116,7 +136,7 @@ const HospitalAppointments = () => {
                   <div className="space-y-4">
                     {todaysAppointments.map(app => (
                       <motion.div
-                        key={app.id}
+                        key={app._id}
                         className="bg-white p-4 shadow-md rounded-xl border-l-4 border-blue-500"
                         variants={itemVariants}
                       >
