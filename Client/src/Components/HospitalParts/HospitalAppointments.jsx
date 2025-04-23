@@ -73,7 +73,7 @@ const HospitalAppointments = () => {
       </h2>
       <div className="w-36 sm:w-45 h-0.5 bg-blue-500 mx-auto mb-4 sm:mb-7 rounded-full"></div>
 
-      <div className="overflow-x-auto max-h-96 overflow-y-auto">
+      <div className="overflow-x-auto h-96 overflow-y-auto">
         <table className="min-w-full bg-gray-50 rounded-lg shadow-md text-sm sm:text-base">
           <thead>
             <tr className="bg-blue-100 text-gray-700 sticky top-0 z-10">
@@ -130,7 +130,7 @@ const HospitalAppointments = () => {
               <tr>
                 <td
                   colSpan="3"
-                  className="py-4 sm:py-5 text-center text-gray-500 text-sm sm:text-md md:text-lg font-normal md:font-medium"
+                  className="py-4 sm:py-5 text-center h-80 text-gray-500 text-sm sm:text-md md:text-lg font-normal md:font-medium"
                 >
                   No upcoming appointments
                 </td>

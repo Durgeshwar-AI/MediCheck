@@ -33,6 +33,12 @@ const PatientForm = ({ onSubmit, onCancel }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  
+  const handlePhoneChange = (e) => {
+    const { name, value } = e.target;
+    const formattedValue = value.replace(/\D/g, "").slice(0, 10); // Restricts to 10 digits
+    setFormData((prev) => ({ ...prev, [name]: formattedValue }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -281,7 +287,8 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                     type="tel"
                     name="phone"
                     value={formData.phone}
-                    onChange={handleChange}
+                    onChange={handlePhoneChange}
+                    maxLength={10}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
                     required
                   />
@@ -329,7 +336,8 @@ const PatientForm = ({ onSubmit, onCancel }) => {
                     type="tel"
                     name="emergencyPhone"
                     value={formData.emergencyPhone}
-                    onChange={handleChange}
+                    onChange={handlePhoneChange}
+                    maxLength={10}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
                     required
                   />
