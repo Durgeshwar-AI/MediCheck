@@ -15,7 +15,7 @@ const UserNews = () => {
     const [page, setPage] = useState(1);
     const [direction, setDirection] = useState(null);
     const [isTransitioning, setIsTransitioning] = useState(false);
-    const pageSize = 8;
+    const pageSize = 12;
 
     // Example API key for demonstration - replace with your actual implementation
     const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
@@ -23,7 +23,7 @@ const UserNews = () => {
     useEffect(() => {
         // Fetch news data from API on component mount
         fetchNewsFromAPI(1);
-    }, []);
+    }, );
 
     const fetchNewsFromAPI = async (pageNum) => {
         try {
@@ -327,7 +327,7 @@ const UserNews = () => {
                                     }}
                                 >
                                     <div className="absolute top-2 right-2 bg-indigo-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow z-20">
-                                        {currentIndex + 1} / {articles.length}
+                                        {currentIndex + 1} / {articles.length -1}
                                     </div>
                                     <div className="absolute bottom-0 left-0 right-0 h-3/7 bg-gray-700/60 p-4 md:p-6">
                                         <div className="flex flex-wrap justify-between items-start mb-2 gap-2">
