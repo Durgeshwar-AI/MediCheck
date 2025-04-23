@@ -30,7 +30,7 @@ function Appointment() {
       setHospitals(data);
     };
     fetchHospitals();
-  }, []);
+  });
 
   const getDaysInMonth = (month, year) => {
     const index = [
@@ -342,7 +342,7 @@ function Appointment() {
                   ))}
                 </select>
                 <label className="absolute left-3 -top-3 text-xs bg-white px-1 text-gray-500">
-                  Doctor's Specialty
+                  Doctor&apos;s Specialty
                 </label>
               </div>
 
