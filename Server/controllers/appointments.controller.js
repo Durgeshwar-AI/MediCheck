@@ -3,7 +3,7 @@ import { GetHospitalId } from "../services/appointments.service.js";
 
 export const createAppointment = async (req, res) => {
   try {
-    const { name, age, hospitalName, date, month, time, doctorType } = req.body;
+    const { name, age, hospitalName, date, month, time, doctorType, year } = req.body;
     const userId = req.user.id;
     const hospitalId = await GetHospitalId(hospitalName);
 
@@ -13,6 +13,7 @@ export const createAppointment = async (req, res) => {
       age,
       month,
       date,
+      year,
       time,
       hospitalId,
       hospitalName,
@@ -38,3 +39,38 @@ export const getAppointments = async (req, res) => {
   }
 };
 
+export const hospitalGetAppointments = async (req, res) => {
+  const hospitalId = req.user.id;
+  try {
+    const data = await Appointment.find({ hospitalId });
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const acceptAppointment = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await Appointment.findOneAndUpdate(
+      { _id: id },
+      { amount: req.body.amount, status: "accepted" }
+    );
+    res.status(200).json({message:"OK"})
+  } catch (err) {
+    res.status(500).json({error:err})
+  }
+};
+
+export const rejectAppointment = async (req,res)=>{
+  const id = req.params.id;
+  try {
+    await Appointment.findOneAndUpdate(
+      { _id: id },
+      {status: "rejected" }
+    );
+    res.status(200).json({message:"OK"})
+  } catch (err) {
+    res.status(500).json({error:err})
+  }
+}
