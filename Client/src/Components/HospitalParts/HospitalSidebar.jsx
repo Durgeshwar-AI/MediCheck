@@ -134,7 +134,7 @@ const HospitalSidebar = ({ children }) => {
         </nav>
 
         {/* Footer section with user profile, toggle button, and logout */}
-        <div className="absolute bottom-5 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
+        <div className="absolute bottom-1 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
           <div className="flex items-center justify-between">
             {/* User Profile */}
             <div className="flex items-center">
