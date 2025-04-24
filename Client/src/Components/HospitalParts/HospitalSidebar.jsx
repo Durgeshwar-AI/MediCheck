@@ -4,9 +4,10 @@ import {
   LayoutDashboard,
   Calendar,
   Users,
-  UserPlus,
-  Building,
-  AlertTriangle,
+  UserPlus, Siren,
+
+  // Building,
+  // AlertTriangle,
   ChevronRight,
   ChevronLeft,
   LogOut
@@ -66,8 +67,9 @@ const HospitalSidebar = ({ children }) => {
     { name: "Appointments", path: "/hospitalAppointments", icon: <Calendar size={20} /> },
     { name: "Patients", path: "/hospitalPatients", icon: <Users size={20} /> },
     { name: "Doctors", path: "/hospitalDoctors", icon: <UserPlus size={20} /> },
-    { name: "Facilities", path: "/hospitalFacilities", icon: <Building size={20} /> },
-    { name: "Emergency", path: "/hospitalEmergency", icon: <AlertTriangle size={20} /> },
+    { name: "Alart", icon: <Siren size={20} /> },
+    // { name: "Facilities", path: "/hospitalFacilities", icon: <Building size={20} /> },
+    // { name: "Emergency", path: "/hospitalEmergency", icon: <AlertTriangle size={20} /> },
   ];
 
   return (
