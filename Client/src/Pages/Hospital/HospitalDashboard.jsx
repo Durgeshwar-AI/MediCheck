@@ -220,7 +220,7 @@ const HospitalDashboard = () => {
                     <HospitalStatsCard
                         title="Total Patients"
                         value={stats.totalPatients}
-                        icon="👥"
+                        icon="🧍‍♂️"
                         bgColor="bg-blue-100"
                     />
                     <HospitalStatsCard
@@ -268,10 +268,10 @@ const HospitalDashboard = () => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100">
             <HospitalHeader />
 
-            <div className="flex flex-grow">
+            <div className="flex ">
                 <HospitalSidebar />
 
                 <main className="flex-grow p-6 overflow-auto">

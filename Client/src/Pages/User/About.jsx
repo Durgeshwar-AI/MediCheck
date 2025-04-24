@@ -4,6 +4,13 @@ import { ChevronDown, ChevronUp, MapPin, Calendar, Star, FileText, Clock, AlertC
 import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 
+import about1Image from "../../assets/AboutImage/about1.jpg";
+import about2Image from "../../assets/AboutImage/About2.avif";
+import about3Image from "../../assets/AboutImage/About3.jpg";
+import about5Image from "../../assets/AboutImage/about5.jpg";
+import about4Image from "../../assets/AboutImage/about4.jpg";
+import about6Image from "../../assets/AboutImage/about6.jpg";
+
 const About = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [activeTab, setActiveTab] = useState("patients");
@@ -69,22 +76,22 @@ const About = () => {
 
   const testimonials = [
     {
-      name: "Sarah Johnson",
+      name: "Michael Chen",
       role: "Patient",
       content: "CareConnect made finding a specialist and booking appointments so much easier. I love having all my medical records in one place!",
-      image: "/api/placeholder/64/64"
+      image: about4Image
     },
     {
-      name: "Dr. Michael Chen",
+      name: "Dr. Sarah Johnson",
       role: "Cardiologist",
       content: "As a healthcare provider, CareConnect has streamlined patient management and reduced no-shows significantly.",
-      image: "/api/placeholder/64/64"
+      image: about5Image
     },
     {
       name: "Emma Rodriguez",
       role: "Parent",
       content: "Managing my family's healthcare needs has never been simpler. The emergency locator feature gave us peace of mind during our vacation.",
-      image: "/api/placeholder/64/64"
+      image: about6Image
     }
   ];
 
@@ -144,13 +151,14 @@ const About = () => {
                 </button>
               </div>
             </div>
-            <div className="w-full md:w-1/2 mt-10 md:mt-0">
+            <div className="w-full md:w-1/2 mt-10 md:mt-0 z-10">
               <div className="relative">
-                <div className="absolute inset-0 bg-blue-200 rounded-3xl transform rotate-3"></div>
-                <div className="bg-gray-200 h-64 md:h-80 rounded-3xl overflow-hidden relative shadow-xl">
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-                    Medical Professional Image
-                  </div>
+                <div className="absolute inset-0 z-20 bg-blue-200 rounded-3xl transform rotate-3"></div>
+                <div className="bg-gray-200 h-64 z-30 md:h-80 rounded-3xl overflow-hidden relative shadow-xl">
+                  <img
+                    src={about1Image}
+                    alt="CareConnect Hero"
+                    className="h-fit w-full object-cover transform -rotate-3 z-40" />
                 </div>
               </div>
             </div>
@@ -168,9 +176,9 @@ const About = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-green-200 rounded-3xl transform -rotate-3"></div>
                 <div className="bg-gray-200 h-64 md:h-80 rounded-3xl overflow-hidden relative shadow-xl">
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-                    Doctors Collaboration Image
-                  </div>
+                  <img src={about2Image} alt=""
+                    className="h-full w-full object-cover transform bg-amber-400 rotate-3 z-40"
+                  />
                 </div>
               </div>
             </div>
@@ -306,9 +314,10 @@ const About = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-amber-200 rounded-3xl transform rotate-2"></div>
                 <div className="bg-gray-200 h-64 md:h-80 rounded-3xl overflow-hidden relative shadow-xl">
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-                    Future Healthcare Image
-                  </div>
+                  <img
+                    src={about3Image}
+                    alt="CareConnect Vision"
+                    className="h-full w-full object-cover transform -rotate-2 z-40" />
                 </div>
               </div>
             </div>

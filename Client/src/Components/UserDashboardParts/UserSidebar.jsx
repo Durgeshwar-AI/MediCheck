@@ -7,7 +7,7 @@ const UserSidebar = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const { pathname } = useLocation();
   const tokenData = localStorage.getItem("authToken");
-  const { userName,email } = JSON.parse(tokenData);
+  const { userName } = JSON.parse(tokenData);
 
 
   // Debounced resize handler for responsiveness
@@ -73,14 +73,12 @@ const UserSidebar = ({ children }) => {
                 <li key={item.name} className="relative group">
                   <Link
                     to={item.path}
-                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all  ${
-                      active
-                        ? "bg-blue-50 text-red-600 font-medium"
-                        : "text-gray-600 hover:font-bold hover:text-blue-500 hover:bg-gray-50"
-                    }`}
+                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-3 rounded-lg transition-all  ${active
+                      ? "bg-blue-50 text-red-600 font-medium"
+                      : "text-gray-600 hover:font-bold hover:text-blue-500 hover:bg-gray-50"
+                      }`}
                   >
-                    <span className={`${
-                        active ? "text-red-600" : "text-gray-500 hover:font-bold hover:text-blue-500"
+                    <span className={`${active ? "text-red-600" : "text-gray-500 hover:font-bold hover:text-blue-500"
                       }`}>
                       {item.icon}
                     </span>
@@ -98,7 +96,7 @@ const UserSidebar = ({ children }) => {
         </nav>
 
         {/* Footer section with user profile and logout */}
-        <div className="absolute bottom-5 -left-1 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
+        <div className="absolute bottom-1 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
           <div className="flex items-center justify-between">
             {/* User Profile */}
             <div className="flex items-center">
@@ -106,10 +104,11 @@ const UserSidebar = ({ children }) => {
                 <User size={18} />
               </div>
               {expanded && (
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-800">{userName}</p>
-                  <p className="text-xs text-gray-500">{email}</p>
-                </div>
+                <>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-800">{userName}</p>
+                  </div>
+                 </>
               )}
             </div>
 
@@ -129,14 +128,16 @@ const UserSidebar = ({ children }) => {
 
           {/* Logout section:  */}
           {expanded && (
-            <button
-              onClick={handleLogout}
-              className="mt-4 flex items-center justify-start w-full px-3 py-2 rounded-lg hover:bg-red-600 hover:text-white text-red-600 transition-all "
-              aria-label="Logout"
-            >
-              <LogOut size={20} />
-              <span className="ml-3">Log Out</span>
-            </button>
+            <>
+              <button
+                onClick={handleLogout}
+                className="mt-4 flex items-center justify-start w-full px-3 py-2 rounded-lg hover:bg-red-600 hover:text-white text-red-600 transition-all "
+                aria-label="Logout"
+              >
+                <LogOut size={20} />
+                <span className="ml-3">Log Out</span>
+              </button>
+            </>
           )}
         </div>
       </aside>
