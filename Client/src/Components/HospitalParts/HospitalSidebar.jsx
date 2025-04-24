@@ -20,7 +20,7 @@ const HospitalSidebar = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const maxLength = 7; 
+  const maxLength = 7;
   const userName = company
 
   const getInitials = (name) => {
@@ -81,11 +81,9 @@ const HospitalSidebar = ({ children }) => {
         />
       )}
 
-      {/* Sidebar */}
-      <div
-        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky ${
-          expanded ? "w-48" : "w-12"
-        }`}
+      <aside
+        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky ${expanded ? "w-48" : "w-12"
+          }`}
       >
         {/* Navigation menu */}
         <nav className="p-3 mt-2">
@@ -99,18 +97,15 @@ const HospitalSidebar = ({ children }) => {
                 >
                   <Link
                     to={item.path}
-                    className={`flex items-center ${
-                      expanded ? "justify-start" : "justify-center"
-                    } px-3 py-3 rounded-lg transition-all ${
-                      active
+                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"
+                      } px-3 py-3 rounded-lg transition-all ${active
                         ? "bg-blue-50 text-red-600 font-medium"
                         : "text-gray-600 hover:font-bold hover:text-blue-500 hover:bg-gray-50"
-                    }`}
+                      }`}
                   >
                     <span
-                      className={`${
-                        active ? "text-red-600" : "text-gray-500 hover:font-bold hover:text-blue-500"
-                      }`}
+                      className={`${active ? "text-red-600" : "text-gray-500 hover:font-bold hover:text-blue-500"
+                        }`}
                     >
                       {item.icon}
                     </span>
@@ -134,7 +129,7 @@ const HospitalSidebar = ({ children }) => {
         </nav>
 
         {/* Footer section with user profile, toggle button, and logout */}
-        <div className="absolute bottom-1 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 rounded-b-md">
           <div className="flex items-center justify-between">
             {/* User Profile */}
             <div className="flex items-center">
@@ -162,8 +157,8 @@ const HospitalSidebar = ({ children }) => {
               )}
             </button>
           </div>
-           {/* Logout section:  */}
-           {expanded && (
+          {/* Logout section:  */}
+          {expanded && (
             <button
               onClick={handleLogout}
               className="mt-4 flex items-center justify-start w-full px-3 py-2 rounded-lg hover:bg-red-600 hover:text-white text-red-600 transition-all "
@@ -174,13 +169,13 @@ const HospitalSidebar = ({ children }) => {
             </button>
           )}
         </div>
-      </div>
+      </aside>
 
       {/* Main content area */}
       <div className="flex-1 transition-all duration-300 overflow-x-hidden">
         {children}
       </div>
-    </div>
+    </div >
   );
 };
 
