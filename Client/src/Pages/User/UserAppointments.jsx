@@ -207,15 +207,7 @@ const UserAppointments = () => {
             <h1 className="md:text-3xl text-xl font-bold text-blue-500">
               My Appointments
             </h1>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={handleOpenForm}
-              className="bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-xl shadow-sm hover:text-blue-600 hover:bg-blue-200 border-2 border-white hover:border-blue-600 transition flex items-center gap-2 text-sm sm:text-base"
-            >
-              <Plus size={20} />
-              <span className="hidden md:block">New Appointment</span>
-            </motion.button>
-          </div>
+            </div>
 
           <div className="px-2 sm:px-4">
             <div className="mb-8">
