@@ -46,6 +46,4 @@ router.delete("/files/:id", authMiddleware, fileDelete)
 
 router.get("/hospitals", getHospitals)
 
-router.post("/appointments", authMiddleware, )
-
 export default router;
