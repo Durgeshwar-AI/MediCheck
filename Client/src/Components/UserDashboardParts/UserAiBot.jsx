@@ -5,7 +5,7 @@ import { useHealth } from "../../hooks/useHealth";
 
 const UserAiBot = () => {
   const API_URL = import.meta.env.VITE_API_URL;
-  const { heartRate, oxygen, bp, steps, sleep } = useHealth();
+  const { heartRate, oxygen, bp, steps, sleep, deviceConnected } = useHealth();
 
   const [messages, setMessages] = useState([
     {
@@ -27,8 +27,7 @@ const UserAiBot = () => {
   }, [messages]);
 
   const handleSendMessage = async () => {
-    if (symptomsInput.trim() === "" && additionalInfoInput.trim() === "")
-      return;
+    if (symptomsInput.trim() === "") return;
 
     const userMessage = `${
       symptomsInput.trim() ? `Symptoms: ${symptomsInput}` : ""
@@ -39,50 +38,97 @@ const UserAiBot = () => {
         : ""
     }`;
 
-    const newReq = {
-      heartRate,
-      oxygen,
-      bp,
-      steps,
-      sleep,
-      symptoms: symptomsInput?.trim() ? symptomsInput : "N/A",
-      additionalData: additionalInfoInput?.trim() ? additionalInfoInput : "N/A",
-    };
+    if (deviceConnected) {
+      const newReq = {
+        heartRate,
+        oxygen,
+        bp,
+        steps,
+        sleep,
+        symptoms: symptomsInput?.trim() ? symptomsInput : "N/A",
+        additionalData: additionalInfoInput?.trim()
+          ? additionalInfoInput
+          : "N/A",
+      };
 
-    try {
-      const res = await fetch(`${API_URL}/ble/report`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newReq),
-      });
+      try {
+        const res = await fetch(`${API_URL}/ble/report`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newReq),
+        });
 
-      const updatedMessages = [
-        ...messages,
-        { sender: "user", text: userMessage },
-      ];
-      setMessages(updatedMessages);
-      setSymptomsInput("");
-      setAdditionalInfoInput("");
-      setIsLoading(true);
+        const updatedMessages = [
+          ...messages,
+          { sender: "user", text: userMessage },
+        ];
+        setMessages(updatedMessages);
+        setSymptomsInput("");
+        setAdditionalInfoInput("");
+        setIsLoading(true);
 
-      if (res.ok) {
-        const message = await res.json();
-        // Simulate bot response after a short delay
-        setTimeout(() => {
-          setMessages([
-            ...updatedMessages,
-            {
-              sender: "bot",
-              text: message.report,
-            },
-          ]);
-          setIsLoading(false);
-        }, 2000);
+        if (res.ok) {
+          const message = await res.json();
+          // Simulate bot response after a short delay
+          setTimeout(() => {
+            setMessages([
+              ...updatedMessages,
+              {
+                sender: "bot",
+                text: message.report,
+              },
+            ]);
+            setIsLoading(false);
+          }, 2000);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
+    }else{
+      const newReq = {
+        symptoms: symptomsInput.trim(),
+        additionalData: additionalInfoInput?.trim()
+          ? additionalInfoInput
+          : "N/A",
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/ble/symptoms`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newReq),
+        });
+
+        const updatedMessages = [
+          ...messages,
+          { sender: "user", text: userMessage },
+        ];
+        setMessages(updatedMessages);
+        setSymptomsInput("");
+        setAdditionalInfoInput("");
+        setIsLoading(true);
+
+        if (res.ok) {
+          const message = await res.json();
+          // Simulate bot response after a short delay
+          setTimeout(() => {
+            setMessages([
+              ...updatedMessages,
+              {
+                sender: "bot",
+                text: message.report,
+              },
+            ]);
+            setIsLoading(false);
+          }, 2000);
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
   const handleKeyPress = (e) => {
@@ -128,7 +174,7 @@ const UserAiBot = () => {
 
         {/* Chat Content */}
         <div className="bg-gradient-to-b from-blue-50 to-indigo-50 w-full p-6">
-          <div className="flex flex-col max-h-120"> 
+          <div className="flex flex-col max-h-120">
             {/* Messages Area with Custom Scrollbar */}
             <div className="flex-1 overflow-y-auto mb-6 pr-0.5 custom-scrollbar">
               <div className="flex flex-col space-y-4 h-[240px] md:h-[400px] lg:h-[500px]">
@@ -145,10 +191,11 @@ const UserAiBot = () => {
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`max-w-md p-4 rounded-2xl shadow-md ${message.sender === 'user'
-                        ? 'bg-gradient-to-r from-blue-400 via-indigo-500 to-indigo-600 text-white rounded-br-none mr-2'
-                        : 'bg-white text-gray-800 rounded-bl-none'
-                        }`}
+                      className={`max-w-md p-4 rounded-2xl shadow-md ${
+                        message.sender === "user"
+                          ? "bg-gradient-to-r from-blue-400 via-indigo-500 to-indigo-600 text-white rounded-br-none mr-2"
+                          : "bg-white text-gray-800 rounded-bl-none"
+                      }`}
                     >
                       <div className="whitespace-pre-line">{message.text}</div>
                     </div>
@@ -196,7 +243,7 @@ const UserAiBot = () => {
               </div>
               <div className="relative">
                 <textarea
-                  placeholder="Additional information (Ex: allergies, medical history, etc.)"
+                  placeholder="Additional information (Ex: allergies, medical history, health metrics(If not all are connected) etc.)"
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none h-14 overflow-y-scroll md:overflow-hidden"
                   value={additionalInfoInput}
                   onChange={(e) => setAdditionalInfoInput(e.target.value)}
@@ -245,17 +292,17 @@ const UserAiBot = () => {
         .custom-scrollbar::-webkit-scrollbar {
           width: 8px;
         }
-        
+
         .custom-scrollbar::-webkit-scrollbar-track {
           background: rgba(226, 232, 240, 0.6);
           border-radius: 10px;
         }
-        
+
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: linear-gradient(to bottom, #3b82f6, #4f46e5);
           border-radius: 10px;
         }
-        
+
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: linear-gradient(to bottom, #2563eb, #4338ca);
         }
