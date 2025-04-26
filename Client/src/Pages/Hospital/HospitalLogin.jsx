@@ -22,7 +22,7 @@ const HospitalLogin = () => {
       const tokenData = localStorage.getItem("authToken");
       const { type } = JSON.parse(tokenData);
       updateType(type);
-      navigate("/");
+      navigate("/hospitalDashboard");
     }
   }, [navigate, updateLogin]);
 
@@ -62,7 +62,7 @@ const HospitalLogin = () => {
         );
         updateLogin(true);
         updateType(data.type);
-        navigate("/");
+        navigate("/hospitalDashboard");
       } else {
         alert("❌ Login failed!");
       }
