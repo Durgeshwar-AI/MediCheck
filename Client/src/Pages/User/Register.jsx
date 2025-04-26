@@ -84,7 +84,13 @@ const Register = () => {
 
       if (res.ok) {
         // Store token with 7-day expiration
-        storeToken(data.token, data.firstname, data.type);
+        storeToken(
+          data.token,
+          data.firstname,
+          data.email,
+          data.type,
+          data.company
+        );
         // localStorage.setItem("token", data.token);
         setMessage("✅ Registration successful!");
         // Redirect to home page after successful registration

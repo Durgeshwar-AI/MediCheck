@@ -1,17 +1,16 @@
 import React, { useState } from "react";
-import { Hospital, Phone, MapPin, Settings } from "lucide-react";
+import { Hospital, Phone, MapPin, Settings, Mail } from "lucide-react";
 import LogoutButton from "../LogoutButton";
 
 const HospitalProfile = () => {
   
+  const tokenData = localStorage.getItem("authToken");
+  const { company,email } = JSON.parse(tokenData);
   // const { hospitalName } = JSON.parse(localStorage.getItem("authToken"));
 
   const [hospitalData, setHospitalData] = useState({
-    hospitalName: "MediCare Hospital", 
-    email: "contact@hospital.com",
-    phone: "+91 12345 67890",
-    location: "Kolkata, India",
-    specialization: "Multi-Specialty Care",
+    hospitalName: company, 
+    email: email,
     logo: "",
   });
 
@@ -44,7 +43,6 @@ const HospitalProfile = () => {
           <h2 className="text-2xl font-bold text-gray-800">
             {hospitalData.hospitalName}
           </h2>
-          <p className="text-gray-600 text-sm">{hospitalData.specialization}</p>
         </div>
       </div>
 
@@ -52,12 +50,8 @@ const HospitalProfile = () => {
       <div className="w-full mt-2">
         <h3 className="text-sm font-semibold text-gray-500">Contact</h3>
         <p className="text-gray-700">
-          <Phone size={16} className="inline-block mr-2" />
-          {hospitalData.phone}
-        </p>
-        <p className="text-gray-700">
-          <MapPin size={16} className="inline-block mr-2" />
-          {hospitalData.location}
+          <Mail size={16} className="inline-block mr-2" />
+          {hospitalData.email}
         </p>
       </div>
 

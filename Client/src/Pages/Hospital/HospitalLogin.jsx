@@ -53,7 +53,13 @@ const HospitalLogin = () => {
       const data = await res.json();
 
       if (res.ok) {
-        storeToken(data.token, data.firstname, data.type);
+        storeToken(
+          data.token,
+          data.firstname,
+          data.email,
+          data.type,
+          data.company
+        );
         updateLogin(true);
         updateType(data.type);
         navigate("/hospitalDashboard");

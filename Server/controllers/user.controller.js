@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
     await user.save();
 
     const token = user.generateAuthToken();
-    res.status(201).json({ token, firstname, type:"user" });
+    res.status(201).json({ token, firstname, email, type: "user" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -55,7 +55,7 @@ export const loginUser = async (req, res) => {
 
     const token = user.generateAuthToken();
     const firstname = user.fullname.firstname;
-    res.status(200).json({ token, firstname, type:"user" });
+    res.status(200).json({ token, firstname, email: user.email, type: "user" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -66,12 +66,12 @@ export const fileUpload = async (req, res) => {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+      return res.status(400).json({ error: "No file uploaded" });
     }
 
     const image = new File({
       name: file.originalname,
-      data: file.buffer.toString('base64'),
+      data: file.buffer.toString("base64"),
       contentType: file.mimetype,
       userId: req.user.id,
     });
@@ -79,8 +79,8 @@ export const fileUpload = async (req, res) => {
     await image.save();
     res.status(201).json(image);
   } catch (err) {
-    console.error('Upload error:', err);
-    res.status(500).json({ error: 'Failed to upload image' });
+    console.error("Upload error:", err);
+    res.status(500).json({ error: "Failed to upload image" });
   }
 };
 
@@ -89,20 +89,23 @@ export const fileRetrive = async (req, res) => {
     const images = await File.find({ userId: req.user.id });
     res.json(images);
   } catch (err) {
-    console.error('Retrieval error:', err);
-    res.status(500).json({ error: 'Failed to fetch records' });
+    console.error("Retrieval error:", err);
+    res.status(500).json({ error: "Failed to fetch records" });
   }
 };
 
 export const fileDelete = async (req, res) => {
   try {
-    const file = await File.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
-    if (!file) return res.status(404).json({ error: 'File not found' });
+    const file = await File.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
+    if (!file) return res.status(404).json({ error: "File not found" });
 
-    res.json({ message: 'File deleted' });
+    res.json({ message: "File deleted" });
   } catch (err) {
-    console.error('Delete error:', err);
-    res.status(500).json({ error: 'Failed to delete file' });
+    console.error("Delete error:", err);
+    res.status(500).json({ error: "Failed to delete file" });
   }
 };
 
@@ -113,5 +116,5 @@ export const getHospitals = async (req, res) => {
 
 export const appointments = async (req, res) => {
   const { name, date, time, doctor, hospitalId } = req.body;
-  const place = await hospital.find({id:hospitalId},"_id")
+  const place = await hospital.find({ id: hospitalId }, "_id");
 };

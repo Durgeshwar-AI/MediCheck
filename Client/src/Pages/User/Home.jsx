@@ -6,8 +6,12 @@ import Navbar from "../../Components/Navbar";
 import dashboard from "../../assets/Dashboard.png";
 import { useHealth } from "../../hooks/useHealth";
 import UserNews from "../../Components/UserDashboardParts/UserNews";
-
 import { HeartPulse, Stethoscope, ShieldCheck, Activity } from "lucide-react";
+
+
+import homeImage1 from "../../assets/HomeImages/home1.jpg";
+import homeImage2 from "../../assets/HomeImages/home2.jpg";
+import homeImage3 from "../../assets/HomeImages/home3.jpg";
 
 // Define your features array
 const features = [
@@ -38,21 +42,21 @@ const testimonials = [
     role: "Fitness Coach",
     feedback:
       "MediCheck helped me track my health like never before! The insights have been invaluable for my training.",
-    image: "/api/placeholder/64/64",
+    image: homeImage1,
   },
   {
     name: "Bob Martinez",
     role: "Marathon Runner",
     feedback:
       "Simple, elegant, and potentially life-saving features. The heart rate alerts caught an irregularity I wasn't aware of.",
-    image: "/api/placeholder/64/64",
+    image: homeImage2,
   },
   {
     name: "Carla Wong",
     role: "Tech Professional",
     feedback:
       "Love how seamlessly it connects with my watch! The dashboard gives me exactly what I need at a glance.",
-    image: "/api/placeholder/64/64",
+    image: homeImage3,
   },
 ];
 

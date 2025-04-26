@@ -57,13 +57,15 @@ const BluetoothConnector = () => {
           "00001826-0000-1000-8000-00805f9b34fb", // Fitness Machine
         ],
       });
-
+      // updateDevice(conDevice.name);
+      // console.log("Connected to device:", conDevice.name);
+      // console.log("Device:", conDevice);
       setConnectedDevice(conDevice);
       updateDevice(conDevice);
       updateConnection(true)
       const server = await conDevice.gatt.connect();
 
-      alert(`Connected to ${device}`);
+      alert(`Connected to ${conDevice.name}`);
 
       const services = await server.getPrimaryServices();
       for (const service of services) {

@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import logo from "../../assets/logo.png";
-import { GrSearchAdvanced } from "react-icons/gr";
+// import { GrSearchAdvanced } from "react-icons/gr";
 import { FaUserMd } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-import HospitalProfile from '../HospitalParts/HospitalProfile';
+import { Link } from "react-router-dom";
+import HospitalProfile from "../HospitalParts/HospitalProfile";
 
 const HospitalHeader = () => {
+  const tokenData = localStorage.getItem("authToken");
+  const { company } = JSON.parse(tokenData);
+
   const maxLength = 7;
-  const userName = "Dr. Krishna Kumar Roy";
+  const userName = company;
 
   const getInitials = (name) => {
     const words = name.split(" ");
     const initials = words
-      .map((word) => (word.toLowerCase() === "dr." ? "Dr." : word.charAt(0).toUpperCase()))
+      .map((word) =>
+        word.toLowerCase() === "dr." ? "Dr." : word.charAt(0).toUpperCase()
+      )
       .join("");
-    return initials.length > maxLength ? initials.substring(0, maxLength) + "..." : initials;
+    return initials.length > maxLength
+      ? initials.substring(0, maxLength) + "..."
+      : initials;
   };
 
   const displayName = getInitials(userName);
@@ -30,7 +37,7 @@ const HospitalHeader = () => {
       <div className="mx-auto flex flex-col md:flex-row justify-between items-center">
         {/* Left Section: Logo and Title */}
         <div className="flex items-center space-x-4 mb-4 md:mb-0">
-          <Link to={`/home`}>
+          <Link to={`/`}>
             <motion.img
               src={logo}
               alt="MediCheck Logo"
@@ -40,13 +47,15 @@ const HospitalHeader = () => {
               transition={{ duration: 0.35, ease: "easeOut" }}
             />
           </Link>
-          <h1 className="text-lg md:text-2xl font-bold">MediCheck Hospital Dashboard</h1>
+          <h1 className="text-lg md:text-2xl font-bold">
+            MediCheck Hospital Dashboard
+          </h1>
         </div>
 
         {/* Right Section: Search and Profile */}
         <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
           {/* Search Input */}
-          <div className="relative w-full sm:w-auto">
+          {/* <div className="relative w-full sm:w-auto">
             <input
               type="text"
               placeholder="Search patients, doctors, rooms..."
@@ -55,7 +64,7 @@ const HospitalHeader = () => {
             <button className="absolute right-3 top-2 text-gray-500 hover:text-blue-400 transition duration-200 cursor-pointer">
               <GrSearchAdvanced size={24} />
             </button>
-          </div>
+          </div> */}
 
           {/* Profile Toggle */}
           <HospitalProfileLogo displayName={displayName} />
@@ -82,7 +91,9 @@ function HospitalProfileLogo({ displayName }) {
         {/* Profile Icon and Label */}
         <div className="flex items-center bg-yellow-300 text-teal-700 px-3 py-2 rounded-full cursor-pointer hover:bg-yellow-400 transition duration-200">
           <FaUserMd className="text-lg md:text-xl" />
-          <span className="text-xs md:text-sm font-bold text-gray-700">{displayName}</span>
+          <span className="text-xs md:text-sm font-bold text-gray-700">
+            {displayName}
+          </span>
         </div>
       </button>
 

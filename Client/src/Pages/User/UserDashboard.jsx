@@ -12,12 +12,19 @@ import UserAiSection from "../../Components/UserDashboardParts/UserAiSection";
 import { useHealth } from "../../hooks/useHealth";
 
 const UserDashboard = () => {
+  const {
+      heartRate,
+      oxygen,
+      bp,
+      steps,
+      sleep,
+    } = useHealth();
   const metrics = [
-    { name: "Heart Rate", data: "72 bpm" },
-    { name: "Oxygen Level", data: "98%" },
-    { name: "Blood Pressure", data: "120/80" },
-    { name: "Steps Today", data: "7,250" },
-    { name: "Sleep Duration", data: "7h 20m" },
+    { name: "Heart Rate", data: `${heartRate} bpm` },
+    { name: "Oxygen Level", data: `${oxygen}%` },
+    { name: "Blood Pressure", data: `${bp}` },
+    { name: "Steps Today", data: `${steps}` },
+    { name: "Sleep Duration", data: `${sleep} hours` },
     { name: "Weight", data: "75 kg" },
   ];
 

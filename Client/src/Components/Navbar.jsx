@@ -14,7 +14,7 @@ const MENU_ITEMS = [
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const {userLoggedIn}= useHealth()
+  const { userLoggedIn } = useHealth()
   const { pathname } = useLocation();
 
   const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
@@ -28,14 +28,13 @@ const Navbar = () => {
 
   // AuthButton component to render the appropriate button based on login state
   const AuthButton = ({ isMobile }) => {
-    const baseClassName = `font-bold rounded-xl cursor-pointer border-2 ${
-      isMobile ? 'px-4 py-1' : 'px-4 py-2'
-    }`;
-    
+    const baseClassName = `font-bold rounded-xl cursor-pointer border-2 ${isMobile ? 'px-4 py-1' : 'px-4 py-2'
+      }`;
+
     if (!userLoggedIn) {
       return (
         <Link
-          href={`${URL}/register`}
+          to='/register'
           className={`${baseClassName} border-orange-300 text-orange-300 hover:scale-105 hover:bg-blue-500 hover:text-white hover:border-white hover:border-double bg-white border-double`}
         >
           Join Us
@@ -69,16 +68,15 @@ const Navbar = () => {
           <h1 className="text-blue-700 font-bold italic text-2xl my-1">MediCheck</h1>
         </Link>
       </div>
-      
+
       <nav className="hidden md:flex flex-grow justify-end" aria-label="Main navigation">
         <ul className="flex space-x-6">
           {MENU_ITEMS.map((item) => (
             <li key={item.path}>
               <Link
                 to={item.path}
-                className={`group p-1.5 font-bold rounded-xl transform transition-transform duration-300 ${
-                  isActive(item.path) ? "text-blue-600" : "text-black"
-                } hover:text-blue-600 hover:bg-gray-100`}
+                className={`group p-1.5 font-bold rounded-xl transform transition-transform duration-300 ${isActive(item.path) ? "text-blue-600" : "text-black"
+                  } hover:text-blue-600 hover:bg-gray-100`}
               >
                 {item.name}
               </Link>
@@ -126,15 +124,14 @@ const Navbar = () => {
                   <Link
                     to={item.path}
                     onClick={closeMenu}
-                    className={`block px-5 py-2 w-fit text-center font-bold ${
-                      isActive(item.path) ? "text-blue-600" : "text-black"
-                    } hover:text-blue-600 hover:bg-gradient-to-b from-gray-50 to-gray-100 hover:rounded-xl hover:scale-105`}
+                    className={`block px-5 py-2 w-fit text-center font-bold ${isActive(item.path) ? "text-blue-600" : "text-black"
+                      } hover:text-blue-600 hover:bg-gradient-to-b from-gray-50 to-gray-100 hover:rounded-xl hover:scale-105`}
                   >
                     {item.name}
                   </Link>
                 </li>
               ))}
-              
+
               {/* Mobile Auth Button */}
               {showBtn && (
                 <li className="mt-2 w-full flex justify-center">

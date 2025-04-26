@@ -4,13 +4,23 @@ import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 import { Shield, Award, Users, Lightbulb, Globe, MessageSquare } from "lucide-react";
 
+// Import team member images
+import team1Image from "../../assets/TeamImage/1.jpg";
+import team2Image from "../../assets/TeamImage/2.jpg";
+import team3Image from "../../assets/TeamImage/3.jpg";
+import team4Image from "../../assets/TeamImage/4.jpg";
+import team5Image from "../../assets/TeamImage/5.jpg";
+import team6Image from "../../assets/TeamImage/6.png";
+import team7Image from "../../assets/TeamImage/7.jpg";
+import team8Image from "../../assets/TeamImage/8.jpg";
+
 // Team data
 const teamMembers = [
   {
     id: 1,
     name: "Dr. Sarah Johnson",
     role: "Chief Medical Officer",
-    image: "/api/placeholder/320/320",
+    image: team1Image,
     bio: "Dr. Johnson has over 15 years of experience in emergency medicine and healthcare technology. She leads our medical advisory board and ensures all MediCheck features are clinically accurate and beneficial.",
     education: "MD, Stanford University",
     expertise: ["Emergency Medicine", "Healthcare Technology", "Remote Patient Monitoring"],
@@ -20,7 +30,7 @@ const teamMembers = [
     id: 2,
     name: "Michael Chen",
     role: "Founder & CEO",
-    image: "/api/placeholder/320/320",
+    image: team2Image,
     bio: "Michael founded MediCheck after experiencing firsthand the challenges of monitoring his father's health remotely. With a background in software engineering and healthcare, he's passionate about making health monitoring accessible to everyone.",
     education: "MS Computer Science, MIT",
     expertise: ["Healthcare Innovation", "Software Development", "Product Strategy"],
@@ -30,7 +40,7 @@ const teamMembers = [
     id: 3,
     name: "Aisha Patel",
     role: "Lead Data Scientist",
-    image: "/api/placeholder/320/320",
+    image: team3Image,
     bio: "Aisha specializes in machine learning algorithms that power MediCheck's predictive health insights. Her work helps users understand trends in their health data and receive personalized recommendations.",
     education: "PhD in Artificial Intelligence, Carnegie Mellon University",
     expertise: ["Machine Learning", "Health Analytics", "Predictive Modeling"],
@@ -40,7 +50,7 @@ const teamMembers = [
     id: 4,
     name: "Robert Williams",
     role: "Director of Engineering",
-    image: "/api/placeholder/320/320",
+    image: team4Image,
     bio: "Robert leads our engineering team, focusing on building reliable, secure, and scalable systems. He's an advocate for user privacy and ensures all MediCheck's features protect sensitive health data.",
     education: "BS Computer Engineering, Georgia Tech",
     expertise: ["System Architecture", "Data Security", "IoT Integration"],
@@ -50,7 +60,7 @@ const teamMembers = [
     id: 5,
     name: "Dr. Maria Rodriguez",
     role: "Medical Research Lead",
-    image: "/api/placeholder/320/320",
+    image: team5Image,
     bio: "Dr. Rodriguez oversees our clinical research partnerships and validation studies. Her work ensures that MediCheck's features are grounded in the latest medical research and clinical best practices.",
     education: "MD/PhD, Johns Hopkins University",
     expertise: ["Clinical Research", "Digital Health Validation", "Cardiology"],
@@ -60,7 +70,7 @@ const teamMembers = [
     id: 6,
     name: "James Wilson",
     role: "Head of User Experience",
-    image: "/api/placeholder/320/320",
+    image: team6Image,
     bio: "James is dedicated to making complex health data simple and actionable for users of all ages and technical abilities. He leads our user research initiatives and ensures MediCheck is accessible and intuitive.",
     education: "MFA Design, Rhode Island School of Design",
     expertise: ["Accessible Design", "Health Information Visualization", "User Research"],
@@ -70,7 +80,7 @@ const teamMembers = [
     id: 7,
     name: "Sophia Lee",
     role: "Partnerships Director",
-    image: "/api/placeholder/320/320",
+    image: team7Image,
     bio: "Sophia manages our relationships with healthcare providers, insurance companies, and device manufacturers. She works to create an ecosystem where health data can flow securely between systems for better patient care.",
     education: "MBA, Wharton School of Business",
     expertise: ["Healthcare Partnerships", "Business Development", "Digital Health Ecosystems"],
@@ -80,7 +90,7 @@ const teamMembers = [
     id: 8,
     name: "Dr. Thomas Okonjo",
     role: "Advisory Board Member",
-    image: "/api/placeholder/320/320",
+    image: team8Image,
     bio: "Dr. Okonjo brings global health perspective to MediCheck. With experience implementing health technology in resource-limited settings, he advises on making our solutions accessible to diverse populations worldwide.",
     education: "MD, University of Lagos; MPH, Harvard University",
     expertise: ["Global Health", "Health Equity", "Telehealth Implementation"],

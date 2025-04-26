@@ -21,7 +21,7 @@ function Medications() {
 
   useEffect(() => {
     fetchMedications();
-  },[]);
+  });
 
   const fetchMedications = async () => {
     try {

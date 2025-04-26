@@ -27,7 +27,7 @@ export const loginHospital = async (req, res) => {
     const token = hospital.generateAuthToken();
     res
       .status(200)
-      .json({ token, company: hospital.company, type: "hospital" });
+      .json({ token, company: hospital.company, email, type: "hospital" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -37,44 +37,46 @@ export const loginHospital = async (req, res) => {
 export const getHospitals = async (req, res) => {
   try {
     const hospitals = await Hospital.find();
-    
+
     const formatted = hospitals.map((hospital, index) => {
       return `${hospital.id}/${hospital.company}`;
     });
 
     res.status(200).json(formatted);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch hospitals", details: err.message });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch hospitals", details: err.message });
   }
 };
 
-export const addDoctor = async (req,res)=>{
-  console.log("working")
-  const hospital = req.user.id
-  try{
-    const doc = new doctor({...req.body,hospital})
-    await doc.save();
-    res.status(200).json({message:"Doctor added"})
-  }catch (err) {
-    res.status(500).json({ error: err });
-  }
-}
-
-export const getDoctors = async (req,res)=>{
-  const hospital = req.user.id
-  try{
-    const doctors = await doctor.find({hospital})
-    res.json(doctors)
-  }catch (err) {
-    res.status(500).json({ error: err });
-  }
-}
-
-export const deleteDoc = async (req,res) =>{
+export const addDoctor = async (req, res) => {
+  console.log("working");
+  const hospital = req.user.id;
   try {
-    const doc = await doctor.findOneAndDelete({ _id: req.params.id});
-    res.json({ message: 'Doctor deleted' });
+    const doc = new doctor({ ...req.body, hospital });
+    await doc.save();
+    res.status(200).json({ message: "Doctor added" });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete' });
+    res.status(500).json({ error: err });
   }
-}
+};
+
+export const getDoctors = async (req, res) => {
+  const hospital = req.user.id;
+  try {
+    const doctors = await doctor.find({ hospital });
+    res.json(doctors);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+};
+
+export const deleteDoc = async (req, res) => {
+  try {
+    const doc = await doctor.findOneAndDelete({ _id: req.params.id });
+    res.json({ message: "Doctor deleted" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete" });
+  }
+};

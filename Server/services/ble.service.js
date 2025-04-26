@@ -14,7 +14,7 @@ const formatBp = (bp) => {
   if (typeof bp === "string" && /^\d+\/\d+$/.test(bp)) {
     return `${bp} mmHg`;
   }
-  if (typeof bp === 'string') {
+  if (typeof bp === "string") {
     return bp;
   }
   return "Invalid Format";
@@ -40,13 +40,16 @@ const createHealthReport = async (healthData) => {
     throw new Error("AI service is not configured.");
   }
 
-  const { heartRate, oxygen, bp, steps, sleep, symptoms, additionalData } = healthData;
+  const { heartRate, oxygen, bp, steps, sleep, symptoms, additionalData } =
+    healthData;
 
   const formattedBp = formatBp(bp);
   const formattedSleep = formatSleep(sleep);
-  const hrValue = heartRate !== "N/A" && heartRate != null ? `${heartRate} bpm` : "N/A";
+  const hrValue =
+    heartRate !== "N/A" && heartRate != null ? `${heartRate} bpm` : "N/A";
   const spo2Value = oxygen !== "N/A" && oxygen != null ? `${oxygen}%` : "N/A";
-  const stepsValue = steps !== "N/A" && steps != null ? `${steps} steps` : "N/A";
+  const stepsValue =
+    steps !== "N/A" && steps != null ? `${steps} steps` : "N/A";
 
   const prompt = `
     Analyze the following daily health data and generate a concise health report (strictly under 150 words).
@@ -73,7 +76,8 @@ const createHealthReport = async (healthData) => {
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant that generates concise, observational health summaries based on user-provided data. You do not provide medical diagnoses or replace professional medical advice.",
+          content:
+            "You are a helpful assistant that generates concise, observational health summaries based on user-provided data. You do not provide medical diagnoses or replace professional medical advice.",
         },
         {
           role: "user",
@@ -104,12 +108,18 @@ const checkHealth = async (healthData) => {
 
   const formattedBp = formatBp(bp);
   const formattedSleep = formatSleep(sleep);
-  const hrValue = heartRate !== "N/A" && heartRate != null ? `${heartRate} bpm` : "N/A";
+  const hrValue =
+    heartRate !== "N/A" && heartRate != null ? `${heartRate} bpm` : "N/A";
   const spo2Value = oxygen !== "N/A" && oxygen != null ? `${oxygen}%` : "N/A";
   const stepsValue = steps !== "N/A" && steps != null ? steps : "N/A";
   const sleepValue = formattedSleep;
 
-  if (hrValue === "N/A" && spo2Value === "N/A" && formattedBp === "N/A" && sleepValue === "N/A") {
+  if (
+    hrValue === "N/A" &&
+    spo2Value === "N/A" &&
+    formattedBp === "N/A" &&
+    sleepValue === "N/A"
+  ) {
     return "CANNOT ASSESS\nInsufficient data provided.";
   }
 
@@ -134,7 +144,8 @@ const checkHealth = async (healthData) => {
       messages: [
         {
           role: "system",
-          content: "You are an AI health metric analyzer. Provide a status classification (OK, PROBLEM, EMERGENCY-CASE) and a brief justification based strictly on comparing input data to typical physiological ranges. Follow the two-line output format precisely.",
+          content:
+            "You are an AI health metric analyzer. Provide a status classification (OK, PROBLEM, EMERGENCY-CASE) and a brief justification based strictly on comparing input data to typical physiological ranges. Follow the two-line output format precisely.",
         },
         {
           role: "user",
@@ -152,8 +163,11 @@ const checkHealth = async (healthData) => {
       return "ERROR\nAI service returned an empty response.";
     }
 
-    const lines = reportContent.trim().split('\n');
-    if (lines.length < 1 || !["OK", "PROBLEM", "EMERGENCY-CASE"].includes(lines[0].trim())) {
+    const lines = reportContent.trim().split("\n");
+    if (
+      lines.length < 1 ||
+      !["OK", "PROBLEM", "EMERGENCY-CASE"].includes(lines[0].trim())
+    ) {
       return `FORMAT ERROR\n${reportContent.trim()}`;
     }
 
@@ -163,9 +177,56 @@ const checkHealth = async (healthData) => {
   }
 };
 
-const checkSymptoms = ()=>{
-  
-}
+const checkSymptoms = async (healthData) => {
+  if (!groq) {
+    throw new Error("AI service is not configured.");
+  }
+
+  const { symptoms, additionalData } = healthData;
+
+  const prompt = `
+    Based on the user's self-reported symptoms and contextual information, generate a concise observational health summary with helpful general tips.
+
+    Input Data:
+    - Reported Symptoms: ${symptoms || "None reported"}
+    - Additional Context or Health Data: ${additionalData || "None provided"}
+
+    Task Guidelines:
+    1. Analyze the reported symptoms and context to infer possible general causes or lifestyle-related correlations (e.g., fatigue from lack of sleep, sore throat from seasonal allergies).
+    2. If symptoms are suggestive of common issues (e.g., mild dehydration, cold, stress), provide brief, non-diagnostic suggestions that could support well-being.
+    3. Avoid medical diagnosis or direct treatment advice. Instead, use general phrases like “consider staying hydrated”, “take rest”, or “consider consulting a healthcare professional if symptoms persist or worsen.”
+    4. Use plain language and keep the report strictly under 150 words.
+    5. Only include suggestions that are directly relevant to the symptoms or data provided.
+  `;
+
+  try {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant that summarizes user-reported symptoms and offers general wellness tips. You do not provide medical diagnoses or specific treatment advice.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: "llama3-8b-8192",
+      temperature: 0.6,
+      max_tokens: 250,
+    });
+
+    const reportContent =
+      chatCompletion.choices[0]?.message?.content ||
+      "Could not generate report due to an unexpected AI response.";
+
+    return reportContent.trim();
+  } catch (error) {
+    throw new Error("Failed to generate health report via AI service.");
+  }
+};
+
 
 export default createHealthReport;
-export { checkHealth };
+export { checkHealth, checkSymptoms };
