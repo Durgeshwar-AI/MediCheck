@@ -90,6 +90,15 @@ MediCheck/
     └── middleware/     # Custom middleware
 ```
 
+## Live Demo
+
+👉 [Access MediCheck Live](https://medi-check-six.vercel.app)
+
+**Hospital Demo Login Credentials**
+
+- **Email:** abc@abc.abc
+- **Password:** Abc@1234
+
 ## Features in Detail
 
 ### Health Monitoring
