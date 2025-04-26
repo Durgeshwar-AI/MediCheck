@@ -92,12 +92,12 @@ MediCheck/
 
 ## Live Demo
 
-👉 [Access MediCheck Live](https://your-demo-link.com)
+👉 [Access MediCheck Live](https://medi-check-six.vercel.app)
 
 **Hospital Demo Login Credentials**
 
-- **Email:** hospital_demo@medicheck.com
-- **Password:** Hospital@123
+- **Email:** abc@abc.abc
+- **Password:** Abc@1234
 
 ## Features in Detail
 
