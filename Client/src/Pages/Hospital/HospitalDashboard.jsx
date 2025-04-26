@@ -5,7 +5,7 @@ import HospitalHeader from '../../Components/HospitalParts/HospitalHeader';
 import HospitalSidebar from '../../Components/HospitalParts/HospitalSidebar';
 // import HospitalStatsCard from '../../Components/HospitalParts/HospitalStatsCard';
 import HospitalAppointments from '../../Components/HospitalParts/HospitalAppointments';
-import HospitalFacilities from '../../Components/HospitalParts/HospitalFacilities';
+// import HospitalFacilities from '../../Components/HospitalParts/HospitalFacilities';
 import PatientForm from '../../Components/HospitalParts/PatientForm';
 import PatientList from '../../Components/HospitalParts/PatientList';
 import BackToTopButton from '../../Components/FooterParts/BackToTopButton';
@@ -42,12 +42,7 @@ const timeSlots = [
     '02:15 PM', '03:00 PM', '03:45 PM', '04:30 PM'
 ];
 
-const mockFacilities = {
-    generalWard: { available: 18, occupied: 32, percentFull: 64 },
-    icu: { available: 3, occupied: 7, percentFull: 70 },
-    operatingRooms: { available: 2, inUse: 3, percentInUse: 60 },
-    emergency: { onDuty: 5, currentCases: 3 }
-};
+
 
 const initialPatients = [
     { id: 'P-0487', name: 'Aarav Patel', age: 35, doctorType: 'Cardiologist', status: 'Critical' },
@@ -215,7 +210,7 @@ const HospitalDashboard = () => {
                         <PatientList patients={patients} />
                     </motion.div>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <div className=" gap-6 mt-6">
                     <motion.div variants={itemVariants}>
                         <HospitalAppointments 
                             appointments={appointments} 
@@ -224,9 +219,7 @@ const HospitalDashboard = () => {
                         />
                     </motion.div>
 
-                    <motion.div variants={itemVariants}>
-                        <HospitalFacilities facilities={mockFacilities} />
-                    </motion.div>
+                    
                 </div>
             </>
         );
