@@ -90,6 +90,15 @@ MediCheck/
     └── middleware/     # Custom middleware
 ```
 
+## Live Demo
+
+👉 [Access MediCheck Live](https://your-demo-link.com)
+
+**Hospital Demo Login Credentials**
+
+- **Email:** hospital_demo@medicheck.com
+- **Password:** Hospital@123
+
 ## Features in Detail
 
 ### Health Monitoring
