@@ -8,7 +8,7 @@
 
 ## 📌 Problem Statement
 
-**Problem Statement 1 – Enhance Smart Healthcare Monitoring Systems**
+**Problem Statement 1 – Weave AI Magic with Groq**
 
 ---
 
@@ -28,7 +28,7 @@ It empowers individuals to monitor their health proactively and enables hospital
 - Durgeshwar Kumar Shaw ([@Durgeshwar-AI](https://github.com/Durgeshwar-AI) / Backend Developer)  
 - Manab Biswas ([@ManabBiswas](https://github.com/ManabBiswas) / Frontend Developer)  
 - Sourajeet Routh ([@soura1334](https://github.com/soura1334) / Frontend Developer)
-- Ankit Bhandart ([@ankitbhandary24](https://github.com/ankitbhandary24) / Editing)
+- Ankit Bhandart ([@ankitbhandary24](https://github.com/ankitbhandary24) / UI/UX & Editing)
 
 ### Your Approach:  
 - We chose this problem due to the increasing need for continuous health monitoring and efficient hospital resource management post-pandemic.
@@ -47,7 +47,7 @@ It empowers individuals to monitor their health proactively and enables hospital
 - **Hosting:** Vercel (Frontend), Render (Backend)
 
 ### Sponsor Technologies Used:
-- [✅] **Groq:**  
+- ✅ **Groq:**  
 - [ ] **Monad:**  
 - [ ] **Fluvio:**  
 - [ ] **Base:**  
@@ -78,7 +78,7 @@ It empowers individuals to monitor their health proactively and enables hospital
 
 ## ✅ Tasks & Bonus Checklist
 
-- [✅] **All members of the team completed the mandatory task - Followed at least 2 of the social channels and filled the form**  
+- ✅ **All members of the team completed the mandatory task - Followed at least 2 of the social channels and filled the form**  
 - [ ] **All members of the team completed Bonus Task 1 - Sharing of Badges and filled the form (2 points)**  
 - [ ] **All members of the team completed Bonus Task 2 - Signing up for Sprint.dev and filled the form (3 points)**  
 
