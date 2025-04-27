@@ -16,7 +16,7 @@ const HospitalAppointments = () => {
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, [appointments]);
 
   const fetchAppointments = async () => {
     try {
@@ -144,7 +144,7 @@ const HospitalAppointments = () => {
       {showAmountInput && (
         <div className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-md  flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl shadow-lg w-80  border-green-500 border-2">
-            <h3 className="text-lg font-bold mb-4">Enter Payment Amount</h3>
+           <h3 className="text-lg font-bold mb-4">Enter Payment Amount</h3>
             <input
               type="number"
               placeholder="Amount"

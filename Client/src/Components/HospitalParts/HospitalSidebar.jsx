@@ -4,13 +4,14 @@ import {
   LayoutDashboard,
   Calendar,
   Users,
-  UserPlus, Siren,
+  UserPlus,
+  Siren,
 
   // Building,
   // AlertTriangle,
   ChevronRight,
   ChevronLeft,
-  LogOut
+  LogOut,
 } from "lucide-react";
 
 const HospitalSidebar = ({ children }) => {
@@ -22,7 +23,7 @@ const HospitalSidebar = ({ children }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const maxLength = 7;
-  const userName = company
+  const userName = company;
 
   const getInitials = (name) => {
     const words = name.split(" ");
@@ -62,9 +63,18 @@ const HospitalSidebar = ({ children }) => {
     return () => window.removeEventListener("resize", debounceResize);
   }, []);
 
+  const audio = new Audio("/siren.mp3");
   const menuItems = [
-    { name: "Dashboard", path: "/hospitalDashboard", icon: <LayoutDashboard size={20} /> },
-    { name: "Appointments", path: "/hospitalAppointments", icon: <Calendar size={20} /> },
+    {
+      name: "Dashboard",
+      path: "/hospitalDashboard",
+      icon: <LayoutDashboard size={20} />,
+    },
+    {
+      name: "Appointments",
+      path: "/hospitalAppointments",
+      icon: <Calendar size={20} />,
+    },
     { name: "Patients", path: "/hospitalPatients", icon: <Users size={20} /> },
     { name: "Doctors", path: "/hospitalDoctors", icon: <UserPlus size={20} /> },
     { name: "Alert", icon: <Siren size={20} /> },
@@ -84,8 +94,9 @@ const HospitalSidebar = ({ children }) => {
       )}
 
       <aside
-        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky ${expanded ? "w-48" : "w-12"
-          }`}
+        className={`h-full z-50 bg-white shadow-lg transition-all duration-300 ease-in-out sticky ${
+          expanded ? "w-48" : "w-12"
+        }`}
       >
         {/* Navigation menu */}
         <nav className="p-3 mt-2">
@@ -96,18 +107,35 @@ const HospitalSidebar = ({ children }) => {
                 <li
                   key={item.name}
                   className="relative group hover:font-bold hover:text-blue-500"
+                  onClick={
+                    item.name === "Alert"
+                      ? () => {
+                          audio.play();
+                          setTimeout(()=>{
+                            audio.pause();
+                            audio.currentTime = 0;
+                            audio.play();
+                          },3000)
+                        }
+                      : ""
+                  }
                 >
                   <Link
                     to={item.path}
-                    className={`flex items-center ${expanded ? "justify-start" : "justify-center"
-                      } px-3 py-3 rounded-lg transition-all ${active
+                    className={`flex items-center ${
+                      expanded ? "justify-start" : "justify-center"
+                    } px-3 py-3 rounded-lg transition-all ${
+                      active
                         ? "bg-blue-50 text-red-600 font-medium"
                         : "text-gray-600 hover:font-bold hover:text-blue-500 hover:bg-gray-50"
-                      }`}
+                    }`}
                   >
                     <span
-                      className={`${active ? "text-red-600" : "text-gray-500 hover:font-bold hover:text-blue-500"
-                        }`}
+                      className={`${
+                        active
+                          ? "text-red-600"
+                          : "text-gray-500 hover:font-bold hover:text-blue-500"
+                      }`}
                     >
                       {item.icon}
                     </span>
@@ -177,7 +205,7 @@ const HospitalSidebar = ({ children }) => {
       <div className="flex-1 transition-all duration-300 overflow-x-hidden">
         {children}
       </div>
-    </div >
+    </div>
   );
 };
 

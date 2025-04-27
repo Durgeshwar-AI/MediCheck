@@ -98,6 +98,11 @@ MediCheck/
 
 - **Email:** abc@abc.abc
 - **Password:** Abc@1234
+  
+**User Demo Login Credentials**
+
+- **Email:** abc@abc.abc
+- **Password:** Abc@1234
 
 ## Features in Detail
 
