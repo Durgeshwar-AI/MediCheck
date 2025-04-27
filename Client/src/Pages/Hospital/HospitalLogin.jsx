@@ -22,7 +22,7 @@ const HospitalLogin = () => {
       const tokenData = localStorage.getItem("authToken");
       const { type } = JSON.parse(tokenData);
       updateType(type);
-      navigate("/home");
+      navigate("/hospitalDashboard");
     }
   }, [navigate, updateLogin]);
 
@@ -166,7 +166,7 @@ const HospitalLogin = () => {
               <button
                 type="button"
                 onClick={handleTogglePassword}
-                className="absolute top-2 right-3 text-gray-500 text-2xl font-bold rounded"
+                className="absolute top-3 right-3 text-gray-500 text-2xl font-bold rounded"
               >
                 {showPassword ? <RxEyeOpen /> : <LuEyeClosed />}
               </button>
