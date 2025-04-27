@@ -27,8 +27,8 @@ It empowers individuals to monitor their health proactively and enables hospital
 ### Team Members:  
 - Durgeshwar Kumar Shaw ([@Durgeshwar-AI](https://github.com/Durgeshwar-AI) / Backend Developer)  
 - Manab Biswas ([@ManabBiswas](https://github.com/ManabBiswas) / Frontend Developer)  
-- Sourajeet Routh ([@](https://github.com/danielsmith101) / Frontend Developer)
-- Ankit Bhandart ([]() / Editing)
+- Sourajeet Routh ([@soura1334](https://github.com/soura1334) / Frontend Developer)
+- Ankit Bhandart ([@ankitbhandary24](https://github.com/ankitbhandary24) / Editing)
 
 ### Your Approach:  
 - We chose this problem due to the increasing need for continuous health monitoring and efficient hospital resource management post-pandemic.
