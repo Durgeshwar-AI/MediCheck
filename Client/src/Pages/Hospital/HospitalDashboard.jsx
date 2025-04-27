@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 
 import HospitalHeader from '../../Components/HospitalParts/HospitalHeader';
 import HospitalSidebar from '../../Components/HospitalParts/HospitalSidebar';
-import HospitalStatsCard from '../../Components/HospitalParts/HospitalStatsCard';
+// import HospitalStatsCard from '../../Components/HospitalParts/HospitalStatsCard';
 import HospitalAppointments from '../../Components/HospitalParts/HospitalAppointments';
-import HospitalFacilities from '../../Components/HospitalParts/HospitalFacilities';
+// import HospitalFacilities from '../../Components/HospitalParts/HospitalFacilities';
 import PatientForm from '../../Components/HospitalParts/PatientForm';
 import PatientList from '../../Components/HospitalParts/PatientList';
 import BackToTopButton from '../../Components/FooterParts/BackToTopButton';
@@ -42,12 +42,7 @@ const timeSlots = [
     '02:15 PM', '03:00 PM', '03:45 PM', '04:30 PM'
 ];
 
-const mockFacilities = {
-    generalWard: { available: 18, occupied: 32, percentFull: 64 },
-    icu: { available: 3, occupied: 7, percentFull: 70 },
-    operatingRooms: { available: 2, inUse: 3, percentInUse: 60 },
-    emergency: { onDuty: 5, currentCases: 3 }
-};
+
 
 const initialPatients = [
     { id: 'P-0487', name: 'Aarav Patel', age: 35, doctorType: 'Cardiologist', status: 'Critical' },
@@ -75,24 +70,14 @@ const waitingPatients = [
 
 const HospitalDashboard = () => {
     const [isLoaded, setIsLoaded] = useState(false);
-    const [stats, setStats] = useState({
-        totalPatients: 0,
-        availableDoctors: 0,
-        availableRooms: 0,
-        pendingAppointments: 0
-    });
+    
     const [patients, setPatients] = useState(initialPatients);
     const [appointments, setAppointments] = useState(initialAppointments);
     const [waitingList, setWaitingList] = useState(waitingPatients);
 
     useEffect(() => {
         const loadingTimer = setTimeout(() => {
-            setStats({
-                totalPatients: 1245,
-                availableDoctors: 23,
-                availableRooms: 42,
-                pendingAppointments: 18
-            });
+            // Simulate loading time
             setIsLoaded(true);
         }, 800);
 
@@ -115,10 +100,10 @@ const HospitalDashboard = () => {
         
         setPatients(prevPatients => [updatedPatient, ...prevPatients]);
 
-        setStats(prevStats => ({
-            ...prevStats,
-            totalPatients: prevStats.totalPatients + 1
-        }));
+        // setStats(prevStats => ({
+        //     ...prevStats,
+        //     totalPatients: prevStats.totalPatients + 1
+        // }));
 
         alert(`Patient ${newPatient.name} has been added successfully!`);
     };
@@ -187,10 +172,10 @@ const HospitalDashboard = () => {
             setAppointments(finalAppointments);
             alert(`Appointment for ${rejectedAppointment.patient} has been rejected and schedule updated.`);
             
-            setStats(prevStats => ({
-                ...prevStats,
-                pendingAppointments: Math.max(0, prevStats.pendingAppointments - 1)
-            }));
+            // setStats(prevStats => ({
+            //     ...prevStats,
+            //     pendingAppointments: Math.max(0, prevStats.pendingAppointments - 1)
+            // }));
         }
     };
 
@@ -216,33 +201,8 @@ const HospitalDashboard = () => {
     const renderTabContent = () => {
         return (
             <>
-                <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <HospitalStatsCard
-                        title="Total Patients"
-                        value={stats.totalPatients}
-                        icon="🧍‍♂️"
-                        bgColor="bg-blue-100"
-                    />
-                    <HospitalStatsCard
-                        title="Available Specialists"
-                        value={stats.availableDoctors}
-                        icon="👨‍⚕️"
-                        bgColor="bg-green-100"
-                    />
-                    <HospitalStatsCard
-                        title="Available Rooms"
-                        value={stats.availableRooms}
-                        icon="🏥"
-                        bgColor="bg-yellow-100"
-                    />
-                    <HospitalStatsCard
-                        title="Pending Appointments"
-                        value={stats.pendingAppointments}
-                        icon="⏰"
-                        bgColor="bg-red-100"
-                    />
-                </motion.div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
                     <motion.div variants={itemVariants}>
                         <PatientForm onAddPatient={handleAddPatient} />
                     </motion.div>
@@ -250,7 +210,7 @@ const HospitalDashboard = () => {
                         <PatientList patients={patients} />
                     </motion.div>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <div className=" gap-6 mt-6">
                     <motion.div variants={itemVariants}>
                         <HospitalAppointments 
                             appointments={appointments} 
@@ -259,9 +219,7 @@ const HospitalDashboard = () => {
                         />
                     </motion.div>
 
-                    <motion.div variants={itemVariants}>
-                        <HospitalFacilities facilities={mockFacilities} />
-                    </motion.div>
+                    
                 </div>
             </>
         );

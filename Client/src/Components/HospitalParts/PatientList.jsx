@@ -20,7 +20,7 @@ const PatientList = () => {
 
   useEffect(() => {
     fetchPatients();
-  }, );
+  }, [patients]);
 
   const fetchPatients = async () => {
     try {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import logo from "../../assets/logo.png";
-import { GrSearchAdvanced } from "react-icons/gr";
+// import { GrSearchAdvanced } from "react-icons/gr";
 import { FaUserMd } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import HospitalProfile from "../HospitalParts/HospitalProfile";
@@ -55,7 +55,7 @@ const HospitalHeader = () => {
         {/* Right Section: Search and Profile */}
         <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
           {/* Search Input */}
-          <div className="relative w-full sm:w-auto">
+          {/* <div className="relative w-full sm:w-auto">
             <input
               type="text"
               placeholder="Search patients, doctors, rooms..."
@@ -64,7 +64,7 @@ const HospitalHeader = () => {
             <button className="absolute right-3 top-2 text-gray-500 hover:text-blue-400 transition duration-200 cursor-pointer">
               <GrSearchAdvanced size={24} />
             </button>
-          </div>
+          </div> */}
 
           {/* Profile Toggle */}
           <HospitalProfileLogo displayName={displayName} />
