@@ -25,7 +25,6 @@ const UserDashboard = () => {
     { name: "Blood Pressure", data: `${bp}` },
     { name: "Steps Today", data: `${steps}` },
     { name: "Sleep Duration", data: `${sleep} hours` },
-    { name: "Weight", data: "75 kg" },
   ];
 
   const { deviceConnected } = useHealth();
